@@ -1,6 +1,6 @@
 package me.zm.apcsgame.input;
 
-import me.zm.apcsgame.Game;
+import me.zm.apcsgame.GameSettings;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -12,21 +12,29 @@ import java.awt.event.KeyListener;
  */
 public class KeyInputListener implements KeyListener
 {
-	private Game game;
+	private boolean[] keys;
+	public boolean upKey, downKey, leftKey, rightKey;
 
 	/**
 	 * Sets up the key listener
-	 * @param game The main game class.
 	 */
-	public KeyInputListener(Game game)
+	public KeyInputListener()
 	{
-		this.game = game;
+
+	}
+
+	public void update()
+	{
+		upKey = keys[GameSettings.UP_KEY];
+		downKey = keys[GameSettings.DOWN_KEY];
+		leftKey = keys[GameSettings.LEFT_KEY];
+		rightKey = keys[GameSettings.RIGHT_KEY];
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e)
 	{
-
+		keys[e.getKeyCode()] = true;
 	}
 
 	@Override
@@ -38,6 +46,6 @@ public class KeyInputListener implements KeyListener
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
-
+		keys[e.getKeyCode()] = true;
 	}
 }
