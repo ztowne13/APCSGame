@@ -13,7 +13,7 @@ public abstract class Entity implements Locatable
 	private Game game;
 
 	private UUID uuid;
-	private int x, y;
+	private int x, y, width, height;
 
 	/**
 	 * Creates a new entity model
@@ -21,14 +21,18 @@ public abstract class Entity implements Locatable
 	 * @param x The entity's x position
 	 * @param y
 	 */
-	public Entity(Game game, int x, int y)
+	public Entity(Game game, int x, int y, int width, int height)
 	{
 		this.game = game;
 		this.x = x;
 		this.y = y;
+		this.width = width;
+		this.height = height;
 
 		this.uuid = UUID.randomUUID();
 	}
+
+	public abstract void tick();
 
 	public abstract void draw();
 
@@ -72,5 +76,23 @@ public abstract class Entity implements Locatable
 		this.y = y;
 	}
 
+	public int getWidth()
+	{
+		return width;
+	}
 
+	public void setWidth(int width)
+	{
+		this.width = width;
+	}
+
+	public int getHeight()
+	{
+		return height;
+	}
+
+	public void setHeight(int height)
+	{
+		this.height = height;
+	}
 }

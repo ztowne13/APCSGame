@@ -10,9 +10,9 @@ public abstract class Creature extends Entity
 {
 	CreatureType creatureType;
 
-	public Creature(Game game, int x, int y, CreatureType creatureType)
+	public Creature(Game game, int x, int y, int width, int height, CreatureType creatureType)
 	{
-		super(game, x, y);
+		super(game, x, y, width, height);
 		this.creatureType = creatureType;
 	}
 
@@ -27,5 +27,5 @@ public abstract class Creature extends Entity
 	{
 		this.creatureType = creatureType;
 	}
-	
+
 }

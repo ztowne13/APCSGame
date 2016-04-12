@@ -1,6 +1,8 @@
 package me.zm.apcsgame;
 
 import me.zm.apcsgame.input.KeyInputListener;
+import me.zm.apcsgame.level.Level;
+import me.zm.apcsgame.saves.GameSave;
 
 /**
  * Created by ztowne13 on 4/8/16.
@@ -13,12 +15,21 @@ public class Game implements Runnable
 
 	private KeyInputListener keyInputListener;
 
+	private Level currentLevel;
 	private GameState gameState;
+	private GameSave gameSave;
 
 	public Game()
 	{
 		this.keyInputListener = new KeyInputListener();
 		this.gameState = GameState.STARTUP;
+
+		//THIS IS ALL TEST CODE BELOW
+
+		this.currentLevel = new Level("level1");
+		currentLevel.load();
+		currentLevel.loadSettings();
+		currentLevel.loadLevelBounds();
 	}
 
 	/**
@@ -119,5 +130,15 @@ public class Game implements Runnable
 	public void setGameState(GameState gameState)
 	{
 		this.gameState = gameState;
+	}
+
+	public Level getCurrentLevel()
+	{
+		return currentLevel;
+	}
+
+	public void setCurrentLevel(Level currentLevel)
+	{
+		this.currentLevel = currentLevel;
 	}
 }

@@ -9,5 +9,7 @@ public enum GameState
 
 	RUNNING,
 
+	IN_LEVEL,
+
 	STOPPED;
 }

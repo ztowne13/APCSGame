@@ -8,9 +8,15 @@ import me.zm.apcsgame.entity.Entity;
  */
 public class BreakableItem extends Entity
 {
-	public BreakableItem(Game game, int x, int y)
+	public BreakableItem(Game game, int x, int y, int width, int height)
 	{
-		super(game, x, y);
+		super(game, x, y, width, height);
+	}
+
+	@Override
+	public void tick()
+	{
+
 	}
 
 	@Override
