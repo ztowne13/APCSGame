@@ -100,4 +100,24 @@ public class Game implements Runnable
 			}
 		}
 	}
+
+	public KeyInputListener getKeyInputListener()
+	{
+		return keyInputListener;
+	}
+
+	public void setKeyInputListener(KeyInputListener keyInputListener)
+	{
+		this.keyInputListener = keyInputListener;
+	}
+
+	public GameState getGameState()
+	{
+		return gameState;
+	}
+
+	public void setGameState(GameState gameState)
+	{
+		this.gameState = gameState;
+	}
 }
