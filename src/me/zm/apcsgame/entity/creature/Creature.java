@@ -10,8 +10,8 @@ public abstract class Creature extends Entity
 {
 	CreatureType creatureType;
 
-	int healthA, sizeA, speedA;
-	String nameA;
+	int health, size, speed;
+	String name;
 
 	public Creature(Game game, int x, int y, CreatureType creatureType)
 	{
@@ -31,4 +31,43 @@ public abstract class Creature extends Entity
 		this.creatureType = creatureType;
 	}
 
+	public int getHealth()
+	{
+		return health;
+	}
+
+	public void setHealth(int health)
+	{
+		this.health = health;
+	}
+
+	public int getSize()
+	{
+		return size;
+	}
+
+	public void setSize(int size)
+	{
+		this.size = size;
+	}
+
+	public int getSpeed()
+	{
+		return speed;
+	}
+
+	public void setSpeed(int speed)
+	{
+		this.speed = speed;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
 }
