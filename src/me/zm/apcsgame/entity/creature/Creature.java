@@ -10,7 +10,7 @@ public abstract class Creature extends Entity
 {
 	CreatureType creatureType;
 
-	int health, size, speed;
+
 	String name;
 
 	public Creature(Game game, int x, int y, CreatureType creatureType)
