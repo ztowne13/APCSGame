@@ -13,7 +13,7 @@ public class GraphicUtils
 	{
 		try
 		{
-			return ImageIO.read(GraphicUtils.class.getResource(path));
+			return ImageIO.read(GraphicUtils.class.getResource("/" + path));
 		}
 		catch (IOException e)
 		{

@@ -7,9 +7,12 @@ package me.zm.apcsgame;
  */
 public class GameRunner
 {
+	static int WIDTH = 800;
+	static int HEIGHT = 800;
+
 	public static void main(String[] args)
 	{
-		Game game = new Game();
+		Game game = new Game(WIDTH, HEIGHT);
 		game.run();
 	}
 }

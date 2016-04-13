@@ -1,8 +1,12 @@
 package me.zm.apcsgame;
 
+import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.input.KeyInputListener;
+import me.zm.apcsgame.level.GameCamera;
 import me.zm.apcsgame.level.Level;
 import me.zm.apcsgame.saves.GameSave;
+
+import java.util.ArrayList;
 
 /**
  * Created by ztowne13 on 4/8/16.
@@ -12,24 +16,27 @@ import me.zm.apcsgame.saves.GameSave;
 public class Game implements Runnable
 {
 	private Thread thread;
+	private Display display;
 
 	private KeyInputListener keyInputListener;
+	private ArrayList<Entity> entities = new ArrayList<>();
+
+	private int width, height;
 
 	private Level currentLevel;
 	private GameState gameState;
 	private GameSave gameSave;
 
-	public Game()
+	GameCamera gameCamera;
+
+	public Game(int width, int height)
 	{
+		this.width = width;
+		this.height = height;
+
 		this.keyInputListener = new KeyInputListener();
 		this.gameState = GameState.STARTUP;
 
-		//THIS IS ALL TEST CODE BELOW
-
-		this.currentLevel = new Level("level1");
-		currentLevel.load();
-		currentLevel.loadSettings();
-		currentLevel.loadLevelBounds();
 	}
 
 	/**
@@ -37,7 +44,16 @@ public class Game implements Runnable
 	 */
 	private void initialize()
 	{
+		//THIS IS ALL TEST CODE BELOW
 
+		this.gameCamera = new GameCamera(this, 0, 0);
+
+		this.currentLevel = new Level(this, "level1");
+		currentLevel.load();
+		currentLevel.loadSettings();
+		currentLevel.loadLevelBounds();
+
+		this.display = new Display("test", getWidth(), getHeight());
 	}
 
 	/**
@@ -45,7 +61,6 @@ public class Game implements Runnable
 	 */
 	private void tick()
 	{
-
 		render();
 	}
 
@@ -54,7 +69,7 @@ public class Game implements Runnable
 	 */
 	private void render()
 	{
-
+		getCurrentLevel().render(display.getFrame().getGraphics());
 	}
 
 	/**
@@ -140,5 +155,45 @@ public class Game implements Runnable
 	public void setCurrentLevel(Level currentLevel)
 	{
 		this.currentLevel = currentLevel;
+	}
+
+	public ArrayList<Entity> getEntities()
+	{
+		return entities;
+	}
+
+	public void setEntities(ArrayList<Entity> entities)
+	{
+		this.entities = entities;
+	}
+
+	public int getWidth()
+	{
+		return width;
+	}
+
+	public void setWidth(int width)
+	{
+		this.width = width;
+	}
+
+	public int getHeight()
+	{
+		return height;
+	}
+
+	public void setHeight(int height)
+	{
+		this.height = height;
+	}
+
+	public GameCamera getGameCamera()
+	{
+		return gameCamera;
+	}
+
+	public void setGameCamera(GameCamera gameCamera)
+	{
+		this.gameCamera = gameCamera;
 	}
 }

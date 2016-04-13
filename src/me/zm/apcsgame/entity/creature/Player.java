@@ -50,6 +50,8 @@ public class Player extends Creature
 			setX(tempX);
 			setY(tempY);
 		}
+
+		getGame().getGameCamera().centerOnEntity(this);
 	}
 
 	@Override

@@ -11,6 +11,7 @@ public class FileUtils
 {
 	public static ArrayList<String> loadFileByLine(String localPath)
 	{
+		localPath = "/" + localPath;
 		String loadedString = "";
 
 		try

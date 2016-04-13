@@ -1,9 +1,11 @@
 package me.zm.apcsgame.level;
 
+import me.zm.apcsgame.Game;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.utils.FileUtils;
 import me.zm.apcsgame.utils.GraphicUtils;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -12,6 +14,8 @@ import java.util.ArrayList;
  */
 public class Level
 {
+	Game game;
+
 	String levelId;
 	BufferedImage levelBaseWindow;
 
@@ -20,8 +24,9 @@ public class Level
 	String levelName;
 	Point spawnPoint;
 
-	public Level(String levelId)
+	public Level(Game game, String levelId)
 	{
+		this.game = game;
 		this.levelId = levelId;
 	}
 
@@ -30,7 +35,7 @@ public class Level
 	 */
 	public void load()
 	{
-		levelBaseWindow = GraphicUtils.loadImage("levels\\" + levelName + ".png");
+		levelBaseWindow = GraphicUtils.loadImage("levels/" + levelId + ".png");
 	}
 
 	/**
@@ -41,7 +46,7 @@ public class Level
 	 */
 	public void loadSettings()
 	{
-		ArrayList<String> loadedSettings = FileUtils.loadFileByLine("levels\\" + levelName + "settings.txt");
+		ArrayList<String> loadedSettings = FileUtils.loadFileByLine("levels/" + levelId + "settings.txt");
 
 		levelName = loadedSettings.get(0);
 
@@ -58,7 +63,7 @@ public class Level
 	 */
 	public void loadLevelBounds()
 	{
-		ArrayList<String> loadedPoints = FileUtils.loadFileByLine("levels\\" + levelName + "bounds.txt");
+		ArrayList<String> loadedPoints = FileUtils.loadFileByLine("levels/" + levelId + "bounds.txt");
 
 		points = new Point[loadedPoints.size()];
 
@@ -75,6 +80,16 @@ public class Level
 	 * Loads all non-background tiles
 	 */
 	public void loadDynamicTiles()
+	{
+
+	}
+
+	public void render(Graphics graphics)
+	{
+		graphics.drawImage(levelBaseWindow, (int)game.getGameCamera().getxOffset(), (int)game.getGameCamera().getyOffset(), null);
+	}
+
+	public void tick()
 	{
 
 	}
