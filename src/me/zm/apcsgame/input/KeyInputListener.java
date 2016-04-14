@@ -4,6 +4,7 @@ import me.zm.apcsgame.GameSettings;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 /**
  * Created by ztowne13 on 4/8/16.
@@ -12,7 +13,7 @@ import java.awt.event.KeyListener;
  */
 public class KeyInputListener implements KeyListener
 {
-	private boolean[] keys;
+	private ArrayList<Integer> keysPressed = new ArrayList<>();
 	public boolean upKey, downKey, leftKey, rightKey;
 
 	/**
@@ -25,27 +26,30 @@ public class KeyInputListener implements KeyListener
 
 	public void update()
 	{
-		upKey = keys[GameSettings.UP_KEY];
-		downKey = keys[GameSettings.DOWN_KEY];
-		leftKey = keys[GameSettings.LEFT_KEY];
-		rightKey = keys[GameSettings.RIGHT_KEY];
+		upKey = keysPressed.contains(GameSettings.UP_KEY);
+		downKey = keysPressed.contains(GameSettings.DOWN_KEY);
+		leftKey = keysPressed.contains(GameSettings.LEFT_KEY);
+		rightKey = keysPressed.contains(GameSettings.RIGHT_KEY);
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e)
 	{
-		keys[e.getKeyCode()] = true;
+
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
-
+		keysPressed.add(e.getKeyCode());
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
-		keys[e.getKeyCode()] = true;
+		if(keysPressed.contains(e.getKeyCode()))
+		{
+			keysPressed.remove((Object)e.getKeyCode());
+		}
 	}
 }

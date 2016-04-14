@@ -3,6 +3,7 @@ package me.zm.apcsgame.entity;
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.Locatable;
 
+import java.awt.*;
 import java.util.UUID;
 
 /**
@@ -34,7 +35,7 @@ public abstract class Entity implements Locatable
 
 	public abstract void tick();
 
-	public abstract void draw();
+	public abstract void draw(Graphics g);
 
 	public Game getGame()
 	{

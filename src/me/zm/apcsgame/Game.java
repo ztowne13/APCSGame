@@ -1,6 +1,7 @@
 package me.zm.apcsgame;
 
 import me.zm.apcsgame.entity.Entity;
+import me.zm.apcsgame.entity.creature.Player;
 import me.zm.apcsgame.input.KeyInputListener;
 import me.zm.apcsgame.level.GameCamera;
 import me.zm.apcsgame.level.Level;
@@ -24,7 +25,7 @@ public class Game implements Runnable
 	private int width, height;
 
 	private Level currentLevel;
-	private GameState gameState;
+	private GameState gameState = GameState.STARTUP;
 	private GameSave gameSave;
 
 	GameCamera gameCamera;
@@ -44,16 +45,25 @@ public class Game implements Runnable
 	 */
 	private void initialize()
 	{
-		//THIS IS ALL TEST CODE BELOW
+		//THIS IS ALL TEST CODE BELOW AND IS NOT NECCESSARILY GOING TO BE USED LATER
 
 		this.gameCamera = new GameCamera(this, 0, 0);
 
-		this.currentLevel = new Level(this, "level1");
+		this.gameState = GameState.RUNNING;
+
+		this.currentLevel = new Level(this, "level1", width, height);
 		currentLevel.load();
 		currentLevel.loadSettings();
 		currentLevel.loadLevelBounds();
 
+		Player p = new Player(this, "TestCharacter1", currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y, 50, 50, 1);
+
+		//getGameCamera().centerOnEntity(p);
+
+		entities.add(p);
+
 		this.display = new Display("test", getWidth(), getHeight());
+		display.getFrame().addKeyListener(keyInputListener);
 	}
 
 	/**
@@ -62,6 +72,11 @@ public class Game implements Runnable
 	private void tick()
 	{
 		render();
+
+		for(Entity ent : entities)
+		{
+			ent.tick();
+		}
 	}
 
 	/**
@@ -69,7 +84,12 @@ public class Game implements Runnable
 	 */
 	private void render()
 	{
-		getCurrentLevel().render(display.getFrame().getGraphics());
+		getCurrentLevel().render(display.getCanvas().getGraphics());
+
+		for(Entity ent : entities)
+		{
+			ent.draw(display.getCanvas().getGraphics());
+		}
 	}
 
 	/**
@@ -90,6 +110,7 @@ public class Game implements Runnable
 			if(lastTime + nanosPerTick < System.nanoTime())
 			{
 				ticks++;
+				lastTime = System.nanoTime();
 				tick();
 			}
 		}
@@ -98,20 +119,20 @@ public class Game implements Runnable
 	/**
 	 * Initializes the thread.
 	 */
-	private synchronized void start()
+	public synchronized void start()
 	{
 		if(!gameState.equals(GameState.RUNNING))
 		{
 			gameState = GameState.RUNNING;
-			this.thread = new Thread();
-			start();
+			this.thread = new Thread(this);
+			thread.start();
 		}
 	}
 
 	/**
 	 * Ends the thread.
 	 */
-	private synchronized void stop()
+	public synchronized void stop()
 	{
 		if(gameState.equals(GameState.RUNNING))
 		{

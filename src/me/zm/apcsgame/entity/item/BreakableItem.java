@@ -3,6 +3,8 @@ package me.zm.apcsgame.entity.item;
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.entity.Entity;
 
+import java.awt.*;
+
 /**
  * Created by ztowne13 on 4/11/16.
  */
@@ -20,7 +22,7 @@ public class BreakableItem extends Entity
 	}
 
 	@Override
-	public void draw()
+	public void draw(Graphics graphics)
 	{
 
 	}

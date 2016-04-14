@@ -24,10 +24,14 @@ public class Level
 	String levelName;
 	Point spawnPoint;
 
-	public Level(Game game, String levelId)
+	int width, height;
+
+	public Level(Game game, String levelId, int width, int height)
 	{
 		this.game = game;
 		this.levelId = levelId;
+		this.width = width;
+		this.height = height;
 	}
 
 	/**
@@ -86,7 +90,7 @@ public class Level
 
 	public void render(Graphics graphics)
 	{
-		graphics.drawImage(levelBaseWindow, (int)game.getGameCamera().getxOffset(), (int)game.getGameCamera().getyOffset(), null);
+		graphics.drawImage(levelBaseWindow, -(int)game.getGameCamera().getxOffset(), -(int)game.getGameCamera().getyOffset(), null);
 	}
 
 	public void tick()
@@ -101,17 +105,27 @@ public class Level
 	 */
 	public boolean isEntityOutsideBounds(Entity ent)
 	{
-		boolean isOutside = false;
-		for (int i = 0, j = points.length - 1; i < points.length; j = i++)
+		int[] xPoints = new int[points.length];
+		int[] yPoints = new int[points.length];
+
+		for(int i = 0; i < points.length; i++)
 		{
-			if ((points[i].y > ent.getY()) != (points[j].y > ent.getY()) &&
-					(ent.getX() < (points[j].x - points[i].x) * (ent.getY() - points[i].y) / (points[j].y-points[i].y) + points[i].x))
-			{
-				isOutside = !isOutside;
-			}
+			xPoints[i] = points[i].x;
+			yPoints[i] = points[i].y;
 		}
-		return isOutside;
+
+		Polygon polygon = new Polygon(xPoints, yPoints, points.length);
+
+		return !polygon.contains(ent.getX(), ent.getY());
 	}
 
+	public Point getSpawnPoint()
+	{
+		return spawnPoint;
+	}
 
+	public void setSpawnPoint(Point spawnPoint)
+	{
+		this.spawnPoint = spawnPoint;
+	}
 }

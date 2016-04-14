@@ -13,6 +13,6 @@ public class GameRunner
 	public static void main(String[] args)
 	{
 		Game game = new Game(WIDTH, HEIGHT);
-		game.run();
+		game.start();
 	}
 }
