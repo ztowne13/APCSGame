@@ -110,13 +110,13 @@ public class Level
 
 		for(int i = 0; i < points.length; i++)
 		{
-			xPoints[i] = points[i].x;
-			yPoints[i] = points[i].y;
+			xPoints[i] = points[i].x - (int)(game.getGameCamera().getxOffset()) - (ent.getWidth()/2);
+			yPoints[i] = points[i].y - (int)(game.getGameCamera().getyOffset()) - (ent.getHeight());
 		}
 
 		Polygon polygon = new Polygon(xPoints, yPoints, points.length);
 
-		return !polygon.contains(ent.getX(), ent.getY());
+		return !polygon.contains(ent.getX() - game.getGameCamera().getxOffset(), ent.getY() - game.getGameCamera().getyOffset());
 	}
 
 	public Point getSpawnPoint()

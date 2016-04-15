@@ -7,6 +7,8 @@ import me.zm.apcsgame.level.GameCamera;
 import me.zm.apcsgame.level.Level;
 import me.zm.apcsgame.saves.GameSave;
 
+import java.awt.*;
+import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 
 /**
@@ -18,6 +20,8 @@ public class Game implements Runnable
 {
 	private Thread thread;
 	private Display display;
+	private BufferStrategy bs;
+	Graphics g;
 
 	private KeyInputListener keyInputListener;
 	private ArrayList<Entity> entities = new ArrayList<>();
@@ -47,8 +51,6 @@ public class Game implements Runnable
 	{
 		//THIS IS ALL TEST CODE BELOW AND IS NOT NECCESSARILY GOING TO BE USED LATER
 
-		this.gameCamera = new GameCamera(this, 0, 0);
-
 		this.gameState = GameState.RUNNING;
 
 		this.currentLevel = new Level(this, "level1", width, height);
@@ -56,14 +58,18 @@ public class Game implements Runnable
 		currentLevel.loadSettings();
 		currentLevel.loadLevelBounds();
 
+		//this.gameCamera = new GameCamera(this, currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y);
+		this.gameCamera = new GameCamera(this, 0, 0);
+
 		Player p = new Player(this, "TestCharacter1", currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y, 50, 50, 1);
 
-		//getGameCamera().centerOnEntity(p);
+		getGameCamera().centerOnEntity(p);
 
 		entities.add(p);
 
 		this.display = new Display("test", getWidth(), getHeight());
 		display.getFrame().addKeyListener(keyInputListener);
+
 	}
 
 	/**
@@ -71,8 +77,6 @@ public class Game implements Runnable
 	 */
 	private void tick()
 	{
-		render();
-
 		for(Entity ent : entities)
 		{
 			ent.tick();
@@ -84,34 +88,68 @@ public class Game implements Runnable
 	 */
 	private void render()
 	{
-		getCurrentLevel().render(display.getCanvas().getGraphics());
+		bs = display.getCanvas().getBufferStrategy();
+
+		if(bs == null)
+		{
+			display.getCanvas().createBufferStrategy(3);
+			return;
+		}
+
+		g = bs.getDrawGraphics();
+		g.clearRect(0, 0, width, height);
+
+		// Where to write the render code
+
+		getCurrentLevel().render(g);
 
 		for(Entity ent : entities)
 		{
-			ent.draw(display.getCanvas().getGraphics());
+			ent.draw(g);
 		}
+
+		// End writing render code
+
+		bs.show();
+		g.dispose();
 	}
 
 	/**
-	 * Runs the game.
+	 * Runs the game using some baseline delta timing things I found online.
 	 */
 	@Override
 	public void run()
 	{
 		initialize();
 
+		int fps = 60;
+		double timePerTick = 1000000000 / fps;
+		double delta = 0;
+		long now;
+		long lastTime = System.nanoTime();
+		long timer = 0;
 		int ticks = 0;
 
-		double nanosPerTick = 1000000000 / GameSettings.FPS;
-		long lastTime = System.nanoTime();
-
-		while(gameState.equals(gameState.RUNNING))
+		while(gameState.equals(GameState.RUNNING))
 		{
-			if(lastTime + nanosPerTick < System.nanoTime())
+			now = System.nanoTime();
+			delta += (now - lastTime) / timePerTick;
+			timer += now - lastTime;
+			lastTime = now;
+
+			if(delta >= 1)
 			{
-				ticks++;
-				lastTime = System.nanoTime();
 				tick();
+				render();
+				ticks++;
+				delta--;
+			}
+
+			if(timer >= 1000000000)
+			{
+				System.out.println("Ticks and frames: " + ticks);
+				ticks = 0;
+				timer = 0;
 			}
 		}
 	}

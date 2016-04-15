@@ -10,13 +10,13 @@ public class GameCamera
 {
 	private Game game;
 
-	private float xOffset, yOffset;
+	private float xOffset, yOffset, baseXOffset, baseYOffset;
 
-	public GameCamera(Game game, float xOffset, float yOffset)
+	public GameCamera(Game game, float baseXOffset, float baseYOffset)
 	{
 		this.game = game;
-		this.xOffset = xOffset;
-		this.yOffset = yOffset;
+		this.baseXOffset = baseXOffset;
+		this.baseYOffset = baseYOffset;
 	}
 
 	public void centerOnEntity(Entity e)

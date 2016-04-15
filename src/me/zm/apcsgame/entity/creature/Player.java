@@ -38,40 +38,49 @@ public class Player extends Creature
 	@Override
 	public void checkMove()
 	{
+		int xMove = 0;
+		int yMove = 0;
+
+		// To revert back to original position if position outside bounds.
 		int tempX = getX();
 		int tempY = getY();
 
 		KeyInputListener keyInputListener = getGame().getKeyInputListener();
 		if(keyInputListener.downKey)
 		{
-			setY(getY() + speed);
+			yMove = speed;
 		}
 		if(keyInputListener.upKey)
 		{
-			setY(getY() - speed);
+			yMove = -speed;
 		}
 		if(keyInputListener.leftKey)
 		{
-			setX(getX() - speed);
+			xMove = -speed;
 		}
 		if(keyInputListener.rightKey)
 		{
-			setX(getX() + speed);
+			xMove = speed;
 		}
+
+		setX(getX() + xMove);
+		setY(getY() + yMove);
 
 		if(getGame().getCurrentLevel().isEntityOutsideBounds(this))
 		{
-			System.out.println("is outside bounds");
+			xMove = 0;
+			yMove = 0;
+
 			setX(tempX);
 			setY(tempY);
 		}
 
-		getGame().getGameCamera().move(getX() - tempX, getY() - tempY);
+		getGame().getGameCamera().move(xMove, yMove);
 	}
 
 	@Override
 	public void draw(Graphics graphics)
 	{
-		graphics.drawImage(image, getX(), getY(), null);
+		graphics.drawImage(image, getX() - (int)getGame().getGameCamera().getxOffset(), getY() - (int)getGame().getGameCamera().getyOffset(), null);
 	}
 }
