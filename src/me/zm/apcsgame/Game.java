@@ -57,6 +57,7 @@ public class Game implements Runnable
 		currentLevel.load();
 		currentLevel.loadSettings();
 		currentLevel.loadLevelBounds();
+		currentLevel.loadDynamicTiles();
 
 		//this.gameCamera = new GameCamera(this, currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y);
 		this.gameCamera = new GameCamera(this, 0, 0);

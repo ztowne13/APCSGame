@@ -1,4 +1,4 @@
-package me.zm.apcsgame;
+package me.zm.apcsgame.utils;
 
 /**
  * Created by ztowne13 on 4/11/16.

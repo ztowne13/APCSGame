@@ -1,6 +1,7 @@
 package me.zm.apcsgame.entity.creature;
 
 import me.zm.apcsgame.Game;
+import me.zm.apcsgame.entity.breakables.Tile;
 import me.zm.apcsgame.input.KeyInputListener;
 import me.zm.apcsgame.utils.GraphicUtils;
 
@@ -47,40 +48,89 @@ public class Player extends Creature
 
 		KeyInputListener keyInputListener = getGame().getKeyInputListener();
 		if(keyInputListener.downKey)
-		{
 			yMove = speed;
-		}
 		if(keyInputListener.upKey)
-		{
 			yMove = -speed;
-		}
 		if(keyInputListener.leftKey)
-		{
 			xMove = -speed;
-		}
 		if(keyInputListener.rightKey)
-		{
 			xMove = speed;
-		}
 
 		setX(getX() + xMove);
+
+		boolean collideX = false;
+		boolean collideY = false;
+
+		if(collides())
+		{
+			setX(tempX);
+			xMove = 0;
+		}
+
 		setY(getY() + yMove);
 
-		if(getGame().getCurrentLevel().isEntityOutsideBounds(this))
+		if(collides())
 		{
-			xMove = 0;
-			yMove = 0;
-
-			setX(tempX);
 			setY(tempY);
+			yMove = 0;
 		}
 
 		getGame().getGameCamera().move(xMove, yMove);
 	}
 
+	// Checks if the player collides with the walls or entity
+	public boolean collides()
+	{
+		boolean collidesWithTile = false;
+		Tile collidedWith = null;
+
+		for(Tile tile : getGame().getCurrentLevel().getTiles())
+		{
+			if(tile.collidesWith(this))
+			{
+				collidesWithTile = true;
+				collidedWith = tile;
+				break;
+			}
+		}
+
+		return getGame().getCurrentLevel().isEntityOutsideBounds(this) || collidesWithTile;
+	}
+
+
 	@Override
 	public void draw(Graphics graphics)
 	{
 		graphics.drawImage(image, getX() - (int)getGame().getGameCamera().getxOffset(), getY() - (int)getGame().getGameCamera().getyOffset(), null);
+	}
+
+	public int getMaxhealth()
+	{
+		return maxhealth;
+	}
+
+	public void setMaxhealth(int maxhealth)
+	{
+		this.maxhealth = maxhealth;
+	}
+
+	public int getHealth()
+	{
+		return health;
+	}
+
+	public void setHealth(int health)
+	{
+		this.health = health;
+	}
+
+	public int getSpeed()
+	{
+		return speed;
+	}
+
+	public void setSpeed(int speed)
+	{
+		this.speed = speed;
 	}
 }

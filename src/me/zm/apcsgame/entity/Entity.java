@@ -1,7 +1,7 @@
 package me.zm.apcsgame.entity;
 
 import me.zm.apcsgame.Game;
-import me.zm.apcsgame.Locatable;
+import me.zm.apcsgame.utils.Locatable;
 
 import java.awt.*;
 import java.util.UUID;
