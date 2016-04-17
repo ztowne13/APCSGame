@@ -1,5 +1,6 @@
 package me.zm.apcsgame;
 
+import me.zm.apcsgame.displays.MousePointer;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.creature.Player;
 import me.zm.apcsgame.input.KeyInputListener;
@@ -33,6 +34,7 @@ public class Game implements Runnable
 	private GameSave gameSave;
 
 	GameCamera gameCamera;
+	MousePointer mousePointer;
 
 	public Game(int width, int height)
 	{
@@ -41,7 +43,6 @@ public class Game implements Runnable
 
 		this.keyInputListener = new KeyInputListener();
 		this.gameState = GameState.STARTUP;
-
 	}
 
 	/**
@@ -71,6 +72,8 @@ public class Game implements Runnable
 		this.display = new Display("test", getWidth(), getHeight());
 		display.getFrame().addKeyListener(keyInputListener);
 
+		this.mousePointer = new MousePointer(this);
+
 	}
 
 	/**
@@ -78,6 +81,8 @@ public class Game implements Runnable
 	 */
 	private void tick()
 	{
+		mousePointer.tick();
+
 		for(Entity ent : entities)
 		{
 			ent.tick();
@@ -260,5 +265,15 @@ public class Game implements Runnable
 	public void setGameCamera(GameCamera gameCamera)
 	{
 		this.gameCamera = gameCamera;
+	}
+
+	public Display getDisplay()
+	{
+		return display;
+	}
+
+	public void setDisplay(Display display)
+	{
+		this.display = display;
 	}
 }
