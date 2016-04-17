@@ -27,4 +27,6 @@ public abstract class Tile extends Entity
 	 * @return If it collides on that axis, only.
 	 */
 	public abstract boolean collidesWithOnAxis(Entity ent, boolean x);
+
+
 }

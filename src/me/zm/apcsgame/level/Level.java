@@ -142,10 +142,21 @@ public class Level
 	public void render(Graphics graphics)
 	{
 		graphics.drawImage(levelBaseWindow, -(int)game.getGameCamera().getxOffset(), -(int)game.getGameCamera().getyOffset(), null);
+	}
 
+	/**
+	 * Renders all of the tiles based off of the player to determine whether to render it before or after the player is rendered.
+	 * @param player
+	 * @param graphics
+	 */
+	public void renderTiles(Entity player, Graphics graphics, boolean before)
+	{
 		for(Tile tile : tiles)
 		{
-			tile.draw(graphics);
+			if((player.renderBefore(tile) && before) || (!player.renderBefore(tile) && !before))
+			{
+				tile.draw(graphics);
+			}
 		}
 	}
 

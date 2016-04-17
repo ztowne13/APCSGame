@@ -37,6 +37,16 @@ public abstract class Entity implements Locatable
 
 	public abstract void draw(Graphics g);
 
+	/**
+	 * Checks whether or not the entity should be rendered first because it is beneath the entity
+	 * @param entity The other object with x and y coordinates to see if it should be rendered before.
+	 * @return Returns true if it should render before and false if it should render after
+	 */
+	public boolean renderBefore(Entity entity)
+	{
+		return getY() + getHeight() > entity.getY() + entity.getHeight();
+	}
+
 	public Game getGame()
 	{
 		return game;

@@ -1,6 +1,7 @@
 package me.zm.apcsgame.entity.breakables;
 
 import me.zm.apcsgame.Game;
+import me.zm.apcsgame.GameSettings;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.creature.Player;
 import me.zm.apcsgame.level.BlockType;
@@ -61,7 +62,7 @@ public class BreakableTile extends Tile
 		int xOffset = - (int)getGame().getGameCamera().getxOffset();
 		int yOffset = - (int)getGame().getGameCamera().getyOffset();
 		// Entity coordinates
-		int eBottomY = ent.getY() + ent.getHeight() + yOffset;
+		int eBottomY = ent.getY() + ent.getHeight() + yOffset - GameSettings.xShift;
 
 		int eLeftX = ent.getX() + xOffset;
 		int eRightX = ent.getX() + ent.getWidth() + xOffset;

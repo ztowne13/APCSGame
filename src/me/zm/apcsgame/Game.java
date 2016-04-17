@@ -104,10 +104,16 @@ public class Game implements Runnable
 
 		getCurrentLevel().render(g);
 
+		// Renders the tiles that will be beneath the player
+		getCurrentLevel().renderTiles(entities.get(0), g, true);
+
 		for(Entity ent : entities)
 		{
 			ent.draw(g);
 		}
+
+		// Renders the tiles that will be above the player
+		getCurrentLevel().renderTiles(entities.get(0), g, false);
 
 		// End writing render code
 
@@ -123,8 +129,7 @@ public class Game implements Runnable
 	{
 		initialize();
 
-		int fps = 60;
-		double timePerTick = 1000000000 / fps;
+		double timePerTick = 1000000000 / GameSettings.FPS;
 		double delta = 0;
 		long now;
 		long lastTime = System.nanoTime();

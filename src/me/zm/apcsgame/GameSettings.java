@@ -7,7 +7,12 @@ import java.awt.event.KeyEvent;
  */
 public class GameSettings
 {
-	static int FPS = 60;
+	public static int FPS = 60;
+
+	/**
+	 * The amount of pixels that the player can move under breakable tiles.
+	 */
+	public static int xShift = 10;
 
 	public static int UP_KEY = KeyEvent.VK_W;
 	public static int DOWN_KEY = KeyEvent.VK_S;

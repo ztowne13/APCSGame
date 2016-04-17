@@ -58,9 +58,6 @@ public class Player extends Creature
 
 		setX(getX() + xMove);
 
-		boolean collideX = false;
-		boolean collideY = false;
-
 		if(collides())
 		{
 			setX(tempX);
@@ -82,14 +79,12 @@ public class Player extends Creature
 	public boolean collides()
 	{
 		boolean collidesWithTile = false;
-		Tile collidedWith = null;
 
 		for(Tile tile : getGame().getCurrentLevel().getTiles())
 		{
 			if(tile.collidesWith(this))
 			{
 				collidesWithTile = true;
-				collidedWith = tile;
 				break;
 			}
 		}
