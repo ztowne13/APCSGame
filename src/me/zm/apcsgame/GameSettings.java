@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 public class GameSettings
 {
 	public static int FPS = 60;
+	public static int totalAnimationFrames = 3;
 
 	/**
 	 * The amount of pixels that the player can move under breakable tiles.

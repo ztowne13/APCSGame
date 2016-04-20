@@ -128,4 +128,6 @@ public class Player extends Creature
 	{
 		this.speed = speed;
 	}
+
+
 }
