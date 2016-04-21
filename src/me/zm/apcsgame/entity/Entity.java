@@ -1,7 +1,7 @@
 package me.zm.apcsgame.entity;
 
 import me.zm.apcsgame.Game;
-import me.zm.apcsgame.utils.Locatable;
+import me.zm.apcsgame.locations.Location;
 
 import java.awt.*;
 import java.util.UUID;
@@ -9,12 +9,14 @@ import java.util.UUID;
 /**
  * Created by ztowne13 on 4/11/16.
  */
-public abstract class Entity implements Locatable
+public abstract class Entity
 {
 	private Game game;
 
 	private UUID uuid;
-	private int x, y, width, height;
+	private int width, height;
+
+	Location location;
 
 	/**
 	 * Creates a new entity model
@@ -25,10 +27,10 @@ public abstract class Entity implements Locatable
 	public Entity(Game game, int x, int y, int width, int height)
 	{
 		this.game = game;
-		this.x = x;
-		this.y = y;
 		this.width = width;
 		this.height = height;
+
+		this.location = new Location(x, y);
 
 		this.uuid = UUID.randomUUID();
 	}
@@ -44,7 +46,7 @@ public abstract class Entity implements Locatable
 	 */
 	public boolean renderBefore(Entity entity)
 	{
-		return getY() + getHeight() > entity.getY() + entity.getHeight();
+		return location.getY() + getHeight() > entity.getLocation().getY() + entity.getHeight();
 	}
 
 	public Game getGame()
@@ -67,26 +69,6 @@ public abstract class Entity implements Locatable
 		this.uuid = uuid;
 	}
 
-	public int getX()
-	{
-		return x;
-	}
-
-	public void setX(int x)
-	{
-		this.x = x;
-	}
-
-	public int getY()
-	{
-		return y;
-	}
-
-	public void setY(int y)
-	{
-		this.y = y;
-	}
-
 	public int getWidth()
 	{
 		return width;
@@ -105,5 +87,15 @@ public abstract class Entity implements Locatable
 	public void setHeight(int height)
 	{
 		this.height = height;
+	}
+
+	public Location getLocation()
+	{
+		return location;
+	}
+
+	public void setLocation(Location location)
+	{
+		this.location = location;
 	}
 }

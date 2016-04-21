@@ -3,6 +3,8 @@ package me.zm.apcsgame.entity.creature;
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.entity.breakables.Tile;
 import me.zm.apcsgame.input.KeyInputListener;
+import me.zm.apcsgame.locations.Direction;
+import me.zm.apcsgame.utils.EntityUtils;
 import me.zm.apcsgame.utils.GraphicUtils;
 
 import java.awt.*;
@@ -33,6 +35,7 @@ public class Player extends Creature
 	public void tick()
 	{
 		getGame().getKeyInputListener().update();
+		getLocation().setDirection(Direction.combineCardinalDirections(EntityUtils.keysPressesToDirections(getGame().getKeyInputListener().getKeysPressed())));
 		checkMove();
 	}
 
@@ -43,8 +46,8 @@ public class Player extends Creature
 		int yMove = 0;
 
 		// To revert back to original position if position outside bounds.
-		int tempX = getX();
-		int tempY = getY();
+		int tempX = getLocation().getX();
+		int tempY = getLocation().getY();
 
 		KeyInputListener keyInputListener = getGame().getKeyInputListener();
 		if(keyInputListener.downKey)
@@ -56,19 +59,19 @@ public class Player extends Creature
 		if(keyInputListener.rightKey)
 			xMove = speed;
 
-		setX(getX() + xMove);
+		getLocation().setX(getLocation().getX() + xMove);
 
 		if(collides())
 		{
-			setX(tempX);
+			getLocation().setX(tempX);
 			xMove = 0;
 		}
 
-		setY(getY() + yMove);
+		getLocation().setY(getLocation().getY() + yMove);
 
 		if(collides())
 		{
-			setY(tempY);
+			getLocation().setY(tempY);
 			yMove = 0;
 		}
 
@@ -96,7 +99,7 @@ public class Player extends Creature
 	@Override
 	public void draw(Graphics graphics)
 	{
-		graphics.drawImage(image, getX() - (int)getGame().getGameCamera().getxOffset(), getY() - (int)getGame().getGameCamera().getyOffset(), null);
+		graphics.drawImage(image, getLocation().getX() - (int)getGame().getGameCamera().getxOffset(), getLocation().getY() - (int)getGame().getGameCamera().getyOffset(), null);
 	}
 
 	public int getMaxhealth()

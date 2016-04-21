@@ -1,8 +1,8 @@
 package me.zm.apcsgame.displays;
 
 import me.zm.apcsgame.Game;
+import me.zm.apcsgame.locations.Locatable;
 import me.zm.apcsgame.utils.GraphicUtils;
-import me.zm.apcsgame.utils.Locatable;
 
 import java.awt.*;
 

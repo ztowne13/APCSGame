@@ -15,7 +15,6 @@ public class KeyInputListener implements KeyListener
 {
 	private ArrayList<Integer> keysPressed = new ArrayList<>();
 	public boolean upKey, downKey, leftKey, rightKey;
-	public int lastKeyPressed = 0;
 
 	/**
 	 * Sets up the key listener
@@ -42,8 +41,10 @@ public class KeyInputListener implements KeyListener
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
-		keysPressed.add(e.getKeyCode());
-		lastKeyPressed = e.getKeyCode();
+		if(!keysPressed.contains(e.getKeyCode()))
+		{
+			keysPressed.add(e.getKeyCode());
+		}
 	}
 
 	@Override
@@ -53,5 +54,15 @@ public class KeyInputListener implements KeyListener
 		{
 			keysPressed.remove((Object)e.getKeyCode());
 		}
+	}
+
+	public ArrayList<Integer> getKeysPressed()
+	{
+		return keysPressed;
+	}
+
+	public void setKeysPressed(ArrayList<Integer> keysPressed)
+	{
+		this.keysPressed = keysPressed;
 	}
 }

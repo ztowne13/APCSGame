@@ -1,32 +1,46 @@
 package me.zm.apcsgame.utils;
 
-import apple.laf.JRSUIConstants;
 import me.zm.apcsgame.GameSettings;
+import me.zm.apcsgame.locations.Direction;
+
+import java.util.ArrayList;
 
 /**
  * Created by ztowne13 on 4/19/16.
  */
 public class EntityUtils
 {
-	public static JRSUIConstants.Direction getDirectionFromArrowkey(int key)
+	public static Direction getDirectionFromKeypress(int key)
 	{
-		JRSUIConstants.Direction direction = null;
+		Direction direction = null;
 		if(key == GameSettings.UP_KEY)
 		{
-			direction = JRSUIConstants.Direction.NORTH;
+			direction = Direction.NORTH;
 		}
 		else if(key == GameSettings.DOWN_KEY)
 		{
-			direction = JRSUIConstants.Direction.SOUTH;
+			direction = Direction.SOUTH;
 		}
 		else if(key == GameSettings.RIGHT_KEY)
 		{
-			direction = JRSUIConstants.Direction.EAST;
+			direction = Direction.EAST;
 		}
 		else if(key == GameSettings.LEFT_KEY)
 		{
-			direction = JRSUIConstants.Direction.WEST;
+			direction = Direction.WEST;
 		}
 		return direction;
+	}
+
+	public static ArrayList<Direction> keysPressesToDirections(ArrayList<Integer> pressedKeys)
+	{
+		ArrayList<Direction> directions = new ArrayList<>();
+
+		for(Integer i : pressedKeys)
+		{
+			directions.add(getDirectionFromKeypress(i));
+		}
+
+		return directions;
 	}
 }

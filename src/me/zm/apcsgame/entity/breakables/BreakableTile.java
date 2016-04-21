@@ -37,7 +37,7 @@ public class BreakableTile extends Tile
 	@Override
 	public void draw(Graphics graphics)
 	{
-		graphics.drawImage(image, getX() - (int)getGame().getGameCamera().getxOffset(), getY() - (int)getGame().getGameCamera().getyOffset(), null);
+		graphics.drawImage(image, getLocation().getX() - (int)getGame().getGameCamera().getxOffset(), getLocation().getY() - (int)getGame().getGameCamera().getyOffset(), null);
 	}
 
 	public void breakItem()
@@ -62,17 +62,17 @@ public class BreakableTile extends Tile
 		int xOffset = - (int)getGame().getGameCamera().getxOffset();
 		int yOffset = - (int)getGame().getGameCamera().getyOffset();
 		// Entity coordinates
-		int eBottomY = ent.getY() + ent.getHeight() + yOffset - GameSettings.xShift;
+		int eBottomY = ent.getLocation().getY() + ent.getHeight() + yOffset - GameSettings.xShift;
 
-		int eLeftX = ent.getX() + xOffset;
-		int eRightX = ent.getX() + ent.getWidth() + xOffset;
+		int eLeftX = ent.getLocation().getX() + xOffset;
+		int eRightX = ent.getLocation().getX() + ent.getWidth() + xOffset;
 
 		// Block coordinates
-		int bBottomY = getY() + getHeight() + yOffset;
-		int bTopY = getY() + yOffset;
+		int bBottomY = getLocation().getY() + getHeight() + yOffset;
+		int bTopY = getLocation().getY() + yOffset;
 
-		int bLeftX = getX() + xOffset;
-		int bRightX = getX() + getWidth() + xOffset;
+		int bLeftX = getLocation().getX() + xOffset;
+		int bRightX = getLocation().getX() + getWidth() + xOffset;
 
 		return x ? (eLeftX > bLeftX && eLeftX < bRightX) || (eRightX <  bRightX && eRightX > bLeftX) : eBottomY < bBottomY && eBottomY > bTopY;
 	}

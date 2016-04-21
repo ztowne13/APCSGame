@@ -183,7 +183,7 @@ public class Level
 
 		Polygon polygon = new Polygon(xPoints, yPoints, points.length);
 
-		return !polygon.contains(ent.getX() - game.getGameCamera().getxOffset(), ent.getY() - game.getGameCamera().getyOffset());
+		return !polygon.contains(ent.getLocation().getX() - game.getGameCamera().getxOffset(), ent.getLocation().getY() - game.getGameCamera().getyOffset());
 	}
 
 	public Point getSpawnPoint()

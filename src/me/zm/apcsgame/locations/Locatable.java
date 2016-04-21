@@ -1,4 +1,4 @@
-package me.zm.apcsgame.utils;
+package me.zm.apcsgame.locations;
 
 /**
  * Created by ztowne13 on 4/11/16.
