@@ -7,9 +7,9 @@ import me.zm.apcsgame.Game;
  */
 public abstract class Monster extends Creature
 {
-	public Monster(Game game, int x, int y, int width, int height, CreatureType creatureType)
+	public Monster(Game game, int x, int y, int width, int height, int maxhealth, CreatureType creatureType)
 	{
-		super(game, x, y, width, height, creatureType);
+		super(game, x, y, width, height, maxhealth, creatureType);
 	}
 
 	/**

@@ -1,8 +1,6 @@
 package me.zm.apcsgame.entity.breakables;
 
 import me.zm.apcsgame.Game;
-import me.zm.apcsgame.GameSettings;
-import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.creature.Player;
 import me.zm.apcsgame.level.BlockType;
 
@@ -50,13 +48,15 @@ public class BreakableTile extends Tile
 
 	}
 
-	@Override
+	/*
+	*
+	* Old code that was used for prior hit detection
+	*
 	public boolean collidesWith(Entity ent)
 	{
 		return collidesWithOnAxis(ent, true) && collidesWithOnAxis(ent, false);
 	}
 
-	@Override
 	public boolean collidesWithOnAxis(Entity ent, boolean x)
 	{
 		int xOffset = - (int)getGame().getGameCamera().getxOffset();
@@ -75,5 +75,5 @@ public class BreakableTile extends Tile
 		int bRightX = getLocation().getX() + getWidth() + xOffset;
 
 		return x ? (eLeftX > bLeftX && eLeftX < bRightX) || (eRightX <  bRightX && eRightX > bLeftX) : eBottomY < bBottomY && eBottomY > bTopY;
-	}
+	}*/
 }

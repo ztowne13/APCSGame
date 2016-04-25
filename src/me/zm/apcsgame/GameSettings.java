@@ -11,6 +11,11 @@ public class GameSettings
 	public static int totalAnimationFrames = 3;
 
 	/**
+	 * How many pixels smaller the friendly hitbox will be and bigger the enemy hitbox will be.
+	 */
+	public static int hitBoxGiveTake = 10;
+
+	/**
 	 * The amount of pixels that the player can move under breakable tiles.
 	 */
 	public static int xShift = 10;

@@ -4,6 +4,7 @@ import me.zm.apcsgame.displays.MousePointer;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.creature.Player;
 import me.zm.apcsgame.input.KeyInputListener;
+import me.zm.apcsgame.input.MouseEventListener;
 import me.zm.apcsgame.level.GameCamera;
 import me.zm.apcsgame.level.Level;
 import me.zm.apcsgame.saves.GameSave;
@@ -25,6 +26,7 @@ public class Game implements Runnable
 	Graphics g;
 
 	private KeyInputListener keyInputListener;
+	private MouseEventListener mouseEventListener;
 	private ArrayList<Entity> entities = new ArrayList<>();
 
 	private int width, height;
@@ -41,7 +43,8 @@ public class Game implements Runnable
 		this.width = width;
 		this.height = height;
 
-		this.keyInputListener = new KeyInputListener();
+		this.keyInputListener = new KeyInputListener(this);
+		this.mouseEventListener = new MouseEventListener(this);
 		this.gameState = GameState.STARTUP;
 	}
 
@@ -71,6 +74,8 @@ public class Game implements Runnable
 
 		this.display = new Display("test", getWidth(), getHeight());
 		display.getFrame().addKeyListener(keyInputListener);
+		display.getFrame().addMouseListener(mouseEventListener);
+		display.getCanvas().addMouseListener(mouseEventListener);
 
 		this.mousePointer = new MousePointer(this);
 
@@ -275,5 +280,15 @@ public class Game implements Runnable
 	public void setDisplay(Display display)
 	{
 		this.display = display;
+	}
+
+	public Thread getThread()
+	{
+		return thread;
+	}
+
+	public void setThread(Thread thread)
+	{
+		this.thread = thread;
 	}
 }

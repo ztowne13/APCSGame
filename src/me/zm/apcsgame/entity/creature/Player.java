@@ -1,6 +1,7 @@
 package me.zm.apcsgame.entity.creature;
 
 import me.zm.apcsgame.Game;
+import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.breakables.Tile;
 import me.zm.apcsgame.input.KeyInputListener;
 import me.zm.apcsgame.locations.Direction;
@@ -16,14 +17,14 @@ import java.awt.image.BufferedImage;
 public class Player extends Creature
 {
 	String id;
-	int maxhealth, health, speed;
+	int speed;
 
 	// This line will be removed later to support animated characters.
 	BufferedImage image;
 
 	public Player(Game game, String id, int x, int y, int width, int height, int speed)
 	{
-		super(game, x, y, width, height, CreatureType.PLAYER);
+		super(game, x, y, width, height, CreatureType.PLAYER.getDefaultHealth(), CreatureType.PLAYER);
 		this.id = id;
 		this.speed = speed;
 		this.image = GraphicUtils.loadImage("characters/" + id + ".png");
@@ -79,16 +80,20 @@ public class Player extends Creature
 	}
 
 	// Checks if the player collides with the walls or entity
+
 	public boolean collides()
 	{
 		boolean collidesWithTile = false;
 
-		for(Tile tile : getGame().getCurrentLevel().getTiles())
+		for(Entity tile : getGame().getEntities())
 		{
-			if(tile.collidesWith(this))
+			if(tile instanceof Tile)
 			{
-				collidesWithTile = true;
-				break;
+				if (collidesWith(tile.getHitbox()))
+				{
+					collidesWithTile = true;
+					break;
+				}
 			}
 		}
 
@@ -100,26 +105,6 @@ public class Player extends Creature
 	public void draw(Graphics graphics)
 	{
 		graphics.drawImage(image, getLocation().getX() - (int)getGame().getGameCamera().getxOffset(), getLocation().getY() - (int)getGame().getGameCamera().getyOffset(), null);
-	}
-
-	public int getMaxhealth()
-	{
-		return maxhealth;
-	}
-
-	public void setMaxhealth(int maxhealth)
-	{
-		this.maxhealth = maxhealth;
-	}
-
-	public int getHealth()
-	{
-		return health;
-	}
-
-	public void setHealth(int health)
-	{
-		this.health = health;
 	}
 
 	public int getSpeed()

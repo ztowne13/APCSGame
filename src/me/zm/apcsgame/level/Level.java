@@ -22,7 +22,6 @@ public class Level
 	BufferedImage levelBaseWindow;
 
 	Point[] points;
-	ArrayList<Tile> tiles = new ArrayList<>();
 
 	String levelName;
 	Point spawnPoint;
@@ -117,7 +116,7 @@ public class Level
 
 			String[] parsedTiles = s.replaceAll("\\s+","").split(",");
 			BreakableTile breakableTile = new BreakableTile(game, Integer.parseInt(parsedTiles[1]), Integer.parseInt(parsedTiles[2]), 0, 0, BlockType.valueOf(parsedTiles[0].toUpperCase()));
-			tiles.add(breakableTile);
+			game.getEntities().add(breakableTile);
 		}
 	}
 
@@ -151,11 +150,14 @@ public class Level
 	 */
 	public void renderTiles(Entity player, Graphics graphics, boolean before)
 	{
-		for(Tile tile : tiles)
+		for(Entity tile : game.getEntities())
 		{
-			if((player.renderBefore(tile) && before) || (!player.renderBefore(tile) && !before))
+			if(tile instanceof Tile)
 			{
-				tile.draw(graphics);
+				if ((player.renderBefore(tile) && before) || (!player.renderBefore(tile) && !before))
+				{
+					tile.draw(graphics);
+				}
 			}
 		}
 	}
@@ -204,15 +206,5 @@ public class Level
 	public void setPoints(Point[] points)
 	{
 		this.points = points;
-	}
-
-	public ArrayList<Tile> getTiles()
-	{
-		return tiles;
-	}
-
-	public void setTiles(ArrayList<Tile> tiles)
-	{
-		this.tiles = tiles;
 	}
 }

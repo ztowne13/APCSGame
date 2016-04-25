@@ -1,5 +1,6 @@
 package me.zm.apcsgame.input;
 
+import me.zm.apcsgame.Game;
 import me.zm.apcsgame.GameSettings;
 
 import java.awt.event.KeyEvent;
@@ -13,15 +14,17 @@ import java.util.ArrayList;
  */
 public class KeyInputListener implements KeyListener
 {
+	Game game;
+
 	private ArrayList<Integer> keysPressed = new ArrayList<>();
 	public boolean upKey, downKey, leftKey, rightKey;
 
 	/**
 	 * Sets up the key listener
 	 */
-	public KeyInputListener()
+	public KeyInputListener(Game game)
 	{
-
+		this.game = game;
 	}
 
 	public void update()

@@ -36,11 +36,12 @@ public class EntityUtils
 	{
 		ArrayList<Direction> directions = new ArrayList<>();
 
-		for(Integer i : pressedKeys)
+		for(int i : (ArrayList<Integer>) pressedKeys.clone())
 		{
 			directions.add(getDirectionFromKeypress(i));
 		}
 
 		return directions;
 	}
+
 }

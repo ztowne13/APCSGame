@@ -14,7 +14,7 @@ public abstract class Entity
 	private Game game;
 
 	private UUID uuid;
-	private int width, height;
+	private int width, height, maxhealth, health;
 
 	Location location;
 
@@ -24,11 +24,13 @@ public abstract class Entity
 	 * @param x The entity's x position
 	 * @param y
 	 */
-	public Entity(Game game, int x, int y, int width, int height)
+	public Entity(Game game, int x, int y, int width, int height, int maxhealth)
 	{
 		this.game = game;
 		this.width = width;
 		this.height = height;
+		this.maxhealth = maxhealth;
+		this.health = maxhealth;
 
 		this.location = new Location(x, y);
 
@@ -47,6 +49,36 @@ public abstract class Entity
 	public boolean renderBefore(Entity entity)
 	{
 		return location.getY() + getHeight() > entity.getLocation().getY() + entity.getHeight();
+	}
+
+	public Rectangle getHitbox()
+	{
+		return new Rectangle(getLocation().getX(), getLocation().getY(), getWidth(), getHeight());
+	}
+
+	/**
+	 * Checks if the tile collides with an entity
+	 * @param otherHitBox The other hit box it may be colliding with
+	 * @return True if it collides, false id it doesn't
+	 */
+	public boolean collidesWith(Rectangle otherHitBox)
+	{
+		return getHitbox().intersects(otherHitBox);
+	}
+
+	public void damage(int amount)
+	{
+		health -= amount;
+
+		if(health < 0)
+		{
+			destroy();
+		}
+	}
+
+	public void destroy()
+	{
+		getGame().getEntities().remove(this);
 	}
 
 	public Game getGame()
@@ -97,5 +129,25 @@ public abstract class Entity
 	public void setLocation(Location location)
 	{
 		this.location = location;
+	}
+
+	public int getMaxhealth()
+	{
+		return maxhealth;
+	}
+
+	public void setMaxhealth(int maxhealth)
+	{
+		this.maxhealth = maxhealth;
+	}
+
+	public int getHealth()
+	{
+		return health;
+	}
+
+	public void setHealth(int health)
+	{
+		this.health = health;
 	}
 }

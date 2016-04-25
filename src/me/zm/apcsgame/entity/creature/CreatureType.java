@@ -5,5 +5,22 @@ package me.zm.apcsgame.entity.creature;
  */
 public enum CreatureType
 {
-	PLAYER;
+	PLAYER(10);
+
+	int defaultHealth;
+
+	CreatureType(int defaultHealth)
+	{
+		this.defaultHealth = defaultHealth;
+	}
+
+	public int getDefaultHealth()
+	{
+		return defaultHealth;
+	}
+
+	public void setDefaultHealth(int defaultHealth)
+	{
+		this.defaultHealth = defaultHealth;
+	}
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
  * Created by ztowne13 on 4/20/16.
  *
  * The degrees travel counter-clockwise
+
  */
 public enum Direction
 {
@@ -27,6 +28,10 @@ public enum Direction
 
 	int degrees;
 
+	/**
+	 * All of the cardinal directions.
+	 * @param degrees The amount of degrees around the circle counter clockwise (for radians) that the direction is angled at.
+	 */
 	Direction(int degrees)
 	{
 		this.degrees = degrees;
@@ -68,5 +73,15 @@ public enum Direction
 		{
 			return dir.size() == 0 ? SOUTH : dir.get(0);
 		}
+	}
+
+	public int getDegrees()
+	{
+		return degrees;
+	}
+
+	public void setDegrees(int degrees)
+	{
+		this.degrees = degrees;
 	}
 }
