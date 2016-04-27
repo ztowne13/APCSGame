@@ -2,6 +2,8 @@ package me.zm.apcsgame.utils;
 
 import me.zm.apcsgame.level.Point;
 
+
+
 /**
  * Created by ztowne13 on 4/24/16.
  */
@@ -26,18 +28,4 @@ public class MathUtils
 		return xOrY + (widthOrHeight/2);
 	}
 
-	public static double calcRotationAngleInDegrees(Point centerPt, Point targetPt)
-	{
-		double theta = Math.atan2(targetPt.y - centerPt.y, targetPt.x - centerPt.x);
-
-		theta += Math.PI/2.0;
-
-		double angle = Math.toDegrees(theta);
-
-		if (angle < 0) {
-			angle += 360;
-		}
-
-		return angle;
-	}
 }

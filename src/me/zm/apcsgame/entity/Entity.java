@@ -32,7 +32,7 @@ public abstract class Entity
 		this.maxhealth = maxhealth;
 		this.health = maxhealth;
 
-		this.location = new Location(x, y);
+		this.location = new Location(game, x, y);
 
 		this.uuid = UUID.randomUUID();
 	}
@@ -70,7 +70,7 @@ public abstract class Entity
 	{
 		health -= amount;
 
-		if(health < 0)
+		if(health <= 0)
 		{
 			destroy();
 		}

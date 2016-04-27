@@ -1,11 +1,10 @@
 package me.zm.apcsgame.entity.creature;
 
+import com.badlogic.gdx.math.Vector2;
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.entity.Entity;
-import me.zm.apcsgame.level.Point;
 import me.zm.apcsgame.utils.MathUtils;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -33,28 +32,48 @@ public abstract class Creature extends Entity
 		this.creatureType = creatureType;
 	}
 
-	public void swing()
+	/**
+	 * Swings the creatures melee attack. I.E. sword swing.
+	 */
+	public void attack_melee()
 	{
+		// Mouse X and Y positions
 		int mouseX = (int) getGame().getDisplay().getCanvas().getMousePosition().getX();
 		int mouseY = (int) getGame().getDisplay().getCanvas().getMousePosition().getY();
 
-		int midX = (int) (MathUtils.middle(getLocation().getX(), getWidth()) - getGame().getGameCamera().getxOffset());
-		int midY = (int) (MathUtils.middle(getLocation().getY(), getHeight()) - getGame().getGameCamera().getyOffset());
+		// Creature X and Y positions with game camera offset
+		double midX = MathUtils.middle(getLocation().getX(), getWidth()) - getGame().getGameCamera().getxOffset();
+		double midY = MathUtils.middle(getLocation().getY(), getHeight()) - getGame().getGameCamera().getyOffset();
 
-		Point origin = new Point(midX, midY);
+		// Creature position as Vector2
+		Vector2 crVec = getLocation().getVectorAsMiddleWithOffset(getWidth(), getHeight());
 
-		int angle = (int)MathUtils.calcRotationAngleInDegrees(origin, new Point(mouseX, mouseY));
-
-		int[] xPoints = new int[]{midX, MathUtils.getPointOnCircumfernce(20, angle - 30, origin).x, MathUtils.getPointOnCircumfernce(20, angle + 30, origin).y};
-		int[] yPoints = new int[]{midY, MathUtils.getPointOnCircumfernce(20, angle - 30, origin).y, MathUtils.getPointOnCircumfernce(20, angle + 30, origin).y};
-
-		Polygon swingLocation = new Polygon(xPoints, yPoints, 3);
-
+		// Sorts through all entities (Players, Creatures, Tiles)
 		for(Entity entity : (ArrayList<Entity>) getGame().getEntities().clone())
 		{
-			if(!(entity == this || entity instanceof Player) && swingLocation.contains(entity.getLocation().getX(), entity.getLocation().getY()));
+			// Checks that the entity is not this entity so it doesn't kill itsself.
+			if(!entity.getUuid().toString().equalsIgnoreCase(getUuid().toString()))
 			{
-				entity.damage(1);
+				// The specific entities Vector and X and Y position.
+				Vector2 entVec = entity.getLocation().getVectorAsMiddleWithOffset(entity.getWidth(), entity.getHeight());
+				double x = entVec.x;
+				double y = entVec.y;
+
+				// The angle of the mouse with this creature.
+				float mouseAngle = new Vector2((float) (midX - mouseX), (float) (midY - mouseY)).angle();
+
+				// The angle of the mouse with the entity.
+				float enemyAngle = new Vector2((float) (midX - x), (float) (midY - y)).angle();
+
+				// Checks if the entity is within 60 degrees of the swing radius
+				boolean inField = (mouseAngle - enemyAngle < 30 && mouseAngle - enemyAngle > -30);
+
+				float distance = crVec.dst(entVec);
+
+				if(inField && distance < 100)
+				{
+					entity.damage(1);
+				}
 
 			}
 		}

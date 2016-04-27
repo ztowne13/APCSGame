@@ -29,6 +29,9 @@ public class Game implements Runnable
 	private MouseEventListener mouseEventListener;
 	private ArrayList<Entity> entities = new ArrayList<>();
 
+	// This is purely for test purposes to have the game draw hit boxes and other polygonal shapes that detect locations and such.
+	private ArrayList<Polygon> toDisplayPolygons = new ArrayList<>();
+
 	private int width, height;
 
 	private Level currentLevel;
@@ -125,6 +128,13 @@ public class Game implements Runnable
 		// Renders the tiles that will be above the player
 		getCurrentLevel().renderTiles(entities.get(0), g, false);
 
+		// Test code that will not actually be included in final production
+		g.setColor(Color.BLACK);
+		for(Polygon polygon : toDisplayPolygons)
+		{
+			g.fillPolygon(polygon);
+		}
+
 		// End writing render code
 
 		bs.show();
@@ -163,7 +173,7 @@ public class Game implements Runnable
 
 			if(timer >= 1000000000)
 			{
-				System.out.println("Ticks and frames: " + ticks);
+				//System.out.println("Ticks and frames: " + ticks);
 				ticks = 0;
 				timer = 0;
 			}
@@ -290,5 +300,15 @@ public class Game implements Runnable
 	public void setThread(Thread thread)
 	{
 		this.thread = thread;
+	}
+
+	public ArrayList<Polygon> getToDisplayPolygons()
+	{
+		return toDisplayPolygons;
+	}
+
+	public void setToDisplayPolygons(ArrayList<Polygon> toDisplayPolygons)
+	{
+		this.toDisplayPolygons = toDisplayPolygons;
 	}
 }

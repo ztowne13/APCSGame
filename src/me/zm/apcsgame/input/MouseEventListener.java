@@ -29,7 +29,7 @@ public class MouseEventListener implements MouseListener
 			if(entity instanceof Player)
 			{
 
-				((Player)entity).swing();
+				((Player)entity).attack_melee();
 				break;
 			}
 		}
