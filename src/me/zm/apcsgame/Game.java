@@ -2,6 +2,7 @@ package me.zm.apcsgame;
 
 import me.zm.apcsgame.displays.MousePointer;
 import me.zm.apcsgame.entity.Entity;
+import me.zm.apcsgame.entity.breakables.Tile;
 import me.zm.apcsgame.entity.creature.Player;
 import me.zm.apcsgame.input.KeyInputListener;
 import me.zm.apcsgame.input.MouseEventListener;
@@ -120,9 +121,13 @@ public class Game implements Runnable
 		// Renders the tiles that will be beneath the player
 		getCurrentLevel().renderTiles(entities.get(0), g, true);
 
+		// Renders all non tiles
 		for(Entity ent : entities)
 		{
-			ent.draw(g);
+			if(!(ent instanceof Tile))
+			{
+				ent.draw(g);
+			}
 		}
 
 		// Renders the tiles that will be above the player

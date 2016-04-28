@@ -48,7 +48,7 @@ public abstract class Entity
 	 */
 	public boolean renderBefore(Entity entity)
 	{
-		return location.getY() + getHeight() > entity.getLocation().getY() + entity.getHeight();
+		return getLocation().getVectorAsMiddleWithOffset(getWidth(), getHeight()).y > entity.getLocation().getVectorAsMiddleWithOffset(entity.getWidth(), entity.getHeight()).y;
 	}
 
 	public Rectangle getHitbox()

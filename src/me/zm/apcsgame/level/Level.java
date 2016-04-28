@@ -84,7 +84,7 @@ public class Level
 			String s = loadedSettings.get(i);
 
 			// Checks to see if it has hit the end of the configuration section.
-			if(s.equalsIgnoreCase("}"))
+			if(s.replaceAll("\\s+","").equalsIgnoreCase("}"))
 			{
 				break;
 			}
@@ -109,7 +109,7 @@ public class Level
 			String s = loadedSettings.get(i);
 
 			// Checks to see if it has hit the end of the configuration section.
-			if(s.equalsIgnoreCase("}"))
+			if(s.replaceAll("\\s+","").equalsIgnoreCase("}"))
 			{
 				break;
 			}
