@@ -154,7 +154,14 @@ public class Level
 		{
 			if(tile instanceof Tile)
 			{
-				if ((player.renderBefore(tile) && before) || (!player.renderBefore(tile) && !before))
+				if(!(player == null))
+				{
+					if ((player.renderBefore(tile) && before) || (!player.renderBefore(tile) && !before))
+					{
+						tile.draw(graphics);
+					}
+				}
+				else
 				{
 					tile.draw(graphics);
 				}

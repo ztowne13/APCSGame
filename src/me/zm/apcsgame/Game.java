@@ -29,6 +29,7 @@ public class Game implements Runnable
 	private KeyInputListener keyInputListener;
 	private MouseEventListener mouseEventListener;
 	private ArrayList<Entity> entities = new ArrayList<>();
+	Player player;
 
 	// This is purely for test purposes to have the game draw hit boxes and other polygonal shapes that detect locations and such.
 	private ArrayList<Polygon> toDisplayPolygons = new ArrayList<>();
@@ -70,11 +71,10 @@ public class Game implements Runnable
 		//this.gameCamera = new GameCamera(this, currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y);
 		this.gameCamera = new GameCamera(this, 0, 0);
 
-		Player p = new Player(this, "TestCharacter1", currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y, 50, 50, 2);
+		this.player = new Player(this, "TestCharacter1", currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y, 50, 50, 2);
+		entities.add(player);
 
-		getGameCamera().centerOnEntity(p);
-
-		entities.add(p);
+		getGameCamera().centerOnEntity(player);
 
 		this.display = new Display("test", getWidth(), getHeight());
 		display.getFrame().addKeyListener(keyInputListener);
@@ -119,9 +119,10 @@ public class Game implements Runnable
 		getCurrentLevel().render(g);
 
 		// Renders the tiles that will be beneath the player
-		getCurrentLevel().renderTiles(entities.get(0), g, true);
+		getCurrentLevel().renderTiles(player, g, true);
 
-		// Renders all non tiles
+		// Renders all non tiles and the player
+		player.draw(g);
 		for(Entity ent : entities)
 		{
 			if(!(ent instanceof Tile))
@@ -130,8 +131,11 @@ public class Game implements Runnable
 			}
 		}
 
-		// Renders the tiles that will be above the player
-		getCurrentLevel().renderTiles(entities.get(0), g, false);
+		// Renders the tiles that will be above the player (if the player exists, otherwise they're already rendered)
+		if(!(player == null))
+		{
+			getCurrentLevel().renderTiles(player, g, false);
+		}
 
 		// Test code that will not actually be included in final production
 		g.setColor(Color.BLACK);
