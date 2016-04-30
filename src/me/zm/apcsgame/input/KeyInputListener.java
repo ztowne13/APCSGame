@@ -6,6 +6,7 @@ import me.zm.apcsgame.GameSettings;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by ztowne13 on 4/8/16.
@@ -15,6 +16,9 @@ import java.util.ArrayList;
 public class KeyInputListener implements KeyListener
 {
 	Game game;
+
+	private ArrayList<Integer> directionalKeys = new ArrayList<Integer>(Arrays.asList(GameSettings.UP_KEY, GameSettings.DOWN_KEY, GameSettings.LEFT_KEY, GameSettings.RIGHT_KEY));
+	int lastKeyPressed = GameSettings.DOWN_KEY;
 
 	private ArrayList<Integer> keysPressed = new ArrayList<>();
 	public boolean upKey, downKey, leftKey, rightKey;
@@ -48,6 +52,11 @@ public class KeyInputListener implements KeyListener
 		{
 			keysPressed.add(e.getKeyCode());
 		}
+
+		if(directionalKeys.contains(e.getKeyCode()))
+		{
+			lastKeyPressed = e.getKeyCode();
+		}
 	}
 
 	@Override
@@ -67,5 +76,15 @@ public class KeyInputListener implements KeyListener
 	public void setKeysPressed(ArrayList<Integer> keysPressed)
 	{
 		this.keysPressed = keysPressed;
+	}
+
+	public int getLastKeyPressed()
+	{
+		return lastKeyPressed;
+	}
+
+	public void setLastKeyPressed(int lastKeyPressed)
+	{
+		this.lastKeyPressed = lastKeyPressed;
 	}
 }

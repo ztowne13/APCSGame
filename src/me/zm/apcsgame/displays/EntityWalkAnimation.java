@@ -4,6 +4,7 @@ import me.zm.apcsgame.Game;
 import me.zm.apcsgame.GameSettings;
 import me.zm.apcsgame.entity.creature.Creature;
 import me.zm.apcsgame.entity.creature.Player;
+import me.zm.apcsgame.utils.EntityUtils;
 import me.zm.apcsgame.utils.FileUtils;
 
 import java.awt.*;
@@ -37,7 +38,7 @@ public class EntityWalkAnimation
 		{
 			for(int i = 0; i < GameSettings.totalAnimationFrames; i++)
 			{
-				// Formatted CreatureType + Direction + Anim. stage number. EX: PlayerNORTH1 or FighterEAST0
+				// Formatted CreatureType + Direction + Anim. stage number. EX: NORTH1 or EAST3
 				images.put(dir + i, FileUtils.loadImage((creature instanceof Player ? "characters" : "creatures") + "/" + creature.getCreatureType().name().toLowerCase() + "/" + dir + (i+1) + ".png"));
 			}
 		}
@@ -52,9 +53,18 @@ public class EntityWalkAnimation
 		}
 	}
 
-	public void render(Graphics g)
+	public void render(boolean moving, Graphics g)
 	{
-		g.drawImage(images.get(creature.getLocation().getDirection().toString() + currentAnimationStage), creature.getLocation().getX() - (int)game.getGameCamera().getxOffset(), creature.getLocation().getY() - (int)game.getGameCamera().getyOffset(), null);
+		if (moving)
+		{
+			//g.drawImage(images.get(EntityUtils.getDirectionFromKeypress(game.getKeyInputListener().getLastKeyPressed()).toString() + currentAnimationStage), creature.getLocation().getX() - (int) game.getGameCamera().getxOffset(), creature.getLocation().getY() - (int) game.getGameCamera().getyOffset(), null);
+			g.drawImage(FileUtils.loadImage("characters/player/WEST3.png"), creature.getLocation().getX() - (int) game.getGameCamera().getxOffset(), creature.getLocation().getY() - (int) game.getGameCamera().getyOffset(), null);
+
+		}
+		else
+		{
+			g.drawImage(images.get(EntityUtils.getDirectionFromKeypress(game.getKeyInputListener().getLastKeyPressed()).toString() + "0"), creature.getLocation().getX() - (int)game.getGameCamera().getxOffset(), creature.getLocation().getY() - (int)game.getGameCamera().getyOffset(), null);
+		}
 	}
 
 	public int getCurrentAnimationStage()

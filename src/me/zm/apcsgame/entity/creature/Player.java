@@ -12,6 +12,7 @@ import me.zm.apcsgame.utils.EntityUtils;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import java.awt.*;
 
 /**
@@ -51,7 +52,7 @@ public class Player extends Creature
 		getLocation().setDirection(Direction.combineCardinalDirections(EntityUtils.keysPressesToDirections(getGame().getKeyInputListener().getKeysPressed())));
 		checkMove();
 
-		if(getGame().getTicksAlive() % 20 == 0)
+		if(getGame().getTicksAlive() % 10 == 0)
 		{
 			if(moving)
 			{
@@ -69,10 +70,18 @@ public class Player extends Creature
 					{
 						clip = AudioSystem.getClip();
 						clip.open(walkSound);
+
+						FloatControl gainControl =
+								(FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+						gainControl.setValue(-15.0f);
 					}
 
 					clip.setMicrosecondPosition(0);
-					clip.start();
+
+					if(getGame().getTicksAlive() % 20 == 0)
+					{
+						clip.start();
+					}
 				}
 				catch(Exception exc)
 				{
@@ -149,7 +158,7 @@ public class Player extends Creature
 	public void draw(Graphics graphics)
 	{
 		//graphics.drawImage(image, getLocation().getX() - (int)getGame().getGameCamera().getxOffset(), getLocation().getY() - (int)getGame().getGameCamera().getyOffset(), null);
-		entityWalkAnimation.render(graphics);
+		entityWalkAnimation.render(moving, graphics);
 	}
 
 	public int getSpeed()

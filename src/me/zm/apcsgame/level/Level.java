@@ -8,7 +8,6 @@ import me.zm.apcsgame.sounds.Sound;
 import me.zm.apcsgame.utils.FileUtils;
 
 import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -182,11 +181,14 @@ public class Level
 		{
 			try
 			{
+				/*
+				* Just got annoyed listening to the music, will re-add later.
+				*
 				levelSongStream.reset();
 
 				levelSong = AudioSystem.getClip();
 				levelSong.open(levelSongStream);
-				levelSong.start();
+				levelSong.start();*/
 			}
 			catch(Exception exc)
 			{
