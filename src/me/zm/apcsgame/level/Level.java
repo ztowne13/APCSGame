@@ -4,9 +4,12 @@ import me.zm.apcsgame.Game;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.breakables.BreakableTile;
 import me.zm.apcsgame.entity.breakables.Tile;
+import me.zm.apcsgame.sounds.Sound;
 import me.zm.apcsgame.utils.FileUtils;
-import me.zm.apcsgame.utils.GraphicUtils;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -25,6 +28,8 @@ public class Level
 
 	String levelName;
 	Point spawnPoint;
+	AudioInputStream levelSongStream;
+	Clip levelSong;
 
 	int width, height;
 
@@ -45,7 +50,7 @@ public class Level
 	 */
 	public void load()
 	{
-		levelBaseWindow = GraphicUtils.loadImage("levels/" + levelId + ".png");
+		levelBaseWindow = FileUtils.loadImage("levels/" + levelId + ".png");
 	}
 
 	/**
@@ -64,6 +69,8 @@ public class Level
 
 		String[] unParsedSpawn = loadedSettings.get(startingSettingsLine + 1).replaceAll("\\s+", "").split(",");
 		spawnPoint = new Point(Integer.parseInt(unParsedSpawn[0]), Integer.parseInt(unParsedSpawn[1]));
+
+		levelSongStream = Sound.valueOf(loadedSettings.get(startingSettingsLine + 2).toUpperCase()).getSoundClip();
 	}
 
 	/**
@@ -171,7 +178,26 @@ public class Level
 
 	public void tick()
 	{
+		if(levelSong == null || !levelSong.isRunning())
+		{
+			try
+			{
+				levelSongStream.reset();
 
+				levelSong = AudioSystem.getClip();
+				levelSong.open(levelSongStream);
+				levelSong.start();
+			}
+			catch(Exception exc)
+			{
+				exc.printStackTrace();
+			}
+		}
+	}
+
+	public void endLevel()
+	{
+		levelSong.stop();
 	}
 
 	/**

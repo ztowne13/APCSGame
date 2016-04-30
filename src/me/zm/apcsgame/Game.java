@@ -26,6 +26,8 @@ public class Game implements Runnable
 	private BufferStrategy bs;
 	Graphics g;
 
+	int ticksAlive = 0;
+
 	private KeyInputListener keyInputListener;
 	private MouseEventListener mouseEventListener;
 	private ArrayList<Entity> entities = new ArrayList<>();
@@ -96,6 +98,8 @@ public class Game implements Runnable
 		{
 			ent.tick();
 		}
+
+		getCurrentLevel().tick();
 	}
 
 	/**
@@ -177,6 +181,7 @@ public class Game implements Runnable
 				tick();
 				render();
 				ticks++;
+				ticksAlive++;
 				delta--;
 			}
 
@@ -319,5 +324,15 @@ public class Game implements Runnable
 	public void setToDisplayPolygons(ArrayList<Polygon> toDisplayPolygons)
 	{
 		this.toDisplayPolygons = toDisplayPolygons;
+	}
+
+	public int getTicksAlive()
+	{
+		return ticksAlive;
+	}
+
+	public void setTicksAlive(int ticksAlive)
+	{
+		this.ticksAlive = ticksAlive;
 	}
 }

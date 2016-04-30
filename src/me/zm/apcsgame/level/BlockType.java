@@ -1,6 +1,6 @@
 package me.zm.apcsgame.level;
 
-import me.zm.apcsgame.utils.GraphicUtils;
+import me.zm.apcsgame.utils.FileUtils;
 
 import java.awt.image.BufferedImage;
 
@@ -20,6 +20,6 @@ public enum BlockType
 
 	public BufferedImage getImage()
 	{
-		return GraphicUtils.loadImage("blocks/" + fileName + ".png");
+		return FileUtils.loadImage("blocks/" + fileName + ".png");
 	}
 }

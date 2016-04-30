@@ -2,7 +2,7 @@ package me.zm.apcsgame.displays;
 
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.locations.Locatable;
-import me.zm.apcsgame.utils.GraphicUtils;
+import me.zm.apcsgame.utils.FileUtils;
 
 import java.awt.*;
 
@@ -19,7 +19,7 @@ public class MousePointer implements Locatable
 	public MousePointer(Game game)
 	{
 		this.game = game;
-		this.image = GraphicUtils.loadImage("hud/APCSGamePointer.png");
+		this.image = FileUtils.loadImage("hud/APCSGamePointer.png");
 		this.image = image.getScaledInstance(image.getWidth(null)*2, image.getHeight(null)*2, 0);
 
 		game.getDisplay().getFrame().getContentPane().setCursor(Toolkit.getDefaultToolkit().createCustomCursor(image,  new Point(0, 0), "Custom Cursor"));

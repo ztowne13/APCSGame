@@ -8,7 +8,7 @@ import java.awt.event.KeyEvent;
 public class GameSettings
 {
 	public static int FPS = 60;
-	public static int totalAnimationFrames = 3;
+	public static int totalAnimationFrames = 1;
 
 	/**
 	 * How many pixels smaller the friendly hitbox will be and bigger the enemy hitbox will be.
