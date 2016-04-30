@@ -57,9 +57,7 @@ public class EntityWalkAnimation
 	{
 		if (moving)
 		{
-			//g.drawImage(images.get(EntityUtils.getDirectionFromKeypress(game.getKeyInputListener().getLastKeyPressed()).toString() + currentAnimationStage), creature.getLocation().getX() - (int) game.getGameCamera().getxOffset(), creature.getLocation().getY() - (int) game.getGameCamera().getyOffset(), null);
-			g.drawImage(FileUtils.loadImage("characters/player/WEST3.png"), creature.getLocation().getX() - (int) game.getGameCamera().getxOffset(), creature.getLocation().getY() - (int) game.getGameCamera().getyOffset(), null);
-
+			g.drawImage(images.get(EntityUtils.getDirectionFromKeypress(game.getKeyInputListener().getLastKeyPressed()).toString() + currentAnimationStage), creature.getLocation().getX() - (int) game.getGameCamera().getxOffset(), creature.getLocation().getY() - (int) game.getGameCamera().getyOffset(), null);
 		}
 		else
 		{
