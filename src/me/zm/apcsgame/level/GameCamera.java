@@ -1,7 +1,10 @@
 package me.zm.apcsgame.level;
 
+import com.badlogic.gdx.math.Vector2;
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.entity.Entity;
+import me.zm.apcsgame.entity.creature.Player;
+import me.zm.apcsgame.locations.Location;
 
 /**
  * Created by ztowne13 on 4/12/16.
@@ -29,6 +32,14 @@ public class GameCamera
 	{
 		yOffset += yAmt;
 		xOffset += xAmt;
+	}
+
+	public boolean moveGameCamera(Player player)
+	{
+		Location location = player.getLocation();
+
+		Level level = game.getCurrentLevel();
+		return (new Vector2(location.getX() - xOffset, location.getY() - yOffset).dst(new Vector2(game.getWidth()/2, game.getHeight()/2)) > (game.getWidth() + game.getHeight()) / 8);
 	}
 
 	public float getxOffset()

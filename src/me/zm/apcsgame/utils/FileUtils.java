@@ -49,6 +49,7 @@ public class FileUtils
 	{
 		try
 		{
+
 			return ImageIO.read(FileUtils.class.getResource("/" + path));
 		}
 		catch (IOException e)

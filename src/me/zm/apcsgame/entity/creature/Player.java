@@ -52,7 +52,7 @@ public class Player extends Creature
 		getLocation().setDirection(Direction.combineCardinalDirections(EntityUtils.keysPressesToDirections(getGame().getKeyInputListener().getKeysPressed())));
 		checkMove();
 
-		if(getGame().getTicksAlive() % 10 == 0)
+		if(getGame().getTicksAlive() % 7 == 0)
 		{
 			if(moving)
 			{
@@ -78,7 +78,7 @@ public class Player extends Creature
 
 					clip.setMicrosecondPosition(0);
 
-					if(getGame().getTicksAlive() % 20 == 0)
+					if(getGame().getTicksAlive() % 21 == 0)
 					{
 						clip.start();
 					}
@@ -129,7 +129,10 @@ public class Player extends Creature
 
 		moving = yMove != 0 || xMove != 0;
 
-		getGame().getGameCamera().move(xMove, yMove);
+		if(getGame().getGameCamera().moveGameCamera(this))
+		{
+			getGame().getGameCamera().move(xMove, yMove);
+		}
 	}
 
 	// Checks if the player collides with the walls or entity

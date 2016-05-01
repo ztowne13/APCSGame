@@ -39,7 +39,7 @@ public class EntityWalkAnimation
 			for(int i = 0; i < GameSettings.totalAnimationFrames; i++)
 			{
 				// Formatted CreatureType + Direction + Anim. stage number. EX: NORTH1 or EAST3
-				images.put(dir + i, FileUtils.loadImage((creature instanceof Player ? "characters" : "creatures") + "/" + creature.getCreatureType().name().toLowerCase() + "/" + dir + (i+1) + ".png"));
+				images.put(dir + i, FileUtils.loadImage((creature instanceof Player ? "characters" : "creatures") + "/" + creature.getCreatureType().name().toLowerCase() + "/" + dir + "_" + (i+1) + ".png"));
 			}
 		}
 	}
