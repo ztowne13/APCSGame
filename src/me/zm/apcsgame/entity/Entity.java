@@ -12,6 +12,7 @@ import java.util.UUID;
 public abstract class Entity
 {
 	private Game game;
+	String name;
 
 	private UUID uuid;
 	private int width, height, maxhealth, health;
@@ -24,13 +25,15 @@ public abstract class Entity
 	 * @param x The entity's x position
 	 * @param y
 	 */
-	public Entity(Game game, int x, int y, int width, int height, int maxhealth)
+	public Entity(Game game, String name, int x, int y, int width, int height, int maxhealth)
 	{
 		this.game = game;
 		this.width = width;
 		this.height = height;
 		this.maxhealth = maxhealth;
 		this.health = maxhealth;
+
+		this.name = name;
 
 		this.location = new Location(game, x, y);
 
@@ -149,5 +152,15 @@ public abstract class Entity
 	public void setHealth(int health)
 	{
 		this.health = health;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
 	}
 }

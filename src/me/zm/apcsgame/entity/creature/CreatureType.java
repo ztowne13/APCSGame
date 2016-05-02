@@ -5,13 +5,15 @@ package me.zm.apcsgame.entity.creature;
  */
 public enum CreatureType
 {
-	PLAYER(10);
+	PLAYER(10, 3);
 
 	int defaultHealth;
+	int defaultAnimationLength;
 
-	CreatureType(int defaultHealth)
+	CreatureType(int defaultHealth, int defaultAnimationLength)
 	{
 		this.defaultHealth = defaultHealth;
+		this.defaultAnimationLength = defaultAnimationLength;
 	}
 
 	public int getDefaultHealth()
@@ -22,5 +24,15 @@ public enum CreatureType
 	public void setDefaultHealth(int defaultHealth)
 	{
 		this.defaultHealth = defaultHealth;
+	}
+
+	public int getDefaultAnimationLength()
+	{
+		return defaultAnimationLength;
+	}
+
+	public void setDefaultAnimationLength(int defaultAnimationLength)
+	{
+		this.defaultAnimationLength = defaultAnimationLength;
 	}
 }

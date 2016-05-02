@@ -1,7 +1,7 @@
 package me.zm.apcsgame.entity.creature;
 
 import me.zm.apcsgame.Game;
-import me.zm.apcsgame.displays.EntityWalkAnimation;
+import me.zm.apcsgame.displays.animations.EntityWalkAnimation;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.breakables.Tile;
 import me.zm.apcsgame.input.KeyInputListener;
@@ -36,7 +36,7 @@ public class Player extends Creature
 		this.id = id;
 		this.speed = speed;
 
-		this.entityWalkAnimation = new EntityWalkAnimation(game, this);
+		this.entityWalkAnimation = new EntityWalkAnimation(game, this, CreatureType.PLAYER.getDefaultAnimationLength());
 		entityWalkAnimation.loadImages();
 
 		setWidth(entityWalkAnimation.getImages().values().iterator().next().getWidth(null));
