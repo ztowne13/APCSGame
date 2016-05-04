@@ -16,22 +16,34 @@ public abstract class Entity
 
 	private UUID uuid;
 	private int width, height, maxhealth, health;
+	boolean damageable;
 
 	Location location;
 
-	/**
-	 * Creates a new entity model
-	 * @param game The running game instnace
-	 * @param x The entity's x position
-	 * @param y
-	 */
 	public Entity(Game game, String name, int x, int y, int width, int height, int maxhealth)
+	{
+		this(game, name, x, y, width, height, maxhealth, true);
+	}
+
+	/**
+	 * Constructs a new entity
+	 * @param game The game instance
+	 * @param name The name of the entity (must be the creature type for creatures and such)
+	 * @param x The base x location of the entity
+	 * @param y The base y location of the entity
+	 * @param width The width of the entity
+	 * @param height The height of the enity
+	 * @param maxhealth The maximum health of the entity
+     * @param damageable Is the entity able to be damaged
+     */
+	public Entity(Game game, String name, int x, int y, int width, int height, int maxhealth, boolean damageable)
 	{
 		this.game = game;
 		this.width = width;
 		this.height = height;
 		this.maxhealth = maxhealth;
 		this.health = maxhealth;
+		this.damageable = damageable;
 
 		this.name = name;
 
@@ -75,11 +87,14 @@ public abstract class Entity
 
 	public void damage(int amount)
 	{
-		health -= amount;
-
-		if(health <= 0)
+		if(damageable)
 		{
-			destroy();
+			health -= amount;
+
+			if (health <= 0)
+			{
+				destroy();
+			}
 		}
 	}
 
@@ -166,5 +181,13 @@ public abstract class Entity
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+
+	public boolean isDamageable() {
+		return damageable;
+	}
+
+	public void setDamageable(boolean damageable) {
+		this.damageable = damageable;
 	}
 }

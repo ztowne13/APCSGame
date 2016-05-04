@@ -2,6 +2,7 @@ settings {
 A test level
 50,200
 SONG_1
+SNOW
 }
 
 level bounds {

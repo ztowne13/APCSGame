@@ -1,6 +1,8 @@
 package me.zm.apcsgame.level;
 
 import me.zm.apcsgame.Game;
+import me.zm.apcsgame.displays.overlays.Overlay;
+import me.zm.apcsgame.displays.overlays.SnowOverlay;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.breakables.BreakableTile;
 import me.zm.apcsgame.entity.breakables.Tile;
@@ -27,6 +29,9 @@ public class Level
 
 	String levelName;
 	Point spawnPoint;
+
+	Overlay overlay;
+
 	AudioInputStream levelSongStream;
 	Clip levelSong;
 
@@ -70,6 +75,16 @@ public class Level
 		spawnPoint = new Point(Integer.parseInt(unParsedSpawn[0]), Integer.parseInt(unParsedSpawn[1]));
 
 		levelSongStream = Sound.valueOf(loadedSettings.get(startingSettingsLine + 2).toUpperCase()).getSoundClip();
+
+		String overlayName = loadedSettings.get(startingSettingsLine + 3);
+		if(overlayName.equalsIgnoreCase("snow"))
+		{
+			overlay = new SnowOverlay(game, 500);
+		}
+		else
+		{
+
+		}
 	}
 
 	/**
@@ -147,6 +162,11 @@ public class Level
 	public void render(Graphics graphics)
 	{
 		graphics.drawImage(levelBaseWindow, -(int)game.getGameCamera().getxOffset(), -(int)game.getGameCamera().getyOffset(), null);
+
+		if(overlay != null)
+		{
+			overlay.render(graphics);
+		}
 	}
 
 	/**
@@ -194,6 +214,11 @@ public class Level
 			{
 				exc.printStackTrace();
 			}
+		}
+
+		if(overlay != null)
+		{
+			overlay.tick();
 		}
 	}
 
