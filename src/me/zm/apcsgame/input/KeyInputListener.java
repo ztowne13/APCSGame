@@ -22,7 +22,7 @@ public class KeyInputListener implements KeyListener
 	/**
 	 * Current pressed keys
 	 */
-	private ArrayList<Integer> keysPressed = new ArrayList<>();
+	private ArrayList<Integer> keysPressed = new ArrayList<Integer>();
 
 	/**
 	 * The last directional key that was pressed

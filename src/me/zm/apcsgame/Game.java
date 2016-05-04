@@ -30,11 +30,11 @@ public class Game implements Runnable
 
 	private KeyInputListener keyInputListener;
 	private MouseEventListener mouseEventListener;
-	private ArrayList<Entity> entities = new ArrayList<>();
+	private ArrayList<Entity> entities = new ArrayList<Entity>();
 	Player player;
 
 	// This is purely for test purposes to have the game draw hit boxes and other polygonal shapes that detect locations and such.
-	private ArrayList<Polygon> toDisplayPolygons = new ArrayList<>();
+	private ArrayList<Polygon> toDisplayPolygons = new ArrayList<Polygon>();
 
 	private int width, height;
 

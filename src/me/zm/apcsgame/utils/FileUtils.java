@@ -40,7 +40,7 @@ public class FileUtils
 
 		}
 
-		ArrayList<String> loadedList = new ArrayList<>();
+		ArrayList<String> loadedList = new ArrayList<String>();
 
 		for(String s : loadedString.split("\n"))
 		{

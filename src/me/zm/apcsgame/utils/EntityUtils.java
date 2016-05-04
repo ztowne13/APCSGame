@@ -44,7 +44,7 @@ public class EntityUtils
 	 */
 	public static ArrayList<Direction> keysPressesToDirections(ArrayList<Integer> pressedKeys)
 	{
-		ArrayList<Direction> directions = new ArrayList<>();
+		ArrayList<Direction> directions = new ArrayList<Direction>();
 
 		for(int i : (ArrayList<Integer>) pressedKeys.clone())
 		{

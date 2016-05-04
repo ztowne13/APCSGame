@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 public abstract class Animation
 {
-	HashMap<String,Image> images = new HashMap<>();
+	HashMap<String,Image> images = new HashMap<String,Image>();
 
 	Game game;
 
