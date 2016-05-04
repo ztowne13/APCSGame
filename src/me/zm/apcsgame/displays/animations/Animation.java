@@ -2,7 +2,7 @@ package me.zm.apcsgame.displays.animations;
 
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.GameSettings;
-import me.zm.apcsgame.entity.Entity;
+import me.zm.apcsgame.locations.Location;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -15,19 +15,30 @@ public abstract class Animation
 	HashMap<String,Image> images = new HashMap<>();
 
 	Game game;
-	Entity entity;
-	/**
-	 * How many animation stages there are for this specific animation so it knows when to reloop.
-	 */
-	int animationStagesCount;
+
+	Location location;
+
+	int framesCount;
+	AnimationType animationType;
+	String defaultPath;
 
 	int currentAnimationStage = 0;
 
-	public Animation(Game game, Entity entity, int animationStagesCount)
+	/**
+	 *
+	 * @param game Game instance
+	 * @param animationType The animation type of this specific animation
+	 * @param location The location where the animation will display
+	 * @param defaultPath The filepath of the files based off of the /res/ folder
+	 */
+	public Animation(Game game, AnimationType animationType, Location location, String defaultPath)
 	{
 		this.game = game;
-		this.entity = entity;
-		this.animationStagesCount = animationStagesCount;
+		this.animationType = animationType;
+		this.location = location;
+		this.defaultPath = "animations/" + defaultPath + animationType.name().toLowerCase() + "/";
+
+		this.framesCount = animationType.framesCount;
 	}
 
 	/**
@@ -35,6 +46,9 @@ public abstract class Animation
 	 */
 	public abstract void loadImages();
 
+	/**
+	 * Is a tick method if specific animation classes need extra code run when the plugin is ticked.
+	 */
 	public abstract void individualTick();
 
 	public void tick()
@@ -68,24 +82,34 @@ public abstract class Animation
 		this.game = game;
 	}
 
-	public Entity getEntity()
+	public AnimationType getAnimationType()
 	{
-		return entity;
+		return animationType;
 	}
 
-	public void setEntity(Entity entity)
+	public void setAnimationType(AnimationType animationType)
 	{
-		this.entity = entity;
+		this.animationType = animationType;
 	}
 
-	public int getAnimationStagesCount()
+	public int getFramesCount()
 	{
-		return animationStagesCount;
+		return framesCount;
 	}
 
-	public void setAnimationStagesCount(int animationStagesCount)
+	public void setFramesCount(int framesCount)
 	{
-		this.animationStagesCount = animationStagesCount;
+		this.framesCount = framesCount;
+	}
+
+	public Location getLocation()
+	{
+		return location;
+	}
+
+	public void setLocation(Location location)
+	{
+		this.location = location;
 	}
 
 	public int getCurrentAnimationStage()
@@ -96,5 +120,15 @@ public abstract class Animation
 	public void setCurrentAnimationStage(int currentAnimationStage)
 	{
 		this.currentAnimationStage = currentAnimationStage;
+	}
+
+	public String getDefaultPath()
+	{
+		return defaultPath;
+	}
+
+	public void setDefaultPath(String defaultPath)
+	{
+		this.defaultPath = defaultPath;
 	}
 }

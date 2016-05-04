@@ -19,6 +19,10 @@ public class MouseEventListener implements MouseListener
 		this.game = game;
 	}
 
+	/**
+	 * Listens for mouse clicks and performs mouse click actions.
+	 * @param e
+	 */
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{

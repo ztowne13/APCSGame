@@ -16,6 +16,10 @@ public class MousePointer implements Locatable
 
 	Image image;
 
+	/**
+	 * Loads the custom mouse pointer
+	 * @param game The game instance
+	 */
 	public MousePointer(Game game)
 	{
 		this.game = game;
@@ -23,6 +27,17 @@ public class MousePointer implements Locatable
 		this.image = image.getScaledInstance(image.getWidth(null)*2, image.getHeight(null)*2, 0);
 
 		game.getDisplay().getFrame().getContentPane().setCursor(Toolkit.getDefaultToolkit().createCustomCursor(image,  new Point(0, 0), "Custom Cursor"));
+	}
+
+	/**
+	 * Gets the 'hitbox' of the mouse for use in detecting if it is clicked on things.
+	 * @return The rectangular hitbox of the mouse based off of it's X and Y coordinates with the image's width and heigh as the width and height
+	 */
+	public Rectangle getMouseHitbox()
+	{
+		Point point = MouseInfo.getPointerInfo().getLocation();
+		Rectangle rect = new Rectangle((int)point.getX(), (int)point.getY(), image.getWidth(null), image.getHeight(null));
+		return rect;
 	}
 
 	public void tick()

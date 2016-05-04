@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 
 /**
  * Created by ztowne13 on 4/15/16.
+ *
+ * Square objects that have hitboxes.
  */
 public abstract class Tile extends Entity
 {
@@ -24,12 +26,23 @@ public abstract class Tile extends Entity
 		this.image = blockType.getImage();
 	}
 
+	/**
+	 * Checks if the tile collides with an entity but allows leeway above and below the entity
+	 * @param otherHitBox The other hit box it may be colliding with
+	 * @return True if it collides according to tile collision rules, false if it doesn't
+	 */
 	@Override
 	public boolean collidesWith(Rectangle otherHitBox)
 	{
 		return collidesWithOnAxis(otherHitBox, true) && collidesWithOnAxis(otherHitBox, false);
 	}
 
+	/**
+	 * Checks if other hit box collides with this tile on a certain axis.
+	 * @param oHB The other hitbox to check against
+	 * @param x True, check the x axis, false, check the y axis
+	 * @return True = it collides on the specified axis. False = It doesn't collide on the axis
+	 */
 	public boolean collidesWithOnAxis(Rectangle oHB, boolean x)
 	{
 		int xOffset = - (int)getGame().getGameCamera().getxOffset();

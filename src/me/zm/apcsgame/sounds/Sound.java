@@ -18,6 +18,11 @@ public enum Sound
 	AudioInputStream soundClip;
 	SoundType soundType;
 
+	/**
+	 * The constructor for the sounds
+	 * @param soundType The type of sound it is (effect or song)
+	 * @param soundClip The actualy, already loaded, sound clip.
+	 */
 	Sound(SoundType soundType, AudioInputStream soundClip)
 	{
 		this.soundClip = soundClip;

@@ -7,6 +7,8 @@ import java.awt.*;
 
 /**
  * Created by ztowne13 on 4/11/16.
+ *
+ * Tiles that can be broken when the player swings in their direction
  */
 public class BreakableTile extends Tile
 {

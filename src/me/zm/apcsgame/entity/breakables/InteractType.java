@@ -11,7 +11,7 @@ public enum InteractType
 	NONE,
 
 	/**
-	 * Interacts when the player walks on top of the object
+	 * Interacts when the player_walk walks on top of the object
 	 */
 	WALK_OVER,
 
@@ -21,7 +21,7 @@ public enum InteractType
 	MOUSE_INTERACT_OBJECT,
 
 	/**
-	 * Interacts when the mouse / interact button is being clicked AND the player is standing on the tile
+	 * Interacts when the mouse / interact button is being clicked AND the player_walk is standing on the tile
 	 */
 	MOUSE_INTERACT_WHILE_ABOVE;
 }

@@ -10,6 +10,11 @@ import java.util.ArrayList;
  */
 public class EntityUtils
 {
+	/**
+	 * Turns the key code into a direction
+	 * @param key The key code
+	 * @return The direction the key code turned into.
+	 */
 	public static Direction getDirectionFromKeypress(int key)
 	{
 		Direction direction = null;
@@ -32,6 +37,11 @@ public class EntityUtils
 		return direction;
 	}
 
+	/**
+	 * Turns a list of key codes into a list of directions
+	 * @param pressedKeys List of key codes
+	 * @return List of translated directions
+	 */
 	public static ArrayList<Direction> keysPressesToDirections(ArrayList<Integer> pressedKeys)
 	{
 		ArrayList<Direction> directions = new ArrayList<>();

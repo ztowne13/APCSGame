@@ -150,7 +150,7 @@ public class Level
 	}
 
 	/**
-	 * Renders all of the tiles based off of the player to determine whether to render it before or after the player is rendered.
+	 * Renders all of the tiles based off of the player_walk to determine whether to render it before or after the player_walk is rendered.
 	 * @param player
 	 * @param graphics
 	 */

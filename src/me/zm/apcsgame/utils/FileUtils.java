@@ -3,7 +3,6 @@ package me.zm.apcsgame.utils;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +14,11 @@ import java.util.ArrayList;
  */
 public class FileUtils
 {
+	/**
+	 * Loads a text file to an arraylist where each array entry is a new line in the file
+	 * @param localPath The path of the text file.
+	 * @return The parsed file array
+	 */
 	public static ArrayList<String> loadFileByLine(String localPath)
 	{
 		localPath = "/" + localPath;
@@ -45,6 +49,12 @@ public class FileUtils
 
 		return loadedList;
 	}
+
+	/**
+	 * Loads an image from the resources
+	 * @param path The path of the image
+	 * @return The loaded image as a BufferedImage
+	 */
 	public static BufferedImage loadImage(String path)
 	{
 		try
@@ -59,11 +69,15 @@ public class FileUtils
 		return null;
 	}
 
+	/**
+	 * Loads a sound clip from the resources
+	 * @param path The path of the sound clip
+	 * @return The sound clip as an AudioInputStream with the clip loaded.
+	 */
 	public static AudioInputStream loadSoundClip(String path)
 	{
 		try
 		{
-			Clip clip = AudioSystem.getClip();
 			AudioInputStream inputStream = AudioSystem.getAudioInputStream(FileUtils.class.getResourceAsStream("/sounds/" + path));
 			return inputStream;
 		}

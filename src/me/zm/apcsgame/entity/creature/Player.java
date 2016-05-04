@@ -1,7 +1,8 @@
 package me.zm.apcsgame.entity.creature;
 
 import me.zm.apcsgame.Game;
-import me.zm.apcsgame.displays.animations.EntityWalkAnimation;
+import me.zm.apcsgame.displays.animations.AnimationType;
+import me.zm.apcsgame.displays.animations.DirectionalAnimation;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.breakables.Tile;
 import me.zm.apcsgame.input.KeyInputListener;
@@ -27,8 +28,7 @@ public class Player extends Creature
 	Clip clip;
 	boolean moving = false;
 
-	// This line will be removed later to support animated characters.
-	EntityWalkAnimation entityWalkAnimation;
+	DirectionalAnimation walkAnimation;
 
 	public Player(Game game, String id, int x, int y, int width, int height, int speed)
 	{
@@ -36,15 +36,20 @@ public class Player extends Creature
 		this.id = id;
 		this.speed = speed;
 
-		this.entityWalkAnimation = new EntityWalkAnimation(game, this, CreatureType.PLAYER.getDefaultAnimationLength());
-		entityWalkAnimation.loadImages();
+		this.walkAnimation = new DirectionalAnimation(game, AnimationType.PLAYER_WALK, getLocation());
+		walkAnimation.loadImages();
 
-		setWidth(entityWalkAnimation.getImages().values().iterator().next().getWidth(null));
-		setHeight(entityWalkAnimation.getImages().values().iterator().next().getHeight(null));
+		setWidth(walkAnimation.getImages().values().iterator().next().getWidth(null));
+		setHeight(walkAnimation.getImages().values().iterator().next().getHeight(null));
 
 		walkSound = Sound.WALK.getSoundClip();
 	}
 
+	/**
+	 * - Updates the direction the player is facing
+	 * - Ticks the walking animation
+	 * - Plays the walk sound, if the player is moving
+	 */
 	@Override
 	public void tick()
 	{
@@ -56,7 +61,7 @@ public class Player extends Creature
 		{
 			if(moving)
 			{
-				entityWalkAnimation.tick();
+				walkAnimation.tick();
 				try
 				{
 					walkSound.mark(20);
@@ -91,6 +96,9 @@ public class Player extends Creature
 		}
 	}
 
+	/**
+	 * Checks whether or not the player should be moving based on the keys that are pressed.
+	 */
 	@Override
 	public void checkMove()
 	{
@@ -135,8 +143,9 @@ public class Player extends Creature
 		}
 	}
 
-	// Checks if the player collides with the walls or entity
-
+	/**
+	 * 	Checks if the player_walk collides with the walls or entity
+	 */
 	public boolean collides()
 	{
 		boolean collidesWithTile = false;
@@ -160,8 +169,17 @@ public class Player extends Creature
 	@Override
 	public void draw(Graphics graphics)
 	{
-		//graphics.drawImage(image, getLocation().getX() - (int)getGame().getGameCamera().getxOffset(), getLocation().getY() - (int)getGame().getGameCamera().getyOffset(), null);
-		entityWalkAnimation.render(moving, graphics);
+		Direction combinedCardinal = Direction.combineCardinalDirections(EntityUtils.keysPressesToDirections(getGame().getKeyInputListener().getKeysPressed()));
+		Direction lastKeypress = EntityUtils.getDirectionFromKeypress(getGame().getKeyInputListener().getLastKeyPressed());
+
+		Direction direction = lastKeypress;
+
+		if (moving)
+		{
+			direction = combinedCardinal.getDegrees() % 90 == 0 ? combinedCardinal : lastKeypress;
+		}
+
+		walkAnimation.render(!moving, direction, graphics);
 	}
 
 	public int getSpeed()

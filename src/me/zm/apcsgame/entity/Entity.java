@@ -54,6 +54,10 @@ public abstract class Entity
 		return getLocation().getY() + getHeight() > entity.getLocation().getY() + entity.getHeight();
 	}
 
+	/**
+	 * Gets the hitbox of the entity
+	 * @return The hitbox of the entity.
+	 */
 	public Rectangle getHitbox()
 	{
 		return new Rectangle(getLocation().getX(), getLocation().getY(), getWidth(), getHeight());
@@ -62,7 +66,7 @@ public abstract class Entity
 	/**
 	 * Checks if the tile collides with an entity
 	 * @param otherHitBox The other hit box it may be colliding with
-	 * @return True if it collides, false id it doesn't
+	 * @return True if it collides, false if it doesn't
 	 */
 	public boolean collidesWith(Rectangle otherHitBox)
 	{

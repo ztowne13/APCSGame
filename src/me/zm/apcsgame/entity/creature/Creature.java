@@ -21,17 +21,10 @@ public abstract class Creature extends Entity
 		this.creatureType = creatureType;
 	}
 
+	/**
+	 * Checks to see whether or not the entity should move
+	 */
 	public abstract void checkMove();
-
-	public CreatureType getCreatureType()
-	{
-		return creatureType;
-	}
-
-	public void setCreatureType(CreatureType creatureType)
-	{
-		this.creatureType = creatureType;
-	}
 
 	/**
 	 * Swings the creatures melee attack. I.E. sword swing.
@@ -82,5 +75,15 @@ public abstract class Creature extends Entity
 				}
 			}
 		}
+	}
+
+	public CreatureType getCreatureType()
+	{
+		return creatureType;
+	}
+
+	public void setCreatureType(CreatureType creatureType)
+	{
+		this.creatureType = creatureType;
 	}
 }

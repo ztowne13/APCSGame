@@ -74,8 +74,7 @@ public class Game implements Runnable
 		this.gameCamera = new GameCamera(this, 0, 0);
 
 		this.player = new Player(this, "TestCharacter1", currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y, 50, 50, 2);
-		entities.add(player);
-
+		entities.add(0, player);
 		getGameCamera().centerOnEntity(player);
 
 		this.display = new Display("test", getWidth(), getHeight());
@@ -122,10 +121,10 @@ public class Game implements Runnable
 
 		getCurrentLevel().render(g);
 
-		// Renders the tiles that will be beneath the player
+		// Renders the tiles that will be beneath the player_walk
 		getCurrentLevel().renderTiles(player, g, true);
 
-		// Renders all non tiles and the player
+		// Renders all non tiles and the player_walk
 		player.draw(g);
 		for(Entity ent : entities)
 		{
@@ -135,7 +134,7 @@ public class Game implements Runnable
 			}
 		}
 
-		// Renders the tiles that will be above the player (if the player exists, otherwise they're already rendered)
+		// Renders the tiles that will be above the player_walk (if the player_walk exists, otherwise they're already rendered)
 		if(!(player == null))
 		{
 			getCurrentLevel().renderTiles(player, g, false);
@@ -236,16 +235,6 @@ public class Game implements Runnable
 		this.keyInputListener = keyInputListener;
 	}
 
-	public GameState getGameState()
-	{
-		return gameState;
-	}
-
-	public void setGameState(GameState gameState)
-	{
-		this.gameState = gameState;
-	}
-
 	public Level getCurrentLevel()
 	{
 		return currentLevel;
@@ -306,16 +295,6 @@ public class Game implements Runnable
 		this.display = display;
 	}
 
-	public Thread getThread()
-	{
-		return thread;
-	}
-
-	public void setThread(Thread thread)
-	{
-		this.thread = thread;
-	}
-
 	public ArrayList<Polygon> getToDisplayPolygons()
 	{
 		return toDisplayPolygons;
@@ -334,5 +313,25 @@ public class Game implements Runnable
 	public void setTicksAlive(int ticksAlive)
 	{
 		this.ticksAlive = ticksAlive;
+	}
+
+	public Player getPlayer()
+	{
+		return player;
+	}
+
+	public void setPlayer(Player player)
+	{
+		this.player = player;
+	}
+
+	public MousePointer getMousePointer()
+	{
+		return mousePointer;
+	}
+
+	public void setMousePointer(MousePointer mousePointer)
+	{
+		this.mousePointer = mousePointer;
 	}
 }

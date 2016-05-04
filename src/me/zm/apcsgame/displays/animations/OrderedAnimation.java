@@ -1,8 +1,7 @@
 package me.zm.apcsgame.displays.animations;
 
 import me.zm.apcsgame.Game;
-import me.zm.apcsgame.entity.Entity;
-import me.zm.apcsgame.entity.creature.Player;
+import me.zm.apcsgame.locations.Location;
 import me.zm.apcsgame.utils.FileUtils;
 
 import java.awt.*;
@@ -13,18 +12,17 @@ import java.awt.*;
 public class OrderedAnimation extends Animation
 {
 	String animationName;
-	public OrderedAnimation(Game game, Entity entity, int animationStagesCount, String animationName)
+	public OrderedAnimation(Game game, AnimationType animationType, Location location)
 	{
-		super(game, entity, animationStagesCount);
-		this.animationName = animationName;
+		super(game, animationType, location, "/ordered_animations/");
 	}
 
 	@Override
 	public void loadImages()
 	{
-		for(int i = 0; i < animationStagesCount; i++)
+		for(int i = 0; i < framesCount; i++)
 		{
-			images.put(i + "", FileUtils.loadImage((entity instanceof Player ? "characters" : "creatures") + "/" + entity.getName().toLowerCase() + "/" + animationName + "_" + (i+1) + ".png"));
+			images.put(i + "", FileUtils.loadImage(defaultPath + animationType.name() + "_" + (i+1) + ".png"));
 		}
 	}
 
@@ -36,6 +34,6 @@ public class OrderedAnimation extends Animation
 
 	public void render(Graphics graphics)
 	{
-		graphics.drawImage(images.get(currentAnimationStage + ""), entity.getLocation().getX(), entity.getLocation().getY(), null);
+		graphics.drawImage(images.get(currentAnimationStage + ""), getLocation().getX(), getLocation().getY(), null);
 	}
 }

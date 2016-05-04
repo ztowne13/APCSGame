@@ -18,7 +18,7 @@ public class GameSettings
 	public static int hitBoxGiveTake = 10;
 
 	/**
-	 * The amount of pixels that the player can move under breakable tiles.
+	 * The amount of pixels that the player_walk can move under breakable tiles.
 	 */
 	public static int xShift = 10;
 
@@ -26,4 +26,5 @@ public class GameSettings
 	public static int DOWN_KEY = KeyEvent.VK_S;
 	public static int LEFT_KEY = KeyEvent.VK_A;
 	public static int RIGHT_KEY = KeyEvent.VK_D;
+	public static int INTERACT = KeyEvent.VK_E;
 }
