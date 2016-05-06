@@ -1,5 +1,5 @@
 settings {
-A test level
+The Beginning
 50,200
 SONG_1
 SNOW

@@ -27,7 +27,7 @@ public class DirectionalAnimation extends Animation
 		{
 			for(int i = 0; i < framesCount; i++)
 			{
-				images.put(dir + i, FileUtils.loadImage(defaultPath + dir + "_" + (i+1) + ".png"));
+				images.put(dir + i, FileUtils.loadImage(defaultPath + dir + "_" + (i+1) + ".png", 1));
 			}
 		}
 	}

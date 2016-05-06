@@ -3,6 +3,9 @@ package me.zm.apcsgame.utils;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,10 +60,22 @@ public class FileUtils
 	 */
 	public static BufferedImage loadImage(String path)
 	{
+		return loadImage(path, 1);
+	}
+
+	public static BufferedImage loadImage(String path, double imageScale)
+	{
 		try
 		{
 
-			return ImageIO.read(FileUtils.class.getResource("/" + path));
+			BufferedImage bI = ImageIO.read(FileUtils.class.getResource("/" + path));
+
+			BufferedImage after = new BufferedImage(bI.getWidth(), bI.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			AffineTransform at = new AffineTransform();
+			at.scale(imageScale, imageScale);
+			AffineTransformOp scaleOp =
+					new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+			return scaleOp.filter(bI, after);
 		}
 		catch (IOException e)
 		{

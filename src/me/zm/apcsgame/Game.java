@@ -65,8 +65,8 @@ public class Game implements Runnable
 		this.gameState = GameState.RUNNING;
 
 		this.currentLevel = new Level(this, "level1", width, height);
-		currentLevel.load();
 		currentLevel.loadSettings();
+		currentLevel.load();
 		currentLevel.loadLevelBounds();
 		currentLevel.loadDynamicTiles();
 

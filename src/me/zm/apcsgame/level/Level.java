@@ -24,6 +24,7 @@ public class Level
 
 	String levelId;
 	BufferedImage levelBaseWindow;
+	double levelImageScale;
 
 	Point[] points;
 
@@ -54,7 +55,7 @@ public class Level
 	 */
 	public void load()
 	{
-		levelBaseWindow = FileUtils.loadImage("levels/" + levelId + ".png");
+		levelBaseWindow = FileUtils.loadImage("levels/" + levelId + ".png", levelImageScale);
 	}
 
 	/**
@@ -74,17 +75,15 @@ public class Level
 		String[] unParsedSpawn = loadedSettings.get(startingSettingsLine + 1).replaceAll("\\s+", "").split(",");
 		spawnPoint = new Point(Integer.parseInt(unParsedSpawn[0]), Integer.parseInt(unParsedSpawn[1]));
 
-		levelSongStream = Sound.valueOf(loadedSettings.get(startingSettingsLine + 2).toUpperCase()).getSoundClip();
+		levelSongStream = Sound.valueOf(loadedSettings.get(startingSettingsLine + 2).replaceAll("\\s+", "").toUpperCase()).getSoundClip();
 
 		String overlayName = loadedSettings.get(startingSettingsLine + 3);
 		if(overlayName.equalsIgnoreCase("snow"))
 		{
 			overlay = new SnowOverlay(game, 500);
 		}
-		else
-		{
 
-		}
+		levelImageScale = Double.parseDouble((loadedSettings.get(startingSettingsLine + 4) + "").replaceAll("\\s+", ""));
 	}
 
 	/**
