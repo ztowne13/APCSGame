@@ -70,7 +70,7 @@ public class FileUtils
 
 			BufferedImage bI = ImageIO.read(FileUtils.class.getResource("/" + path));
 
-			BufferedImage after = new BufferedImage(bI.getWidth(), bI.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			BufferedImage after = new BufferedImage((int)(bI.getWidth()*imageScale), (int)(bI.getHeight()*imageScale), BufferedImage.TYPE_INT_ARGB);
 			AffineTransform at = new AffineTransform();
 			at.scale(imageScale, imageScale);
 			AffineTransformOp scaleOp =
