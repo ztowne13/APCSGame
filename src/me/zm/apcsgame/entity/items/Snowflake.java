@@ -51,7 +51,7 @@ public class Snowflake extends Entity
     @Override
     public void draw(Graphics g)
     {
-        g.setColor(Color.GRAY);
+        g.setColor(Color.WHITE);
         g.fillOval(getLocation().getX(), getLocation().getY(), getWidth(), getHealth());
     }
 }

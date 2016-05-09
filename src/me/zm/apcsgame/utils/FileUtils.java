@@ -1,6 +1,8 @@
 package me.zm.apcsgame.utils;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import java.awt.*;
@@ -10,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
@@ -82,6 +85,16 @@ public class FileUtils
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static BufferedImage bitmapToImage(InputStream is, String format) throws IOException
+	{
+		final ImageReader rdr = ImageIO.getImageReadersByFormatName(format).next();
+		final ImageInputStream imageInput = ImageIO.createImageInputStream(is);
+		rdr.setInput(imageInput);
+		final BufferedImage image = rdr.read(0);
+		is.close();
+		return image;
 	}
 
 	/**
