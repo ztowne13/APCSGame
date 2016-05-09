@@ -24,4 +24,5 @@ level bounds {
 }
 
 breakable tiles {
+grass_1,200,200
 }

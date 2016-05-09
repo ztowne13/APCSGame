@@ -135,7 +135,7 @@ public class Level
 			}
 
 			String[] parsedTiles = s.replaceAll("\\s+","").split(",");
-			BreakableTile breakableTile = new BreakableTile(game, Integer.parseInt(parsedTiles[1]), Integer.parseInt(parsedTiles[2]), 0, 0, BlockType.valueOf(parsedTiles[0].toUpperCase()));
+			BreakableTile breakableTile = new BreakableTile(game, Integer.parseInt(parsedTiles[1]), Integer.parseInt(parsedTiles[2]), 0, 0, BlockType.valueOf(parsedTiles[0].toUpperCase().replaceAll("\\s+", "")));
 			game.getEntities().add(breakableTile);
 		}
 	}
