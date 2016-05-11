@@ -1,6 +1,7 @@
 package me.zm.apcsgame.entity.creature;
 
 import me.zm.apcsgame.Game;
+import me.zm.apcsgame.GameSettings;
 import me.zm.apcsgame.displays.animations.AnimationType;
 import me.zm.apcsgame.displays.animations.DirectionalAnimation;
 import me.zm.apcsgame.entity.Entity;
@@ -121,7 +122,7 @@ public class Player extends Creature
 
 		getLocation().setX(getLocation().getX() + xMove);
 
-		if(collides())
+		if(collides() && !GameSettings.levelBuildMode)
 		{
 			getLocation().setX(tempX);
 			xMove = 0;
@@ -129,7 +130,7 @@ public class Player extends Creature
 
 		getLocation().setY(getLocation().getY() + yMove);
 
-		if(collides())
+		if(collides() && !GameSettings.levelBuildMode)
 		{
 			getLocation().setY(tempY);
 			yMove = 0;

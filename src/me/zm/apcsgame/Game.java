@@ -80,6 +80,8 @@ public class Game implements Runnable
 		this.display = new Display("test", getWidth(), getHeight());
 		display.getFrame().addKeyListener(keyInputListener);
 		display.getFrame().addMouseListener(mouseEventListener);
+		display.getFrame().addMouseMotionListener(mouseEventListener);
+		display.getCanvas().addMouseMotionListener(mouseEventListener);
 		display.getCanvas().addMouseListener(mouseEventListener);
 
 		this.mousePointer = new MousePointer(this);
@@ -142,6 +144,31 @@ public class Game implements Runnable
 		}
 
 		getCurrentLevel().renderOverlay(g);
+
+		// All level design code
+		if(GameSettings.levelBuildMode)
+		{
+			if(mouseEventListener.getPoints().size() > 1)
+			{
+				int[] xPoints = new int[mouseEventListener.getPoints().size() + 1];
+				int[] yPoints = new int[mouseEventListener.getPoints().size() + 1];
+
+				for(int i = 0; i < xPoints.length-1; i++)
+				{
+					xPoints[i] = mouseEventListener.getPoints().get(i).x - (int)getGameCamera().getxOffset();
+				}
+				for(int i = 0; i < yPoints.length-1; i++)
+				{
+					yPoints[i] = mouseEventListener.getPoints().get(i).y - (int) getGameCamera().getyOffset();
+				}
+
+				xPoints[xPoints.length-1] = mouseEventListener.getX();
+				yPoints[yPoints.length-1] = mouseEventListener.getY();
+
+				Polygon p = new Polygon(xPoints, yPoints, mouseEventListener.getPoints().size() + 1);
+				g.drawPolygon(p);
+			}
+		}
 
 		// End writing render code
 

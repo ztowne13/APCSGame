@@ -2,6 +2,7 @@ package me.zm.apcsgame.level;
 
 import com.badlogic.gdx.math.Vector2;
 import me.zm.apcsgame.Game;
+import me.zm.apcsgame.GameSettings;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.creature.Player;
 import me.zm.apcsgame.locations.Location;
@@ -36,15 +37,23 @@ public class GameCamera
 
 	public void move(float xAmt, float yAmt)
 	{
-		toMoveY += yAmt / moveRatio;
-		toMoveX += xAmt / moveRatio;
+		if(GameSettings.levelBuildMode)
+		{
+			xOffset += xAmt;
+			yOffset += yAmt;
+		}
+		else
+		{
+			toMoveY += yAmt / moveRatio;
+			toMoveX += xAmt / moveRatio;
+		}
 	}
 
 	public boolean moveGameCamera(Player player)
 	{
 		Location location = player.getLocation();
 
-		return (new Vector2(location.getX() - xOffset, location.getY() - yOffset).dst(new Vector2(game.getWidth()/2, game.getHeight()/2)) > (game.getWidth() + game.getHeight()) / 25);
+		return (new Vector2(location.getX() - xOffset, location.getY() - yOffset).dst(new Vector2(game.getWidth()/2, game.getHeight()/2)) > (game.getWidth() + game.getHeight()) / 25) || GameSettings.levelBuildMode;
 	}
 
 	public void tick()
