@@ -73,7 +73,7 @@ public class Game implements Runnable
 		//this.gameCamera = new GameCamera(this, currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y);
 		this.gameCamera = new GameCamera(this, 0, 0);
 
-		this.player = new Player(this, "TestCharacter1", currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y, 50, 50, 2);
+		this.player = new Player(this, "TestCharacter1", currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y, 50, 50, 4);
 		entities.add(0, player);
 		getGameCamera().centerOnEntity(player);
 

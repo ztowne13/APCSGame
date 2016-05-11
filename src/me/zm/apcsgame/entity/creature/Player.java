@@ -176,7 +176,14 @@ public class Player extends Creature
 
 		if (moving)
 		{
-			direction = combinedCardinal.getDegrees() % 90 == 0 ? combinedCardinal : lastKeypress;
+			try
+			{
+				direction = combinedCardinal.getDegrees() % 90 == 0 ? combinedCardinal : lastKeypress;
+			}
+			catch(Exception exc)
+			{
+				exc.printStackTrace();
+			}
 		}
 
 		walkAnimation.render(!moving, direction, graphics);
