@@ -162,9 +162,14 @@ public class Level
 	public void render(Graphics graphics)
 	{
 		graphics.drawImage(levelBaseWindow, -(int)game.getGameCamera().getxOffset(), -(int)game.getGameCamera().getyOffset(), null);
+	}
 
+	public void renderOverlay(Graphics graphics)
+	{
 		if(overlay != null)
 		{
+			// Also ticks the snowflakes to improve performance
+			overlay.tick();
 			overlay.render(graphics);
 		}
 	}
@@ -214,11 +219,6 @@ public class Level
 			{
 				exc.printStackTrace();
 			}
-		}
-
-		if(overlay != null)
-		{
-			overlay.tick();
 		}
 	}
 

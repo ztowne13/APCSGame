@@ -28,7 +28,7 @@ public class SnowOverlay extends Overlay
         {
             int randX = random.nextInt(game.getWidth()-300) + 150;
             int randY = random.nextInt(game.getHeight()-100) + 100;
-            Snowflake snowflake = new Snowflake(game, randX, randY, 4, 4, 1, 4, 2);
+            Snowflake snowflake = new Snowflake(game, randX, randY, 4, 4, 4, 2);
             flakes.add(snowflake);
         }
     }
@@ -36,10 +36,7 @@ public class SnowOverlay extends Overlay
     @Override
     public void tick()
     {
-        for(Snowflake snowflake : flakes)
-        {
-            snowflake.tick();
-        }
+
     }
 
     @Override
@@ -47,6 +44,7 @@ public class SnowOverlay extends Overlay
     {
         for(Snowflake snowflake : flakes)
         {
+            snowflake.tick();
             snowflake.draw(g);
         }
     }

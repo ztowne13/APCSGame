@@ -140,12 +140,7 @@ public class Game implements Runnable
 			getCurrentLevel().renderTiles(player, g, false);
 		}
 
-		// Test code that will not actually be included in final production
-		g.setColor(Color.BLACK);
-		for(Polygon polygon : toDisplayPolygons)
-		{
-			g.fillPolygon(polygon);
-		}
+		getCurrentLevel().renderOverlay(g);
 
 		// End writing render code
 
