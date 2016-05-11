@@ -13,7 +13,10 @@ public class GameCamera
 {
 	private Game game;
 
+	private int cameraMoveSpeed = 30;
+
 	private float xOffset, yOffset, baseXOffset, baseYOffset;
+	private float toMoveX, toMoveY;
 
 	public GameCamera(Game game, float baseXOffset, float baseYOffset)
 	{
@@ -30,8 +33,8 @@ public class GameCamera
 
 	public void move(float xAmt, float yAmt)
 	{
-		yOffset += yAmt;
-		xOffset += xAmt;
+		toMoveY += yAmt;
+		toMoveX += xAmt;
 	}
 
 	public boolean moveGameCamera(Player player)
@@ -39,7 +42,22 @@ public class GameCamera
 		Location location = player.getLocation();
 
 		Level level = game.getCurrentLevel();
-		return (new Vector2(location.getX() - xOffset, location.getY() - yOffset).dst(new Vector2(game.getWidth()/2, game.getHeight()/2)) > (game.getWidth() + game.getHeight()) / 8);
+		return (new Vector2(location.getX() - xOffset, location.getY() - yOffset).dst(new Vector2(game.getWidth()/2, game.getHeight()/2)) > (game.getWidth() + game.getHeight()) / 25);
+	}
+
+	public void tick()
+	{
+		float xDist = toMoveX;
+		float yDist = toMoveY;
+
+		float xSpeed = xDist / cameraMoveSpeed;
+		float ySpeed = yDist / cameraMoveSpeed;
+
+		toMoveY -= ySpeed;
+		toMoveX -= xSpeed;
+
+		xOffset += xSpeed;
+		yOffset += ySpeed;
 	}
 
 	public float getxOffset()

@@ -98,6 +98,7 @@ public class Game implements Runnable
 			ent.tick();
 		}
 
+		getGameCamera().tick();
 		getCurrentLevel().tick();
 	}
 
