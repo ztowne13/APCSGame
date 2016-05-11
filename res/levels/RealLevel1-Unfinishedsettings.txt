@@ -4,6 +4,7 @@ The Beginning
 SONG_1
 NONE
 1
+TestBackground-Blurred1,60,1.15
 }
 
 level bounds {

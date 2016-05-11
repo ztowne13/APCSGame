@@ -1,6 +1,7 @@
 package me.zm.apcsgame.level;
 
 import me.zm.apcsgame.Game;
+import me.zm.apcsgame.displays.Background;
 import me.zm.apcsgame.displays.overlays.Overlay;
 import me.zm.apcsgame.displays.overlays.SnowOverlay;
 import me.zm.apcsgame.entity.Entity;
@@ -31,6 +32,7 @@ public class Level
 	String levelName;
 	Point spawnPoint;
 
+	Background background;
 	Overlay overlay;
 
 	AudioInputStream levelSongStream;
@@ -63,6 +65,10 @@ public class Level
 	 * File format:
 	 * settings {
 	 * level name
+	 * song name
+	 * overlay name
+	 * level image scale
+	 * background name,background offset
 	 * x coord, y coord - Spawn coordinates
 	 * }
 	 */
@@ -84,6 +90,9 @@ public class Level
 		}
 
 		levelImageScale = Double.parseDouble((loadedSettings.get(startingSettingsLine + 4) + "").replaceAll("\\s+", ""));
+
+		String[] backgroundArgs = loadedSettings.get(startingSettingsLine + 5).replaceAll("\\s+", "").split(",");
+		background = new Background(game, backgroundArgs[0], Integer.parseInt(backgroundArgs[1]), Double.parseDouble(backgroundArgs[2]));
 	}
 
 	/**
@@ -160,6 +169,7 @@ public class Level
 
 	public void render(Graphics graphics)
 	{
+		background.render(graphics);
 		graphics.drawImage(levelBaseWindow, -(int)game.getGameCamera().getxOffset(), -(int)game.getGameCamera().getyOffset(), null);
 	}
 

@@ -71,7 +71,7 @@ public class Game implements Runnable
 		currentLevel.loadDynamicTiles();
 
 		//this.gameCamera = new GameCamera(this, currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y);
-		this.gameCamera = new GameCamera(this, 0, 0);
+		this.gameCamera = new GameCamera(this, 0, 0, 1);
 
 		this.player = new Player(this, "TestCharacter1", currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y, 50, 50, 4);
 		entities.add(0, player);

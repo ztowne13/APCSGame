@@ -17,12 +17,15 @@ public class GameCamera
 
 	private float xOffset, yOffset, baseXOffset, baseYOffset;
 	private float toMoveX, toMoveY;
+	float moveRatio;
 
-	public GameCamera(Game game, float baseXOffset, float baseYOffset)
+	public GameCamera(Game game, float baseXOffset, float baseYOffset, float moveRatio)
 	{
 		this.game = game;
 		this.baseXOffset = baseXOffset;
 		this.baseYOffset = baseYOffset;
+
+		this.moveRatio = moveRatio;
 	}
 
 	public void centerOnEntity(Entity e)
@@ -33,15 +36,14 @@ public class GameCamera
 
 	public void move(float xAmt, float yAmt)
 	{
-		toMoveY += yAmt;
-		toMoveX += xAmt;
+		toMoveY += yAmt / moveRatio;
+		toMoveX += xAmt / moveRatio;
 	}
 
 	public boolean moveGameCamera(Player player)
 	{
 		Location location = player.getLocation();
 
-		Level level = game.getCurrentLevel();
 		return (new Vector2(location.getX() - xOffset, location.getY() - yOffset).dst(new Vector2(game.getWidth()/2, game.getHeight()/2)) > (game.getWidth() + game.getHeight()) / 25);
 	}
 
