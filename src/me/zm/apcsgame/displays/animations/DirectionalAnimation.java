@@ -1,5 +1,7 @@
 package me.zm.apcsgame.displays.animations;
 
+import me.zm.apcsgame.locations.Location;
+
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.locations.Direction;
 import me.zm.apcsgame.locations.Location;
@@ -27,7 +29,7 @@ public class DirectionalAnimation extends Animation
 		{
 			for(int i = 0; i < framesCount; i++)
 			{
-				images.put(dir + i, FileUtils.loadImage(defaultPath + dir + "_" + (i+1) + ".png"));
+				images.put(dir + i, FileUtils.loadImage(defaultPath + dir + "_" + (i+1) + ".png", 2));
 			}
 		}
 	}
