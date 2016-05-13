@@ -72,7 +72,13 @@ public class KeyInputListener implements KeyListener
 		{
 			lastKeyPressed = e.getKeyCode();
 		}
+		//test health bar
+		if(e.getKeyCode()== e.VK_Z)
+		{
+			game.getPlayer().damage(1);
+		}
 	}
+
 
 	@Override
 	public void keyReleased(KeyEvent e)

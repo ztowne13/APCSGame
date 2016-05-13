@@ -1,5 +1,6 @@
 package me.zm.apcsgame;
 
+import me.zm.apcsgame.displays.HUD;
 import me.zm.apcsgame.displays.MousePointer;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.creature.Player;
@@ -21,6 +22,8 @@ import java.util.ArrayList;
  */
 public class Game implements Runnable
 {
+
+
 	private Thread thread;
 	private Display display;
 	private BufferStrategy bs;
@@ -37,6 +40,8 @@ public class Game implements Runnable
 	private ArrayList<Polygon> toDisplayPolygons = new ArrayList<Polygon>();
 
 	private int width, height;
+
+	private HUD hud;
 
 	private Level currentLevel;
 	private GameState gameState = GameState.STARTUP;
@@ -76,6 +81,8 @@ public class Game implements Runnable
 		this.player = new Player(this, "TestCharacter1", currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y, 50, 50, 4);
 		entities.add(0, player);
 		getGameCamera().centerOnEntity(player);
+
+		hud = new HUD(this);
 
 		this.display = new Display("test", getWidth(), getHeight());
 		display.getFrame().addKeyListener(keyInputListener);
@@ -170,6 +177,7 @@ public class Game implements Runnable
 			}
 		}
 
+		hud.drawHealth(g);
 		// End writing render code
 
 		bs.show();
