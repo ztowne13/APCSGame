@@ -27,4 +27,9 @@ public class GameSettings
 	public static int LEFT_KEY = KeyEvent.VK_A;
 	public static int RIGHT_KEY = KeyEvent.VK_D;
 	public static int INTERACT = KeyEvent.VK_E;
+
+	/**
+	 * Developer Settings
+	 */
+	public static boolean levelBuildMode = false;
 }

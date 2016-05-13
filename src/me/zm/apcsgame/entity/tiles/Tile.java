@@ -1,4 +1,4 @@
-package me.zm.apcsgame.entity.breakables;
+package me.zm.apcsgame.entity.tiles;
 
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.GameSettings;

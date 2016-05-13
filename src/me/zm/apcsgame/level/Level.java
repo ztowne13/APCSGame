@@ -1,11 +1,12 @@
 package me.zm.apcsgame.level;
 
 import me.zm.apcsgame.Game;
+import me.zm.apcsgame.displays.Background;
 import me.zm.apcsgame.displays.overlays.Overlay;
 import me.zm.apcsgame.displays.overlays.SnowOverlay;
 import me.zm.apcsgame.entity.Entity;
-import me.zm.apcsgame.entity.breakables.BreakableTile;
-import me.zm.apcsgame.entity.breakables.Tile;
+import me.zm.apcsgame.entity.tiles.StaticTile;
+import me.zm.apcsgame.entity.tiles.Tile;
 import me.zm.apcsgame.sounds.Sound;
 import me.zm.apcsgame.utils.FileUtils;
 
@@ -31,6 +32,7 @@ public class Level
 	String levelName;
 	Point spawnPoint;
 
+	Background background;
 	Overlay overlay;
 
 	AudioInputStream levelSongStream;
@@ -63,6 +65,10 @@ public class Level
 	 * File format:
 	 * settings {
 	 * level name
+	 * song name
+	 * overlay name
+	 * level image scale
+	 * background name,background offset
 	 * x coord, y coord - Spawn coordinates
 	 * }
 	 */
@@ -84,6 +90,9 @@ public class Level
 		}
 
 		levelImageScale = Double.parseDouble((loadedSettings.get(startingSettingsLine + 4) + "").replaceAll("\\s+", ""));
+
+		String[] backgroundArgs = loadedSettings.get(startingSettingsLine + 5).replaceAll("\\s+", "").split(",");
+		background = new Background(game, backgroundArgs[0], Integer.parseInt(backgroundArgs[1]), Double.parseDouble(backgroundArgs[2]));
 	}
 
 	/**
@@ -135,8 +144,8 @@ public class Level
 			}
 
 			String[] parsedTiles = s.replaceAll("\\s+","").split(",");
-			BreakableTile breakableTile = new BreakableTile(game, Integer.parseInt(parsedTiles[1]), Integer.parseInt(parsedTiles[2]), 0, 0, BlockType.valueOf(parsedTiles[0].toUpperCase().replaceAll("\\s+", "")));
-			game.getEntities().add(breakableTile);
+			StaticTile staticTile = new StaticTile(game, Integer.parseInt(parsedTiles[1]), Integer.parseInt(parsedTiles[2]), 0, 0, BlockType.valueOf(parsedTiles[0].toUpperCase()));
+			game.getEntities().add(staticTile);
 		}
 	}
 
@@ -160,10 +169,16 @@ public class Level
 
 	public void render(Graphics graphics)
 	{
+		background.render(graphics);
 		graphics.drawImage(levelBaseWindow, -(int)game.getGameCamera().getxOffset(), -(int)game.getGameCamera().getyOffset(), null);
+	}
 
+	public void renderOverlay(Graphics graphics)
+	{
 		if(overlay != null)
 		{
+			// Also ticks the snowflakes to improve performance
+			overlay.tick();
 			overlay.render(graphics);
 		}
 	}
@@ -213,11 +228,6 @@ public class Level
 			{
 				exc.printStackTrace();
 			}
-		}
-
-		if(overlay != null)
-		{
-			overlay.tick();
 		}
 	}
 

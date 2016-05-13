@@ -2,6 +2,7 @@ package me.zm.apcsgame.level;
 
 import com.badlogic.gdx.math.Vector2;
 import me.zm.apcsgame.Game;
+import me.zm.apcsgame.GameSettings;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.creature.Player;
 import me.zm.apcsgame.locations.Location;
@@ -13,13 +14,19 @@ public class GameCamera
 {
 	private Game game;
 
-	private float xOffset, yOffset, baseXOffset, baseYOffset;
+	private int cameraMoveSpeed = 30;
 
-	public GameCamera(Game game, float baseXOffset, float baseYOffset)
+	private float xOffset, yOffset, baseXOffset, baseYOffset;
+	private float toMoveX, toMoveY;
+	float moveRatio;
+
+	public GameCamera(Game game, float baseXOffset, float baseYOffset, float moveRatio)
 	{
 		this.game = game;
 		this.baseXOffset = baseXOffset;
 		this.baseYOffset = baseYOffset;
+
+		this.moveRatio = moveRatio;
 	}
 
 	public void centerOnEntity(Entity e)
@@ -30,16 +37,38 @@ public class GameCamera
 
 	public void move(float xAmt, float yAmt)
 	{
-		yOffset += yAmt;
-		xOffset += xAmt;
+		if(GameSettings.levelBuildMode)
+		{
+			xOffset += xAmt;
+			yOffset += yAmt;
+		}
+		else
+		{
+			toMoveY += yAmt / moveRatio;
+			toMoveX += xAmt / moveRatio;
+		}
 	}
 
 	public boolean moveGameCamera(Player player)
 	{
 		Location location = player.getLocation();
 
-		Level level = game.getCurrentLevel();
-		return (new Vector2(location.getX() - xOffset, location.getY() - yOffset).dst(new Vector2(game.getWidth()/2, game.getHeight()/2)) > (game.getWidth() + game.getHeight()) / 8);
+		return (new Vector2(location.getX() - xOffset, location.getY() - yOffset).dst(new Vector2(game.getWidth()/2, game.getHeight()/2)) > (game.getWidth() + game.getHeight()) / 25) || GameSettings.levelBuildMode;
+	}
+
+	public void tick()
+	{
+		float xDist = toMoveX;
+		float yDist = toMoveY;
+
+		float xSpeed = xDist / cameraMoveSpeed;
+		float ySpeed = yDist / cameraMoveSpeed;
+
+		toMoveY -= ySpeed;
+		toMoveX -= xSpeed;
+
+		xOffset += xSpeed;
+		yOffset += ySpeed;
 	}
 
 	public float getxOffset()

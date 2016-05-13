@@ -2,8 +2,8 @@ package me.zm.apcsgame;
 
 import me.zm.apcsgame.displays.MousePointer;
 import me.zm.apcsgame.entity.Entity;
-import me.zm.apcsgame.entity.breakables.Tile;
 import me.zm.apcsgame.entity.creature.Player;
+import me.zm.apcsgame.entity.tiles.Tile;
 import me.zm.apcsgame.input.KeyInputListener;
 import me.zm.apcsgame.input.MouseEventListener;
 import me.zm.apcsgame.level.GameCamera;
@@ -71,15 +71,17 @@ public class Game implements Runnable
 		currentLevel.loadDynamicTiles();
 
 		//this.gameCamera = new GameCamera(this, currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y);
-		this.gameCamera = new GameCamera(this, 0, 0);
+		this.gameCamera = new GameCamera(this, 0, 0, 1);
 
-		this.player = new Player(this, "TestCharacter1", currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y, 50, 50, 2);
+		this.player = new Player(this, "TestCharacter1", currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y, 50, 50, 4);
 		entities.add(0, player);
 		getGameCamera().centerOnEntity(player);
 
 		this.display = new Display("test", getWidth(), getHeight());
 		display.getFrame().addKeyListener(keyInputListener);
 		display.getFrame().addMouseListener(mouseEventListener);
+		display.getFrame().addMouseMotionListener(mouseEventListener);
+		display.getCanvas().addMouseMotionListener(mouseEventListener);
 		display.getCanvas().addMouseListener(mouseEventListener);
 
 		this.mousePointer = new MousePointer(this);
@@ -98,6 +100,7 @@ public class Game implements Runnable
 			ent.tick();
 		}
 
+		getGameCamera().tick();
 		getCurrentLevel().tick();
 	}
 
@@ -140,11 +143,31 @@ public class Game implements Runnable
 			getCurrentLevel().renderTiles(player, g, false);
 		}
 
-		// Test code that will not actually be included in final production
-		g.setColor(Color.BLACK);
-		for(Polygon polygon : toDisplayPolygons)
+		getCurrentLevel().renderOverlay(g);
+
+		// All level design code
+		if(GameSettings.levelBuildMode)
 		{
-			g.fillPolygon(polygon);
+			if(mouseEventListener.getPoints().size() > 1)
+			{
+				int[] xPoints = new int[mouseEventListener.getPoints().size() + 1];
+				int[] yPoints = new int[mouseEventListener.getPoints().size() + 1];
+
+				for(int i = 0; i < xPoints.length-1; i++)
+				{
+					xPoints[i] = mouseEventListener.getPoints().get(i).x - (int)getGameCamera().getxOffset();
+				}
+				for(int i = 0; i < yPoints.length-1; i++)
+				{
+					yPoints[i] = mouseEventListener.getPoints().get(i).y - (int) getGameCamera().getyOffset();
+				}
+
+				xPoints[xPoints.length-1] = mouseEventListener.getX();
+				yPoints[yPoints.length-1] = mouseEventListener.getY();
+
+				Polygon p = new Polygon(xPoints, yPoints, mouseEventListener.getPoints().size() + 1);
+				g.drawPolygon(p);
+			}
 		}
 
 		// End writing render code

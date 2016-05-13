@@ -15,7 +15,7 @@ public class Snowflake extends Entity
     Random random = new Random();
     int speed, speedBase;
 
-    public Snowflake(Game game, int x, int y, int width, int height, int maxhealth, int speed, int speedBase)
+    public Snowflake(Game game, int x, int y, int width, int height, int speed, int speedBase)
     {
         super(game, "Snowflake", x, y, width, height, 1, false);
 
@@ -25,7 +25,7 @@ public class Snowflake extends Entity
 
     public void respawn()
     {
-        int randX = random.nextInt(getGame().getWidth()-300) + 150;
+        int randX = random.nextInt(getGame().getWidth()) - random.nextInt(getGame().getWidth());
 
         getLocation().setX(randX);
         getLocation().setY(0);
@@ -42,7 +42,7 @@ public class Snowflake extends Entity
         l.setX(l.getX() + xMove);
         l.setY(l.getY() + yMove);
 
-        if(l.getY() > getGame().getHeight() + 20)
+        if(l.getY() > getGame().getHeight() + 20 || l.getX() > getGame().getWidth() + 20)
         {
             respawn();
         }
@@ -52,6 +52,6 @@ public class Snowflake extends Entity
     public void draw(Graphics g)
     {
         g.setColor(Color.WHITE);
-        g.fillOval(getLocation().getX(), getLocation().getY(), getWidth(), getHealth());
+        g.fillOval(getLocation().getX(), getLocation().getY(), getWidth(), getHeight());
     }
 }

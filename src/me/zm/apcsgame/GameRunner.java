@@ -7,8 +7,8 @@ package me.zm.apcsgame;
  */
 public class GameRunner
 {
-	static int WIDTH = 800;
-	static int HEIGHT = 800;
+	static int WIDTH = 1000;
+	static int HEIGHT = 1000;
 
 	public static void main(String[] args)
 	{
