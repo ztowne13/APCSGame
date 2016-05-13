@@ -5,7 +5,7 @@ import me.zm.apcsgame.GameSettings;
 import me.zm.apcsgame.displays.animations.AnimationType;
 import me.zm.apcsgame.displays.animations.DirectionalAnimation;
 import me.zm.apcsgame.entity.Entity;
-import me.zm.apcsgame.entity.breakables.Tile;
+import me.zm.apcsgame.entity.tiles.Tile;
 import me.zm.apcsgame.input.KeyInputListener;
 import me.zm.apcsgame.locations.Direction;
 import me.zm.apcsgame.sounds.Sound;

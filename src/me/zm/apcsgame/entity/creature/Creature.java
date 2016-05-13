@@ -3,7 +3,7 @@ package me.zm.apcsgame.entity.creature;
 import com.badlogic.gdx.math.Vector2;
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.entity.Entity;
-import me.zm.apcsgame.entity.breakables.Tile;
+import me.zm.apcsgame.entity.tiles.Tile;
 import me.zm.apcsgame.utils.MathUtils;
 
 import java.util.ArrayList;

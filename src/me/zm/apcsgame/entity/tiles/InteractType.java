@@ -1,4 +1,4 @@
-package me.zm.apcsgame.entity.breakables;
+package me.zm.apcsgame.entity.tiles;
 
 /**
  * Created by ztowne13 on 5/1/16.

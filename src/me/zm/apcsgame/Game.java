@@ -2,8 +2,8 @@ package me.zm.apcsgame;
 
 import me.zm.apcsgame.displays.MousePointer;
 import me.zm.apcsgame.entity.Entity;
-import me.zm.apcsgame.entity.breakables.Tile;
 import me.zm.apcsgame.entity.creature.Player;
+import me.zm.apcsgame.entity.tiles.Tile;
 import me.zm.apcsgame.input.KeyInputListener;
 import me.zm.apcsgame.input.MouseEventListener;
 import me.zm.apcsgame.level.GameCamera;

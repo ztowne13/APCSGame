@@ -1,4 +1,4 @@
-package me.zm.apcsgame.entity.breakables;
+package me.zm.apcsgame.entity.tiles;
 
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.level.BlockType;
@@ -10,10 +10,10 @@ import java.awt.*;
  *
  * Tiles that can be broken when the player swings in their direction
  */
-public class BreakableTile extends Tile
+public class StaticTile extends Tile
 {
 
-	public BreakableTile(Game game, int x, int y, int width, int height, BlockType blockType)
+	public StaticTile(Game game, int x, int y, int width, int height, BlockType blockType)
 	{
 		super(game, x, y, width, height, blockType);
 		this.blockType = blockType;

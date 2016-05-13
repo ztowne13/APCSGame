@@ -5,8 +5,8 @@ import me.zm.apcsgame.displays.Background;
 import me.zm.apcsgame.displays.overlays.Overlay;
 import me.zm.apcsgame.displays.overlays.SnowOverlay;
 import me.zm.apcsgame.entity.Entity;
-import me.zm.apcsgame.entity.breakables.BreakableTile;
-import me.zm.apcsgame.entity.breakables.Tile;
+import me.zm.apcsgame.entity.tiles.StaticTile;
+import me.zm.apcsgame.entity.tiles.Tile;
 import me.zm.apcsgame.sounds.Sound;
 import me.zm.apcsgame.utils.FileUtils;
 
@@ -144,8 +144,8 @@ public class Level
 			}
 
 			String[] parsedTiles = s.replaceAll("\\s+","").split(",");
-			BreakableTile breakableTile = new BreakableTile(game, Integer.parseInt(parsedTiles[1]), Integer.parseInt(parsedTiles[2]), 0, 0, BlockType.valueOf(parsedTiles[0].toUpperCase()));
-			game.getEntities().add(breakableTile);
+			StaticTile staticTile = new StaticTile(game, Integer.parseInt(parsedTiles[1]), Integer.parseInt(parsedTiles[2]), 0, 0, BlockType.valueOf(parsedTiles[0].toUpperCase()));
+			game.getEntities().add(staticTile);
 		}
 	}
 

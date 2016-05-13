@@ -1,6 +1,6 @@
 package me.zm.apcsgame.level;
 
-import me.zm.apcsgame.entity.breakables.InteractType;
+import me.zm.apcsgame.entity.tiles.InteractType;
 import me.zm.apcsgame.utils.FileUtils;
 
 import java.awt.image.BufferedImage;
