@@ -1,12 +1,17 @@
 package me.zm.apcsgame.level;
 
 import me.zm.apcsgame.Game;
+import me.zm.apcsgame.GameSettings;
 import me.zm.apcsgame.displays.Background;
 import me.zm.apcsgame.displays.overlays.Overlay;
+import me.zm.apcsgame.displays.overlays.OverlayType;
 import me.zm.apcsgame.displays.overlays.SnowOverlay;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.tiles.StaticTile;
 import me.zm.apcsgame.entity.tiles.Tile;
+import me.zm.apcsgame.locations.events.EventLocation;
+import me.zm.apcsgame.locations.events.EventLocationType;
+import me.zm.apcsgame.locations.events.NewLevelEventLocation;
 import me.zm.apcsgame.sounds.Sound;
 import me.zm.apcsgame.utils.FileUtils;
 
@@ -27,8 +32,8 @@ public class Level
 	BufferedImage levelBaseWindow;
 	double levelImageScale;
 
+	ArrayList<EventLocation> eventLocations = new ArrayList<EventLocation>();
 	Point[] points;
-
 	String levelName;
 	Point spawnPoint;
 
@@ -52,10 +57,19 @@ public class Level
 		loadedSettings = FileUtils.loadFileByLine("levels/" + levelId + "settings.txt");
 	}
 
+	public void loadAll()
+	{
+		loadSettings();
+		loadImage();
+		loadLevelBounds();
+		loadDynamicTiles();
+		loadEventLocations();
+	}
+
 	/**
 	 * Loads the level's Buffered image.
 	 */
-	public void load()
+	public void loadImage()
 	{
 		levelBaseWindow = FileUtils.loadImage("levels/" + levelId + ".png", levelImageScale);
 	}
@@ -74,7 +88,7 @@ public class Level
 	 */
 	public void loadSettings()
 	{
-		int startingSettingsLine = findStartingConfigLine("settings {");
+		int startingSettingsLine = findStartingConfigLine(GameSettings.start_settings);
 
 		levelName = loadedSettings.get(startingSettingsLine);
 
@@ -83,8 +97,8 @@ public class Level
 
 		levelSongStream = Sound.valueOf(loadedSettings.get(startingSettingsLine + 2).replaceAll("\\s+", "").toUpperCase()).getSoundClip();
 
-		String overlayName = loadedSettings.get(startingSettingsLine + 3);
-		if(overlayName.equalsIgnoreCase("snow"))
+		OverlayType overlayType = OverlayType.valueOf(loadedSettings.get(startingSettingsLine + 3).toUpperCase());
+		if(overlayType == OverlayType.SNOW)
 		{
 			overlay = new SnowOverlay(game, 500);
 		}
@@ -104,7 +118,7 @@ public class Level
 	 */
 	public void loadLevelBounds()
 	{
-		int startingBoundsLine = findStartingConfigLine("level bounds {");
+		int startingBoundsLine = findStartingConfigLine(GameSettings.start_levelBounds);
 
 		ArrayList<Point> tempPoints = new ArrayList<Point>();
 
@@ -131,7 +145,7 @@ public class Level
 	 */
 	public void loadDynamicTiles()
 	{
-		int startingBoundsLine = findStartingConfigLine("breakable tiles {");
+		int startingBoundsLine = findStartingConfigLine(GameSettings.start_breakableTiles);
 
 		for(int i = startingBoundsLine; i < loadedSettings.size(); i++)
 		{
@@ -146,6 +160,39 @@ public class Level
 			String[] parsedTiles = s.replaceAll("\\s+","").split(",");
 			StaticTile staticTile = new StaticTile(game, Integer.parseInt(parsedTiles[1]), Integer.parseInt(parsedTiles[2]), 0, 0, BlockType.valueOf(parsedTiles[0].toUpperCase()));
 			game.getEntities().add(staticTile);
+		}
+	}
+
+	/**
+	 * Loads all of the event locations such as new level areas
+	 */
+	public void loadEventLocations()
+	{
+		int startingBoundsLine = findStartingConfigLine(GameSettings.start_eventLocations);
+
+		for(int i = startingBoundsLine; i < loadedSettings.size(); i++)
+		{
+			String s = loadedSettings.get(i);
+
+			if(s.replaceAll("\\s+","").equalsIgnoreCase("}"))
+			{
+				break;
+			}
+
+			String[] args = s.replaceAll("\\s+", "").split(",");
+
+			EventLocationType eventLocationType = EventLocationType.valueOf(args[0].toUpperCase());
+
+			int x = Integer.parseInt(args[1]);
+			int y = Integer.parseInt(args[2]);
+			int radius = Integer.parseInt(args[3]);
+
+			switch(eventLocationType)
+			{
+				case NEW_LEVEL:
+					new NewLevelEventLocation(game, x, y, radius, args[4]);
+					break;
+			}
 		}
 	}
 

@@ -70,10 +70,7 @@ public class Game implements Runnable
 		this.gameState = GameState.RUNNING;
 
 		this.currentLevel = new Level(this, "RealLevel1-Unfinished", width, height);
-		currentLevel.loadSettings();
-		currentLevel.load();
-		currentLevel.loadLevelBounds();
-		currentLevel.loadDynamicTiles();
+		currentLevel.loadAll();
 
 		//this.gameCamera = new GameCamera(this, currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y);
 		this.gameCamera = new GameCamera(this, 0, 0, 1);

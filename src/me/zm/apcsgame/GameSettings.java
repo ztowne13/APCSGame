@@ -29,6 +29,14 @@ public class GameSettings
 	public static int INTERACT = KeyEvent.VK_E;
 
 	/**
+	 * Level config identifiers
+	 */
+	public static String start_settings = "settings {";
+	public static String start_breakableTiles = "breakable tiles {";
+	public static String start_eventLocations = "event locations {";
+	public static String start_levelBounds = "level bounds {";
+
+	/**
 	 * Developer Settings
 	 */
 	public static boolean levelBuildMode = false;

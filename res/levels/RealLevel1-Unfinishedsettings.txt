@@ -2,9 +2,17 @@ settings {
 The Beginning
 356,270
 SONG_1
-NONE
+EMPTY
 1
 TestBackground-Blurred1,60,1.15
+}
+
+breakable tiles {
+grass_1,200,200
+}
+
+event locations {
+new_level, 576, 3423, 300, level1
 }
 
 level bounds {
@@ -224,8 +232,4 @@ level bounds {
 229,878
 228,743
 106,743
-}
-
-breakable tiles {
-grass_1,200,200
 }
