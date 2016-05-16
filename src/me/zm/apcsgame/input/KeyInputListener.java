@@ -51,7 +51,7 @@ public class KeyInputListener implements KeyListener
 		downKey = keysPressed.contains(GameSettings.DOWN_KEY);
 		leftKey = keysPressed.contains(GameSettings.LEFT_KEY);
 		rightKey = keysPressed.contains(GameSettings.RIGHT_KEY);
-		interact = keysPressed.contains(GameSettings.INTERACT);
+		interact = keysPressed.contains(GameSettings.INTERACT_KEY);
 	}
 
 	@Override
@@ -72,10 +72,16 @@ public class KeyInputListener implements KeyListener
 		{
 			lastKeyPressed = e.getKeyCode();
 		}
+
+		if(e.getKeyCode() == GameSettings.PAUSE_KEY)
+		{
+			game.getCurrentLevel().getPauseMenu().setInPauseMenu(!game.getCurrentLevel().getPauseMenu().isInPauseMenu());
+		}
+
 		//test health bar
 		if(e.getKeyCode()== e.VK_Z)
 		{
-			game.getPlayer().damage(1);
+			game.getCurrentLevel().getPlayer().damage(1);
 		}
 	}
 

@@ -56,6 +56,7 @@ public class Player extends Creature
 	{
 		getGame().getKeyInputListener().update();
 		getLocation().setDirection(Direction.combineCardinalDirections(EntityUtils.keysPressesToDirections(getGame().getKeyInputListener().getKeysPressed())));
+
 		checkMove();
 
 		if(getGame().getTicksAlive() % 7 == 0)
@@ -86,7 +87,7 @@ public class Player extends Creature
 
 					if(getGame().getTicksAlive() % 21 == 0)
 					{
-						clip.start();
+						//clip.start();
 					}
 				}
 				catch(Exception exc)
@@ -103,44 +104,47 @@ public class Player extends Creature
 	@Override
 	public void checkMove()
 	{
-		int xMove = 0;
-		int yMove = 0;
-
-		// To revert back to original position if position outside bounds.
-		int tempX = getLocation().getX();
-		int tempY = getLocation().getY();
-
-		KeyInputListener keyInputListener = getGame().getKeyInputListener();
-		if(keyInputListener.downKey)
-			yMove = speed;
-		if(keyInputListener.upKey)
-			yMove = -speed;
-		if(keyInputListener.leftKey)
-			xMove = -speed;
-		if(keyInputListener.rightKey)
-			xMove = speed;
-
-		getLocation().setX(getLocation().getX() + xMove);
-
-		if(collides() && !GameSettings.levelBuildMode)
+		if(!getGame().getCurrentLevel().getPauseMenu().isInPauseMenu())
 		{
-			getLocation().setX(tempX);
-			xMove = 0;
-		}
+			int xMove = 0;
+			int yMove = 0;
 
-		getLocation().setY(getLocation().getY() + yMove);
+			// To revert back to original position if position outside bounds.
+			int tempX = getLocation().getX();
+			int tempY = getLocation().getY();
 
-		if(collides() && !GameSettings.levelBuildMode)
-		{
-			getLocation().setY(tempY);
-			yMove = 0;
-		}
+			KeyInputListener keyInputListener = getGame().getKeyInputListener();
+			if (keyInputListener.downKey)
+				yMove = speed;
+			if (keyInputListener.upKey)
+				yMove = -speed;
+			if (keyInputListener.leftKey)
+				xMove = -speed;
+			if (keyInputListener.rightKey)
+				xMove = speed;
 
-		moving = yMove != 0 || xMove != 0;
+			getLocation().setX(getLocation().getX() + xMove);
 
-		if(getGame().getGameCamera().moveGameCamera(this))
-		{
-			getGame().getGameCamera().move(xMove, yMove);
+			if (collides() && !GameSettings.levelBuildMode)
+			{
+				getLocation().setX(tempX);
+				xMove = 0;
+			}
+
+			getLocation().setY(getLocation().getY() + yMove);
+
+			if (collides() && !GameSettings.levelBuildMode)
+			{
+				getLocation().setY(tempY);
+				yMove = 0;
+			}
+
+			moving = yMove != 0 || xMove != 0;
+
+			if (getGame().getCurrentLevel().getGameCamera().moveGameCamera(this))
+			{
+				getGame().getCurrentLevel().getGameCamera().move(xMove, yMove);
+			}
 		}
 	}
 
@@ -151,7 +155,7 @@ public class Player extends Creature
 	{
 		boolean collidesWithTile = false;
 
-		for(Entity tile : getGame().getEntities())
+		for(Entity tile : getGame().getCurrentLevel().getEntities())
 		{
 			if(tile instanceof Tile)
 			{

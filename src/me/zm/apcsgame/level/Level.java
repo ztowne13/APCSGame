@@ -3,10 +3,14 @@ package me.zm.apcsgame.level;
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.GameSettings;
 import me.zm.apcsgame.displays.Background;
+import me.zm.apcsgame.displays.effects.FadeEffect;
+import me.zm.apcsgame.displays.menus.HUD;
+import me.zm.apcsgame.displays.menus.PauseMenu;
 import me.zm.apcsgame.displays.overlays.Overlay;
 import me.zm.apcsgame.displays.overlays.OverlayType;
 import me.zm.apcsgame.displays.overlays.SnowOverlay;
 import me.zm.apcsgame.entity.Entity;
+import me.zm.apcsgame.entity.creature.Player;
 import me.zm.apcsgame.entity.tiles.StaticTile;
 import me.zm.apcsgame.entity.tiles.Tile;
 import me.zm.apcsgame.locations.events.EventLocation;
@@ -32,13 +36,19 @@ public class Level
 	BufferedImage levelBaseWindow;
 	double levelImageScale;
 
+	GameCamera gameCamera;
+	private ArrayList<Entity> entities = new ArrayList<Entity>();
+	Player player;
 	ArrayList<EventLocation> eventLocations = new ArrayList<EventLocation>();
+
 	Point[] points;
 	String levelName;
 	Point spawnPoint;
 
+	HUD hud;
 	Background background;
 	Overlay overlay;
+	PauseMenu pauseMenu;
 
 	AudioInputStream levelSongStream;
 	Clip levelSong;
@@ -46,6 +56,8 @@ public class Level
 	int width, height;
 
 	ArrayList<String> loadedSettings;
+	boolean hasFinishedLoading = false;
+	boolean finished = false;
 
 	public Level(Game game, String levelId, int width, int height)
 	{
@@ -57,13 +69,119 @@ public class Level
 		loadedSettings = FileUtils.loadFileByLine("levels/" + levelId + "settings.txt");
 	}
 
-	public void loadAll()
+	public void tick()
 	{
-		loadSettings();
-		loadImage();
-		loadLevelBounds();
-		loadDynamicTiles();
-		loadEventLocations();
+		if(hasFinishedLoading)
+		{
+			if (levelSong == null || !levelSong.isRunning())
+			{
+				try
+				{
+					/*
+					* Just got annoyed listening to the music, will re-add later.
+					*
+					levelSongStream.reset();
+
+					levelSong = AudioSystem.getClip();
+					levelSong.open(levelSongStream);
+					levelSong.start();*/
+				}
+				catch (Exception exc)
+				{
+					exc.printStackTrace();
+				}
+			}
+
+			getGameCamera().tick();
+
+			// Items that are supposed to tick at the game's percentage speed
+
+			if(game.getTicksAlive() % (101 - game.getPlaySpeed()) == 0)
+			{
+				getPlayer().tick();
+
+				for (Entity ent : entities)
+				{
+					ent.tick();
+				}
+			}
+		}
+	}
+
+	public void loadAll(boolean fadeOut)
+	{
+		Thread thread = new Thread()
+		{
+			@Override
+			public void run()
+			{
+				long start = System.currentTimeMillis();
+				long last = start;
+
+				loadSettings();
+				System.out.println("(" + (System.currentTimeMillis() - start) + ") Loaded level '" + levelName + "' settings in " + (System.currentTimeMillis() - last) + " ms");
+				last = System.currentTimeMillis();
+
+				loadImage();
+				System.out.println("(" + (System.currentTimeMillis() - start) + ") Loaded level '" + levelName + "' image in " + (System.currentTimeMillis() - last) + " ms");
+				last = System.currentTimeMillis();
+
+				loadLevelBounds();
+				System.out.println("(" + (System.currentTimeMillis() - start) + ") Loaded level '" + levelName + "' level bounds in " + (System.currentTimeMillis() - last) + " ms");
+				last = System.currentTimeMillis();
+
+				loadDynamicTiles();
+				System.out.println("(" + (System.currentTimeMillis() - start) + ") Loaded level '" + levelName + "' dynamic tiles in " + (System.currentTimeMillis() - last) + " ms");
+				last = System.currentTimeMillis();
+
+				loadEventLocations();
+				System.out.println("(" + (System.currentTimeMillis() - start) + ") Loaded level '" + levelName + "' event locations in " + (System.currentTimeMillis() - last) + " ms");
+				last = System.currentTimeMillis();
+
+				loadOther();
+				System.out.println("(" + (System.currentTimeMillis() - start) + ") Loaded level '" + levelName + "' other in " + (System.currentTimeMillis() - last) + " ms");
+				last = System.currentTimeMillis();
+
+				System.out.println("Milliseconds to load level '" + levelName + "': " + (last - start));
+				hasFinishedLoading = true;
+
+				game.getGraphicEffects().remove("fade in level");
+
+				if(fadeOut)
+				{
+					game.getGraphicEffects().put("fade out level", new FadeEffect(game, Color.BLACK, 1, true, true));
+				}
+
+				try
+				{
+					interrupt();
+				}
+				catch(Exception exc)
+				{
+
+				}
+			}
+		};
+
+		thread.start();
+	}
+
+	/**
+	 * Loads the player as well as the game camera
+	 */
+	public void loadOther()
+	{
+		this.player = new Player(game, "TestCharacter1", getSpawnPoint().x, getSpawnPoint().y, 50, 50, 3);
+		entities.add(0, player);
+
+		this.gameCamera = new GameCamera(game, 0, 0, 1);
+		hud = new HUD(game);
+
+		pauseMenu = new PauseMenu(game);
+		pauseMenu.loadImage();
+
+		getGameCamera().centerOnEntity(player);
+		game.setPlaySpeed(100);
 	}
 
 	/**
@@ -159,7 +277,7 @@ public class Level
 
 			String[] parsedTiles = s.replaceAll("\\s+","").split(",");
 			StaticTile staticTile = new StaticTile(game, Integer.parseInt(parsedTiles[1]), Integer.parseInt(parsedTiles[2]), 0, 0, BlockType.valueOf(parsedTiles[0].toUpperCase()));
-			game.getEntities().add(staticTile);
+			getEntities().add(staticTile);
 		}
 	}
 
@@ -190,7 +308,7 @@ public class Level
 			switch(eventLocationType)
 			{
 				case NEW_LEVEL:
-					new NewLevelEventLocation(game, x, y, radius, args[4]);
+					eventLocations.add(new NewLevelEventLocation(game, x, y, radius, args[4]));
 					break;
 			}
 		}
@@ -216,17 +334,77 @@ public class Level
 
 	public void render(Graphics graphics)
 	{
-		background.render(graphics);
-		graphics.drawImage(levelBaseWindow, -(int)game.getGameCamera().getxOffset(), -(int)game.getGameCamera().getyOffset(), null);
+		if(hasFinishedLoading)
+		{
+			background.render(graphics);
+			graphics.drawImage(levelBaseWindow, -(int) getGameCamera().getxOffset(), -(int) getGameCamera().getyOffset(), null);
+
+			// Renders the tiles that will be beneath the player_walk
+			renderTiles(player, graphics, true);
+
+			player.draw(graphics);
+
+			// Renders the tiles that will be above the player_walk (if the player_walk exists, otherwise they're already rendered)
+			if (!(player == null))
+			{
+				renderTiles(player, graphics, false);
+			}
+
+			for (Entity ent : entities)
+			{
+				if (!(ent instanceof Tile))
+				{
+					ent.draw(graphics);
+				}
+			}
+
+			// All level design code
+			if (GameSettings.levelBuildMode)
+			{
+				if (game.getMouseEventListener().getPoints().size() > 1)
+				{
+					int[] xPoints = new int[game.getMouseEventListener().getPoints().size() + 1];
+					int[] yPoints = new int[game.getMouseEventListener().getPoints().size() + 1];
+
+					for (int i = 0; i < xPoints.length - 1; i++)
+					{
+						xPoints[i] = game.getMouseEventListener().getPoints().get(i).x - (int) getGameCamera().getxOffset();
+					}
+					for (int i = 0; i < yPoints.length - 1; i++)
+					{
+						yPoints[i] = game.getMouseEventListener().getPoints().get(i).y - (int) getGameCamera().getyOffset();
+					}
+
+					xPoints[xPoints.length - 1] = game.getMouseEventListener().getX();
+					yPoints[yPoints.length - 1] = game.getMouseEventListener().getY();
+
+					Polygon p = new Polygon(xPoints, yPoints, game.getMouseEventListener().getPoints().size() + 1);
+					graphics.drawPolygon(p);
+				}
+			}
+
+			hud.drawHealth(graphics);
+
+			// This is to go to a new level (typically). Code may be moved at some point
+			for (EventLocation eventLocation : eventLocations)
+			{
+				eventLocation.executeFor(graphics, player);
+			}
+
+			pauseMenu.draw(graphics);
+		}
 	}
 
 	public void renderOverlay(Graphics graphics)
 	{
-		if(overlay != null)
+		if (hasFinishedLoading)
 		{
-			// Also ticks the snowflakes to improve performance
-			overlay.tick();
-			overlay.render(graphics);
+			if (overlay != null)
+			{
+				// Also ticks the snowflakes to improve performance
+				overlay.tick();
+				overlay.render(graphics);
+			}
 		}
 	}
 
@@ -237,7 +415,7 @@ public class Level
 	 */
 	public void renderTiles(Entity player, Graphics graphics, boolean before)
 	{
-		for(Entity tile : game.getEntities())
+		for(Entity tile : getEntities())
 		{
 			if(tile instanceof Tile)
 			{
@@ -252,28 +430,6 @@ public class Level
 				{
 					tile.draw(graphics);
 				}
-			}
-		}
-	}
-
-	public void tick()
-	{
-		if(levelSong == null || !levelSong.isRunning())
-		{
-			try
-			{
-				/*
-				* Just got annoyed listening to the music, will re-add later.
-				*
-				levelSongStream.reset();
-
-				levelSong = AudioSystem.getClip();
-				levelSong.open(levelSongStream);
-				levelSong.start();*/
-			}
-			catch(Exception exc)
-			{
-				exc.printStackTrace();
 			}
 		}
 	}
@@ -295,13 +451,13 @@ public class Level
 
 		for(int i = 0; i < points.length; i++)
 		{
-			xPoints[i] = points[i].x - (int)(game.getGameCamera().getxOffset()) - (ent.getWidth()/2);
-			yPoints[i] = points[i].y - (int)(game.getGameCamera().getyOffset()) - (ent.getHeight());
+			xPoints[i] = points[i].x - (int)(getGameCamera().getxOffset()) - (ent.getWidth()/2);
+			yPoints[i] = points[i].y - (int)(getGameCamera().getyOffset()) - (ent.getHeight());
 		}
 
 		Polygon polygon = new Polygon(xPoints, yPoints, points.length);
 
-		return !polygon.contains(ent.getLocation().getX() - game.getGameCamera().getxOffset(), ent.getLocation().getY() - game.getGameCamera().getyOffset());
+		return !polygon.contains(ent.getLocation().getX() - getGameCamera().getxOffset(), ent.getLocation().getY() - getGameCamera().getyOffset());
 	}
 
 	public Point getSpawnPoint()
@@ -322,5 +478,75 @@ public class Level
 	public void setPoints(Point[] points)
 	{
 		this.points = points;
+	}
+
+	public ArrayList<EventLocation> getEventLocations()
+	{
+		return eventLocations;
+	}
+
+	public void setEventLocations(ArrayList<EventLocation> eventLocations)
+	{
+		this.eventLocations = eventLocations;
+	}
+
+	public ArrayList<Entity> getEntities()
+	{
+		return entities;
+	}
+
+	public void setEntities(ArrayList<Entity> entities)
+	{
+		this.entities = entities;
+	}
+
+	public Player getPlayer()
+	{
+		return player;
+	}
+
+	public void setPlayer(Player player)
+	{
+		this.player = player;
+	}
+
+	public GameCamera getGameCamera()
+	{
+		return gameCamera;
+	}
+
+	public void setGameCamera(GameCamera gameCamera)
+	{
+		this.gameCamera = gameCamera;
+	}
+
+	public boolean isFinished()
+	{
+		return finished;
+	}
+
+	public void setFinished(boolean finished)
+	{
+		this.finished = finished;
+	}
+
+	public boolean isHasFinishedLoading()
+	{
+		return hasFinishedLoading;
+	}
+
+	public void setHasFinishedLoading(boolean hasFinishedLoading)
+	{
+		this.hasFinishedLoading = hasFinishedLoading;
+	}
+
+	public PauseMenu getPauseMenu()
+	{
+		return pauseMenu;
+	}
+
+	public void setPauseMenu(PauseMenu pauseMenu)
+	{
+		this.pauseMenu = pauseMenu;
 	}
 }

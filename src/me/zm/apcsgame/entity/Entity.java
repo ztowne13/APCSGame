@@ -100,7 +100,7 @@ public abstract class Entity
 
 	public void destroy()
 	{
-		getGame().getEntities().remove(this);
+		getGame().getCurrentLevel().getEntities().remove(this);
 	}
 
 	public Game getGame()

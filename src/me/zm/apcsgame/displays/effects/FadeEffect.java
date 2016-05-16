@@ -13,14 +13,16 @@ public class FadeEffect extends GraphicEffect
 	int speedToFade;
 
 	boolean fadeOut;
+	boolean endWhenDone;
 
-	public FadeEffect(Game game, Color toFadeTo, int speedToFade, boolean fadeOut)
+	public FadeEffect(Game game, Color toFadeTo, int speedToFade, boolean fadeOut, boolean endWhenDone)
 	{
 		super(game);
 
 		this.toFadeTo = toFadeTo;
 		this.speedToFade = speedToFade;
 		this.fadeOut = fadeOut;
+		this.endWhenDone = endWhenDone;
 	}
 
 	public Color getCurrentColor()
@@ -33,20 +35,21 @@ public class FadeEffect extends GraphicEffect
 	public void draw(Graphics graphics)
 	{
 		graphics.setColor(getCurrentColor());
-		graphics.drawRect(0, 0, (int)graphics.getClipBounds().getWidth(), (int)graphics.getClipBounds().getHeight());
+		graphics.fillRect(0, 0, game.getDisplay().getFrame().getWidth(), game.getDisplay().getFrame().getHeight());
 	}
 
 	@Override
 	public boolean tick()
 	{
-		setTickCount(getTickCount() + speedToFade);
-
-		if(getTickCount() > 255)
+		tickCount += speedToFade;
+		if (tickCount > 255)
 		{
-			setTickCount(255);
-			return false;
+			tickCount = 255;
+			if(endWhenDone)
+			{
+				return false;
+			}
 		}
-
 		return true;
 	}
 }

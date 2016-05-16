@@ -39,7 +39,7 @@ public class Location implements Locatable
 
 	public Vector2 getVectorAsMiddleWithOffset(int width, int height)
 	{
-		return new Vector2(MathUtils.middle(x, width) - game.getGameCamera().getxOffset(), MathUtils.middle(y, height) - game.getGameCamera().getyOffset());
+		return new Vector2(MathUtils.middle(x, width) - game.getCurrentLevel().getGameCamera().getxOffset(), MathUtils.middle(y, height) - game.getCurrentLevel().getGameCamera().getyOffset());
 	}
 
 	@Override

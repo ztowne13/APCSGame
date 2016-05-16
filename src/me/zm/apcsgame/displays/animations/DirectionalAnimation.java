@@ -1,7 +1,5 @@
 package me.zm.apcsgame.displays.animations;
 
-import me.zm.apcsgame.locations.Location;
-
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.locations.Direction;
 import me.zm.apcsgame.locations.Location;
@@ -48,7 +46,7 @@ public class DirectionalAnimation extends Animation
 	 */
 	public void render(boolean keepAtOne, Direction direction, Graphics g)
 	{
-		g.drawImage(images.get(direction.name() + (keepAtOne ? 0 + "" : currentAnimationStage)), location.getX() - (int) game.getGameCamera().getxOffset(), location.getY() - (int) game.getGameCamera().getyOffset(), null);
+		g.drawImage(images.get(direction.name() + (keepAtOne ? 0 + "" : currentAnimationStage)), location.getX() - (int) game.getCurrentLevel().getGameCamera().getxOffset(), location.getY() - (int) game.getCurrentLevel().getGameCamera().getyOffset(), null);
 	}
 
 	public int getCurrentAnimationStage()

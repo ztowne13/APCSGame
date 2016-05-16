@@ -26,6 +26,6 @@ public class Background
 
 	public void render(Graphics graphics)
 	{
-		graphics.drawImage(backGroundImage, -offset-(int)(game.getGameCamera().getxOffset()/5), -offset-(int)(game.getGameCamera().getyOffset()/5), null);
+		graphics.drawImage(backGroundImage, -offset-(int)(game.getCurrentLevel().getGameCamera().getxOffset()/5), -offset-(int)(game.getCurrentLevel().getGameCamera().getyOffset()/5), null);
 	}
 }

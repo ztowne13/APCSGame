@@ -4,6 +4,8 @@ import me.zm.apcsgame.Game;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.locations.Locatable;
 
+import java.awt.*;
+
 /**
  * Created by ztowne13 on 5/14/16.
  */
@@ -20,7 +22,7 @@ public abstract class EventLocation implements Locatable
 		this.eventRadius = eventRadius;
 	}
 
-	public abstract void executeFor(Entity entity);
+	public abstract void executeFor(Graphics graphics, Entity entity);
 
 	public abstract boolean isExecutable(Entity entity);
 

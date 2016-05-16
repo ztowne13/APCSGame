@@ -1,4 +1,4 @@
-package me.zm.apcsgame.displays;
+package me.zm.apcsgame.displays.menus;
 
 import me.zm.apcsgame.Game;
 
@@ -23,7 +23,7 @@ public class HUD
 		graphics.fillRect(5, 5, 200, 25);
 
 		graphics.setColor(Color.GREEN);
-		graphics.fillRect(5, 5, game.getPlayer().getHealth() * 20, 25);
+		graphics.fillRect(5, 5, game.getCurrentLevel().getPlayer().getHealth() * 20, 25);
 
 		graphics.setColor(Color.WHITE);
 		graphics.drawRect(5, 5, 200, 25);

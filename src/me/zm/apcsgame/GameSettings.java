@@ -26,7 +26,8 @@ public class GameSettings
 	public static int DOWN_KEY = KeyEvent.VK_S;
 	public static int LEFT_KEY = KeyEvent.VK_A;
 	public static int RIGHT_KEY = KeyEvent.VK_D;
-	public static int INTERACT = KeyEvent.VK_E;
+	public static int INTERACT_KEY = KeyEvent.VK_E;
+	public static int PAUSE_KEY = KeyEvent.VK_ESCAPE;
 
 	/**
 	 * Level config identifiers

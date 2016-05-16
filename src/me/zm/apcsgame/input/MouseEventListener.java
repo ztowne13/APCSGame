@@ -35,7 +35,7 @@ public class MouseEventListener implements MouseListener, MouseMotionListener
 	public void mouseClicked(MouseEvent e)
 	{
 
-		for(Entity entity : game.getEntities())
+		for(Entity entity : game.getCurrentLevel().getEntities())
 		{
 
 			if(entity instanceof Player)
@@ -65,7 +65,7 @@ public class MouseEventListener implements MouseListener, MouseMotionListener
 			}
 			else
 			{
-				points.add(new Point((int) (e.getX() + game.getGameCamera().getxOffset()), (int) (e.getY() + game.getGameCamera().getyOffset())));
+				points.add(new Point((int) (e.getX() + game.getCurrentLevel().getGameCamera().getxOffset()), (int) (e.getY() + game.getCurrentLevel().getGameCamera().getyOffset())));
 			}
 		}
 	}

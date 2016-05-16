@@ -34,7 +34,7 @@ public class InteractableTile extends Tile
 		switch(interactType)
 		{
 			case WALK_OVER:
-				if(getGame().getPlayer().collidesWith(getHitbox()))
+				if(getGame().getCurrentLevel().getPlayer().collidesWith(getHitbox()))
 				{
 					interact();
 				}

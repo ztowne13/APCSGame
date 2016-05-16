@@ -1,19 +1,18 @@
 package me.zm.apcsgame;
 
-import me.zm.apcsgame.displays.HUD;
 import me.zm.apcsgame.displays.MousePointer;
-import me.zm.apcsgame.entity.Entity;
-import me.zm.apcsgame.entity.creature.Player;
-import me.zm.apcsgame.entity.tiles.Tile;
+import me.zm.apcsgame.displays.effects.GraphicEffect;
 import me.zm.apcsgame.input.KeyInputListener;
 import me.zm.apcsgame.input.MouseEventListener;
-import me.zm.apcsgame.level.GameCamera;
 import me.zm.apcsgame.level.Level;
 import me.zm.apcsgame.saves.GameSave;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by ztowne13 on 4/8/16.
@@ -33,21 +32,19 @@ public class Game implements Runnable
 
 	private KeyInputListener keyInputListener;
 	private MouseEventListener mouseEventListener;
-	private ArrayList<Entity> entities = new ArrayList<Entity>();
-	Player player;
 
 	// This is purely for test purposes to have the game draw hit boxes and other polygonal shapes that detect locations and such.
 	private ArrayList<Polygon> toDisplayPolygons = new ArrayList<Polygon>();
+	private HashMap<String,GraphicEffect> graphicEffects = new HashMap<String,GraphicEffect>();
 
 	private int width, height;
-
-	private HUD hud;
+	private double playSpeed = 100;
 
 	private Level currentLevel;
+	private HashMap<String,Level> loadedLevels = new HashMap<String,Level>();
 	private GameState gameState = GameState.STARTUP;
 	private GameSave gameSave;
 
-	GameCamera gameCamera;
 	MousePointer mousePointer;
 
 	public Game(int width, int height)
@@ -65,21 +62,12 @@ public class Game implements Runnable
 	 */
 	private void initialize()
 	{
-		//THIS IS ALL TEST CODE BELOW AND IS NOT NECCESSARILY GOING TO BE USED LATER
-
 		this.gameState = GameState.RUNNING;
 
-		this.currentLevel = new Level(this, "RealLevel1-Unfinished", width, height);
-		currentLevel.loadAll();
+		loadAllLevels();
 
-		//this.gameCamera = new GameCamera(this, currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y);
-		this.gameCamera = new GameCamera(this, 0, 0, 1);
-
-		this.player = new Player(this, "TestCharacter1", currentLevel.getSpawnPoint().x, currentLevel.getSpawnPoint().y, 50, 50, 4);
-		entities.add(0, player);
-		getGameCamera().centerOnEntity(player);
-
-		hud = new HUD(this);
+		this.currentLevel = getLoadedLevels().get("RealLevel1-Unfinished");
+		currentLevel.loadAll(true);
 
 		this.display = new Display("test", getWidth(), getHeight());
 		display.getFrame().addKeyListener(keyInputListener);
@@ -92,6 +80,14 @@ public class Game implements Runnable
 
 	}
 
+	private void loadAllLevels()
+	{
+		for(String s : new String[]{"RealLevel1-Unfinished"})
+		{
+			loadedLevels.put(s, new Level(this, s, 0, 0));
+		}
+	}
+
 	/**
 	 * Updates all game functions to the next tick.
 	 */
@@ -99,12 +95,17 @@ public class Game implements Runnable
 	{
 		mousePointer.tick();
 
-		for(Entity ent : entities)
+		Set<String> clonedList = new HashSet<String>();
+		clonedList.addAll(getGraphicEffects().keySet());
+		for(String graphicEffect : clonedList)
 		{
-			ent.tick();
+			GraphicEffect effect = getGraphicEffects().get(graphicEffect);
+			if(!effect.tick())
+			{
+				graphicEffects.remove(graphicEffect);
+			}
 		}
 
-		getGameCamera().tick();
 		getCurrentLevel().tick();
 	}
 
@@ -127,54 +128,13 @@ public class Game implements Runnable
 		// Where to write the render code
 
 		getCurrentLevel().render(g);
-
-		// Renders the tiles that will be beneath the player_walk
-		getCurrentLevel().renderTiles(player, g, true);
-
-		// Renders all non tiles and the player_walk
-		player.draw(g);
-		for(Entity ent : entities)
-		{
-			if(!(ent instanceof Tile))
-			{
-				ent.draw(g);
-			}
-		}
-
-		// Renders the tiles that will be above the player_walk (if the player_walk exists, otherwise they're already rendered)
-		if(!(player == null))
-		{
-			getCurrentLevel().renderTiles(player, g, false);
-		}
-
 		getCurrentLevel().renderOverlay(g);
 
-		// All level design code
-		if(GameSettings.levelBuildMode)
+		for(GraphicEffect graphicEffect : graphicEffects.values())
 		{
-			if(mouseEventListener.getPoints().size() > 1)
-			{
-				int[] xPoints = new int[mouseEventListener.getPoints().size() + 1];
-				int[] yPoints = new int[mouseEventListener.getPoints().size() + 1];
-
-				for(int i = 0; i < xPoints.length-1; i++)
-				{
-					xPoints[i] = mouseEventListener.getPoints().get(i).x - (int)getGameCamera().getxOffset();
-				}
-				for(int i = 0; i < yPoints.length-1; i++)
-				{
-					yPoints[i] = mouseEventListener.getPoints().get(i).y - (int) getGameCamera().getyOffset();
-				}
-
-				xPoints[xPoints.length-1] = mouseEventListener.getX();
-				yPoints[yPoints.length-1] = mouseEventListener.getY();
-
-				Polygon p = new Polygon(xPoints, yPoints, mouseEventListener.getPoints().size() + 1);
-				g.drawPolygon(p);
-			}
+			graphicEffect.draw(g);
 		}
 
-		hud.drawHealth(g);
 		// End writing render code
 
 		bs.show();
@@ -273,16 +233,6 @@ public class Game implements Runnable
 		this.currentLevel = currentLevel;
 	}
 
-	public ArrayList<Entity> getEntities()
-	{
-		return entities;
-	}
-
-	public void setEntities(ArrayList<Entity> entities)
-	{
-		this.entities = entities;
-	}
-
 	public int getWidth()
 	{
 		return width;
@@ -301,16 +251,6 @@ public class Game implements Runnable
 	public void setHeight(int height)
 	{
 		this.height = height;
-	}
-
-	public GameCamera getGameCamera()
-	{
-		return gameCamera;
-	}
-
-	public void setGameCamera(GameCamera gameCamera)
-	{
-		this.gameCamera = gameCamera;
 	}
 
 	public Display getDisplay()
@@ -343,16 +283,6 @@ public class Game implements Runnable
 		this.ticksAlive = ticksAlive;
 	}
 
-	public Player getPlayer()
-	{
-		return player;
-	}
-
-	public void setPlayer(Player player)
-	{
-		this.player = player;
-	}
-
 	public MousePointer getMousePointer()
 	{
 		return mousePointer;
@@ -362,4 +292,46 @@ public class Game implements Runnable
 	{
 		this.mousePointer = mousePointer;
 	}
+
+	public MouseEventListener getMouseEventListener()
+	{
+		return mouseEventListener;
+	}
+
+	public void setMouseEventListener(MouseEventListener mouseEventListener)
+	{
+		this.mouseEventListener = mouseEventListener;
+	}
+
+	public HashMap<String, GraphicEffect> getGraphicEffects()
+	{
+		return graphicEffects;
+	}
+
+	public void setGraphicEffects(HashMap<String, GraphicEffect> graphicEffects)
+	{
+		this.graphicEffects = graphicEffects;
+	}
+
+	public HashMap<String, Level> getLoadedLevels()
+	{
+		return loadedLevels;
+	}
+
+	public void setLoadedLevels(HashMap<String, Level> loadedLevels)
+	{
+		this.loadedLevels = loadedLevels;
+	}
+
+	public double getPlaySpeed()
+	{
+		return playSpeed;
+	}
+
+	public void setPlaySpeed(double playSpeed)
+	{
+		this.playSpeed = playSpeed;
+	}
+
+
 }

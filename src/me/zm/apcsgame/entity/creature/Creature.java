@@ -36,14 +36,14 @@ public abstract class Creature extends Entity
 		int mouseY = (int) getGame().getDisplay().getCanvas().getMousePosition().getY();
 
 		// Creature X and Y positions with game camera offset
-		double midX = MathUtils.middle(getLocation().getX(), getWidth()) - getGame().getGameCamera().getxOffset();
-		double midY = MathUtils.middle(getLocation().getY(), getHeight()) - getGame().getGameCamera().getyOffset();
+		double midX = MathUtils.middle(getLocation().getX(), getWidth()) - getGame().getCurrentLevel().getGameCamera().getxOffset();
+		double midY = MathUtils.middle(getLocation().getY(), getHeight()) - getGame().getCurrentLevel().getGameCamera().getyOffset();
 
 		// Creature position as Vector2
 		Vector2 crVec = getLocation().getVectorAsMiddleWithOffset(getWidth(), getHeight());
 
 		// Sorts through all entities (Players, Creatures, Tiles)
-		for(Entity entity : (ArrayList<Entity>) getGame().getEntities().clone())
+		for(Entity entity : (ArrayList<Entity>) getGame().getCurrentLevel().getEntities().clone())
 		{
 			// Make sure it's a breakable tile
 			if(!(entity instanceof Tile && !((Tile)entity).getBlockType().isBreakable()))

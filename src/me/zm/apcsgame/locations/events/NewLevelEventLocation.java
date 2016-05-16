@@ -23,23 +23,44 @@ public class NewLevelEventLocation extends EventLocation
 	}
 
 	@Override
-	public void executeFor(Entity entity)
+	public void executeFor(Graphics graphics, Entity entity)
 	{
 		if(isExecutable(entity))
 		{
-			new FadeEffect(game, Color.BLACK, 20, false);
-			Level level = new Level(game, toLevel, game.getWidth(), game.getHeight());
-			level.loadAll();
-			game.setCurrentLevel(level);
+			game.getCurrentLevel().setFinished(true);
+			game.setPlaySpeed(95);
+			game.getGraphicEffects().put("fade in level", new FadeEffect(game, Color.BLACK, 2, false, false));
 
-			game.getPlayer().getLocation().setX(level.getSpawnPoint().x);
-			game.getPlayer().getLocation().setY(level.getSpawnPoint().y);
+			Thread thread = new Thread()
+			{
+				@Override
+				public void run()
+				{
+					try
+					{
+						sleep(2134);
+						Level level = new Level(game, toLevel, game.getWidth(), game.getHeight());
+						level.loadAll(true);
+						game.setCurrentLevel(level);
+
+						interrupt();
+					}
+					catch(Exception exc)
+					{
+
+					}
+				}
+			};
+
+			thread.start();
 		}
 	}
 
 	@Override
 	public boolean isExecutable(Entity entity)
 	{
-		return new Vector2(getX(), getY()).nor().dst(new Vector2(entity.getLocation().getX(), entity.getLocation().getY())) <= eventRadius;
+		Vector2 eventVec = new Vector2(getX() - (int)game.getCurrentLevel().getGameCamera().getxOffset(), getY() - (int)game.getCurrentLevel().getGameCamera().getyOffset());
+		Vector2 entityVec = new Vector2(entity.getLocation().getX() - (int)game.getCurrentLevel().getGameCamera().getxOffset(), entity.getLocation().getY() - (int)game.getCurrentLevel().getGameCamera().getyOffset());
+		return eventVec.dst(entityVec) <= eventRadius && !game.getCurrentLevel().isFinished();
 	}
 }

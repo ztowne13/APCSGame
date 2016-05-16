@@ -45,8 +45,8 @@ public abstract class Tile extends Entity
 	 */
 	public boolean collidesWithOnAxis(Rectangle oHB, boolean x)
 	{
-		int xOffset = - (int)getGame().getGameCamera().getxOffset();
-		int yOffset = - (int)getGame().getGameCamera().getyOffset();
+		int xOffset = - (int)getGame().getCurrentLevel().getGameCamera().getxOffset();
+		int yOffset = - (int)getGame().getCurrentLevel().getGameCamera().getyOffset();
 		// Entity coordinates
 		int eBottomY = (int) (oHB.getY() + oHB.getHeight() + yOffset - GameSettings.xShift);
 

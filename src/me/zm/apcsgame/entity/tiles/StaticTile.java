@@ -31,6 +31,6 @@ public class StaticTile extends Tile
 	@Override
 	public void draw(Graphics graphics)
 	{
-		graphics.drawImage(image, getLocation().getX() - (int)getGame().getGameCamera().getxOffset(), getLocation().getY() - (int)getGame().getGameCamera().getyOffset(), null);
+		graphics.drawImage(image, getLocation().getX() - (int)getGame().getCurrentLevel().getGameCamera().getxOffset(), getLocation().getY() - (int)getGame().getCurrentLevel().getGameCamera().getyOffset(), null);
 	}
 }
