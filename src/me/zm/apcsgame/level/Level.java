@@ -49,6 +49,7 @@ public class Level
 	HUD hud;
 	Background background;
 	Overlay overlay;
+	OverlayType overlayType;
 	PauseMenu pauseMenu;
 
 	AudioInputStream levelSongStream;
@@ -185,6 +186,13 @@ public class Level
 		{
 			game.setGameState(GameState.IN_LEVEL);
 		}
+
+		if(overlayType == OverlayType.SNOW)
+		{
+			SnowOverlay flakes = new SnowOverlay(game, 500);
+			flakes.createAllFlakes();
+			overlay = flakes;
+		}
 	}
 
 	/**
@@ -192,6 +200,7 @@ public class Level
 	 */
 	public void loadOther(int forceX, int forceY)
 	{
+
 		this.player = new Player(game, "TestCharacter1", forceX != -1 ? forceX : getSpawnPoint().x, forceY != -1 ? forceY : getSpawnPoint().y, 50, 50, 3);
 		entities.add(0, player);
 
@@ -211,6 +220,8 @@ public class Level
 	public void loadImage()
 	{
 		levelBaseWindow = FileUtils.loadImage("levels/" + levelId + ".png", levelImageScale);
+		this.width = levelBaseWindow.getWidth();
+		this.height = levelBaseWindow.getHeight();
 	}
 
 	/**
@@ -231,21 +242,17 @@ public class Level
 
 		levelName = loadedSettings.get(startingSettingsLine);
 
-		String[] unParsedSpawn = loadedSettings.get(startingSettingsLine + 1).replaceAll("\\s+", "").split(",");
-		spawnPoint = new Point(Integer.parseInt(unParsedSpawn[0]), Integer.parseInt(unParsedSpawn[1]));
+		String[] unParsedSpawn = loadedSettings.get(startingSettingsLine + 1).split(",");
+		spawnPoint = new Point(Integer.parseInt(unParsedSpawn[0].replaceAll("\\s+", "")), Integer.parseInt(unParsedSpawn[1].replaceAll("\\s+", "")));
 
 		levelSongStream = Sound.valueOf(loadedSettings.get(startingSettingsLine + 2).replaceAll("\\s+", "").toUpperCase()).getSoundClip();
 
-		OverlayType overlayType = OverlayType.valueOf(loadedSettings.get(startingSettingsLine + 3).toUpperCase());
-		if(overlayType == OverlayType.SNOW)
-		{
-			overlay = new SnowOverlay(game, 500);
-		}
+		this.overlayType = OverlayType.valueOf(loadedSettings.get(startingSettingsLine + 3).replaceAll("\\s+", "").toUpperCase());
 
 		levelImageScale = Double.parseDouble((loadedSettings.get(startingSettingsLine + 4) + "").replaceAll("\\s+", ""));
 
 		String[] backgroundArgs = loadedSettings.get(startingSettingsLine + 5).replaceAll("\\s+", "").split(",");
-		background = new Background(game, backgroundArgs[0], Integer.parseInt(backgroundArgs[1]), Double.parseDouble(backgroundArgs[2]));
+		background = new Background(game, backgroundArgs[0].replaceAll("\\s+", ""), Integer.parseInt(backgroundArgs[1]), Double.parseDouble(backgroundArgs[2]));
 	}
 
 	/**
@@ -424,7 +431,7 @@ public class Level
 	{
 		if (hasFinishedLoading)
 		{
-			if (overlay != null)
+			if (!(overlay == null))
 			{
 				// Also ticks the snowflakes to improve performance
 				overlay.tick();
@@ -573,5 +580,15 @@ public class Level
 	public void setPauseMenu(PauseMenu pauseMenu)
 	{
 		this.pauseMenu = pauseMenu;
+	}
+
+	public int getWidth()
+	{
+		return width;
+	}
+
+	public int getHeight()
+	{
+		return height;
 	}
 }

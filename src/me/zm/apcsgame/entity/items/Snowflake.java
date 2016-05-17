@@ -25,10 +25,9 @@ public class Snowflake extends Entity
 
     public void respawn()
     {
-        int randX = random.nextInt(getGame().getWidth()) - random.nextInt(getGame().getWidth());
+        int randX = random.nextInt(getGame().getCurrentLevel().getWidth()) - random.nextInt(getGame().getCurrentLevel().getWidth());
 
         getLocation().setX(randX);
-        getLocation().setY(0);
     }
 
     @Override
@@ -42,7 +41,7 @@ public class Snowflake extends Entity
         l.setX(l.getX() + xMove);
         l.setY(l.getY() + yMove);
 
-        if(l.getY() > getGame().getHeight() + 20 || l.getX() > getGame().getWidth() + 20)
+        if(l.getY() > getGame().getCurrentLevel().getHeight() || l.getX() > getGame().getCurrentLevel().getWidth() + 20)
         {
             respawn();
         }
@@ -52,6 +51,6 @@ public class Snowflake extends Entity
     public void draw(Graphics g)
     {
         g.setColor(Color.WHITE);
-        g.fillOval(getLocation().getX(), getLocation().getY(), getWidth(), getHeight());
+        g.fillOval(getLocation().getX()-(int)getGame().getCurrentLevel().getGameCamera().getxOffset(), getLocation().getY()-(int)getGame().getCurrentLevel().getGameCamera().getyOffset(), getWidth(), getHeight());
     }
 }
