@@ -14,12 +14,15 @@ import java.awt.*;
 public class NewLevelEventLocation extends EventLocation
 {
 	String toLevel;
+	int toX, toY;
 
-	public NewLevelEventLocation(Game game, int x, int y, int eventRadius, String toLevel)
+	public NewLevelEventLocation(Game game, int x, int y, int eventRadius, int toX, int toY, String toLevel)
 	{
 		super(game, x, y, eventRadius);
 
 		this.toLevel = toLevel;
+		this.toX = toX;
+		this.toY = toY;
 	}
 
 	@Override
@@ -40,8 +43,7 @@ public class NewLevelEventLocation extends EventLocation
 					{
 						sleep(2134);
 						Level level = new Level(game, toLevel, game.getWidth(), game.getHeight());
-						level.loadAll(true);
-						game.setCurrentLevel(level);
+						level.loadAll(true, true, true, toX, toY);
 
 						interrupt();
 					}

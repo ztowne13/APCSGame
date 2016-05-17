@@ -10,6 +10,7 @@ public class GameSettings
 	public static int FPS = 60;
 	public static int totalAnimationFrames = 3;
 
+	public static int moveableDistanceFromMiddle = 50;
 	public static int imageScaleFactor = 2;
 
 	/**

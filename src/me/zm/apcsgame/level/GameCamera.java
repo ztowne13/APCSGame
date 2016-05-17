@@ -14,7 +14,7 @@ public class GameCamera
 {
 	private Game game;
 
-	private int cameraMoveSpeed = 30;
+	private int cameraMoveSpeed = 22;
 
 	private float xOffset, yOffset, baseXOffset, baseYOffset;
 	private float toMoveX, toMoveY;
@@ -53,7 +53,7 @@ public class GameCamera
 	{
 		Location location = player.getLocation();
 
-		return (new Vector2(location.getX() - xOffset, location.getY() - yOffset).dst(new Vector2(game.getWidth()/2, game.getHeight()/2)) > (game.getWidth() + game.getHeight()) / 25) || GameSettings.levelBuildMode;
+		return (new Vector2(location.getX() - xOffset, location.getY() - yOffset).dst(new Vector2(game.getWidth()/2, game.getHeight()/2)) > GameSettings.moveableDistanceFromMiddle) || GameSettings.levelBuildMode;
 	}
 
 	public void tick()

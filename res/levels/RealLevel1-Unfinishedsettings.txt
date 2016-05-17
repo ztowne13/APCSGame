@@ -12,7 +12,7 @@ grass_1,200,200
 }
 
 event locations {
-new_level, 576, 3423, 150, RealLevel1-Unfinished
+new_level, 576, 3423, 150, Underground-Level1, -1, -1
 }
 
 level bounds {

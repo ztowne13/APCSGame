@@ -2,6 +2,7 @@ package me.zm.apcsgame.level;
 
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.GameSettings;
+import me.zm.apcsgame.GameState;
 import me.zm.apcsgame.displays.Background;
 import me.zm.apcsgame.displays.effects.FadeEffect;
 import me.zm.apcsgame.displays.menus.HUD;
@@ -108,7 +109,12 @@ public class Level
 		}
 	}
 
-	public void loadAll(boolean fadeOut)
+	public void loadAll(boolean fadeOut, boolean setAsCurrent, boolean modifyToInLevel)
+	{
+		loadAll(fadeOut, setAsCurrent, modifyToInLevel, -1, -1);
+	}
+
+	public void loadAll(boolean fadeOut, boolean setAsCurrent, boolean modifyToInLevel, int forceXSpawn, int forceYSpawn)
 	{
 		Thread thread = new Thread()
 		{
@@ -138,19 +144,14 @@ public class Level
 				System.out.println("(" + (System.currentTimeMillis() - start) + ") Loaded level '" + levelName + "' event locations in " + (System.currentTimeMillis() - last) + " ms");
 				last = System.currentTimeMillis();
 
-				loadOther();
+				loadOther(forceXSpawn, forceYSpawn);
 				System.out.println("(" + (System.currentTimeMillis() - start) + ") Loaded level '" + levelName + "' other in " + (System.currentTimeMillis() - last) + " ms");
 				last = System.currentTimeMillis();
 
 				System.out.println("Milliseconds to load level '" + levelName + "': " + (last - start));
 				hasFinishedLoading = true;
 
-				game.getGraphicEffects().remove("fade in level");
-
-				if(fadeOut)
-				{
-					game.getGraphicEffects().put("fade out level", new FadeEffect(game, Color.BLACK, 1, true, true));
-				}
+				loadAfter(fadeOut, setAsCurrent, modifyToInLevel);
 
 				try
 				{
@@ -166,12 +167,32 @@ public class Level
 		thread.start();
 	}
 
+	public void loadAfter(boolean fadeOut, boolean setAsCurrent, boolean modifyToInLevel)
+	{
+		game.getGraphicEffects().remove("fade in level");
+
+		if(fadeOut)
+		{
+			game.getGraphicEffects().put("fade out level", new FadeEffect(game, Color.BLACK, 1, true, true));
+		}
+
+		if(setAsCurrent)
+		{
+			game.setCurrentLevel(this);
+		}
+
+		if(modifyToInLevel)
+		{
+			game.setGameState(GameState.IN_LEVEL);
+		}
+	}
+
 	/**
 	 * Loads the player as well as the game camera
 	 */
-	public void loadOther()
+	public void loadOther(int forceX, int forceY)
 	{
-		this.player = new Player(game, "TestCharacter1", getSpawnPoint().x, getSpawnPoint().y, 50, 50, 3);
+		this.player = new Player(game, "TestCharacter1", forceX != -1 ? forceX : getSpawnPoint().x, forceY != -1 ? forceY : getSpawnPoint().y, 50, 50, 3);
 		entities.add(0, player);
 
 		this.gameCamera = new GameCamera(game, 0, 0, 1);
@@ -301,14 +322,18 @@ public class Level
 
 			EventLocationType eventLocationType = EventLocationType.valueOf(args[0].toUpperCase());
 
+			//event name, x loc of event, y loc of event, event radius, new level name, force x spawn (-1 to not force), force y spawn (..)
+
 			int x = Integer.parseInt(args[1]);
 			int y = Integer.parseInt(args[2]);
 			int radius = Integer.parseInt(args[3]);
+			int forceX = Integer.parseInt(args[5]);
+			int forceY = Integer.parseInt(args[6]);
 
 			switch(eventLocationType)
 			{
 				case NEW_LEVEL:
-					eventLocations.add(new NewLevelEventLocation(game, x, y, radius, args[4]));
+					eventLocations.add(new NewLevelEventLocation(game, x, y, radius, forceX, forceY, args[4]));
 					break;
 			}
 		}

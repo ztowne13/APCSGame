@@ -1,15 +1,24 @@
 package me.zm.apcsgame;
 
+import me.zm.apcsgame.tick.GameStateTick;
+
 /**
  * Created by ztowne13 on 4/8/16.
  */
 public enum GameState
 {
-	STARTUP,
+	STARTUP(null),
 
-	RUNNING,
+	MAIN_MENU(null),
 
-	IN_LEVEL,
+	IN_LEVEL(null),
 
-	STOPPED;
+	STOPPED(null);
+
+	GameStateTick gameStateTick;
+
+	GameState(GameStateTick gameStateTick)
+	{
+		this.gameStateTick = gameStateTick;
+	}
 }

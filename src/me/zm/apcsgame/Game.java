@@ -6,13 +6,14 @@ import me.zm.apcsgame.input.KeyInputListener;
 import me.zm.apcsgame.input.MouseEventListener;
 import me.zm.apcsgame.level.Level;
 import me.zm.apcsgame.saves.GameSave;
+import me.zm.apcsgame.tick.GameStateTick;
+import me.zm.apcsgame.tick.LevelGSTick;
+import me.zm.apcsgame.tick.StartupGSTick;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by ztowne13 on 4/8/16.
@@ -37,24 +38,23 @@ public class Game implements Runnable
 	private ArrayList<Polygon> toDisplayPolygons = new ArrayList<Polygon>();
 	private HashMap<String,GraphicEffect> graphicEffects = new HashMap<String,GraphicEffect>();
 
-	private int width, height;
+	private int width, height, lastWidth, lastHeight;
 	private double playSpeed = 100;
 
 	private Level currentLevel;
-	private HashMap<String,Level> loadedLevels = new HashMap<String,Level>();
-	private GameState gameState = GameState.STARTUP;
+	private GameState gameState = GameState.STOPPED;
+	private GameStateTick gameStateTick;
 	private GameSave gameSave;
 
 	MousePointer mousePointer;
 
 	public Game(int width, int height)
 	{
-		this.width = width;
-		this.height = height;
+		this.width = width; this.lastWidth = width;
+		this.height = height; this.lastHeight = height;
 
 		this.keyInputListener = new KeyInputListener(this);
 		this.mouseEventListener = new MouseEventListener(this);
-		this.gameState = GameState.STARTUP;
 	}
 
 	/**
@@ -62,13 +62,6 @@ public class Game implements Runnable
 	 */
 	private void initialize()
 	{
-		this.gameState = GameState.RUNNING;
-
-		loadAllLevels();
-
-		this.currentLevel = getLoadedLevels().get("RealLevel1-Unfinished");
-		currentLevel.loadAll(true);
-
 		this.display = new Display("test", getWidth(), getHeight());
 		display.getFrame().addKeyListener(keyInputListener);
 		display.getFrame().addMouseListener(mouseEventListener);
@@ -78,14 +71,9 @@ public class Game implements Runnable
 
 		this.mousePointer = new MousePointer(this);
 
-	}
-
-	private void loadAllLevels()
-	{
-		for(String s : new String[]{"RealLevel1-Unfinished"})
-		{
-			loadedLevels.put(s, new Level(this, s, 0, 0));
-		}
+		// Load into the first thing
+		Level testLevel1 = new Level(this, "RealLevel1-Unfinished", 0, 0);
+		testLevel1.loadAll(true, true, true);
 	}
 
 	/**
@@ -93,20 +81,21 @@ public class Game implements Runnable
 	 */
 	private void tick()
 	{
-		mousePointer.tick();
+		// Manages width / height update.
+		setWidth(getDisplay().getFrame().getWidth());
+		setHeight(getDisplay().getFrame().getHeight());
 
-		Set<String> clonedList = new HashSet<String>();
-		clonedList.addAll(getGraphicEffects().keySet());
-		for(String graphicEffect : clonedList)
+		if((lastWidth != width || lastHeight != height) && getGameState().equals(GameState.IN_LEVEL))
 		{
-			GraphicEffect effect = getGraphicEffects().get(graphicEffect);
-			if(!effect.tick())
-			{
-				graphicEffects.remove(graphicEffect);
-			}
+			getCurrentLevel().getGameCamera().centerOnEntity(getCurrentLevel().getPlayer());
 		}
 
-		getCurrentLevel().tick();
+		lastWidth = getWidth();
+		lastHeight = getHeight();
+
+		mousePointer.tick();
+
+		gameStateTick.tick();
 	}
 
 	/**
@@ -127,13 +116,7 @@ public class Game implements Runnable
 
 		// Where to write the render code
 
-		getCurrentLevel().render(g);
-		getCurrentLevel().renderOverlay(g);
-
-		for(GraphicEffect graphicEffect : graphicEffects.values())
-		{
-			graphicEffect.draw(g);
-		}
+		gameStateTick.draw(g);
 
 		// End writing render code
 
@@ -156,7 +139,7 @@ public class Game implements Runnable
 		long timer = 0;
 		int ticks = 0;
 
-		while(gameState.equals(GameState.RUNNING))
+		while(!gameState.equals(GameState.STOPPED))
 		{
 			now = System.nanoTime();
 			delta += (now - lastTime) / timePerTick;
@@ -186,9 +169,9 @@ public class Game implements Runnable
 	 */
 	public synchronized void start()
 	{
-		if(!gameState.equals(GameState.RUNNING))
+		if(gameState.equals(GameState.STOPPED))
 		{
-			gameState = GameState.RUNNING;
+			setGameState(GameState.STARTUP);
 			this.thread = new Thread(this);
 			thread.start();
 		}
@@ -199,9 +182,9 @@ public class Game implements Runnable
 	 */
 	public synchronized void stop()
 	{
-		if(gameState.equals(GameState.RUNNING))
+		if(!gameState.equals(GameState.STOPPED))
 		{
-			gameState = GameState.STOPPED;
+			setGameState(GameState.STOPPED);
 			try
 			{
 				thread.join();
@@ -211,6 +194,26 @@ public class Game implements Runnable
 
 			}
 		}
+	}
+
+	public void setGameState(GameState gameState)
+	{
+		this.gameState = gameState;
+
+		switch (gameState)
+		{
+			case IN_LEVEL:
+				gameStateTick = new LevelGSTick(this);
+				break;
+			case STARTUP:
+				gameStateTick = new StartupGSTick(this);
+				break;
+		}
+	}
+
+	public GameState getGameState()
+	{
+		return gameState;
 	}
 
 	public KeyInputListener getKeyInputListener()
@@ -313,16 +316,6 @@ public class Game implements Runnable
 		this.graphicEffects = graphicEffects;
 	}
 
-	public HashMap<String, Level> getLoadedLevels()
-	{
-		return loadedLevels;
-	}
-
-	public void setLoadedLevels(HashMap<String, Level> loadedLevels)
-	{
-		this.loadedLevels = loadedLevels;
-	}
-
 	public double getPlaySpeed()
 	{
 		return playSpeed;
@@ -332,6 +325,4 @@ public class Game implements Runnable
 	{
 		this.playSpeed = playSpeed;
 	}
-
-
 }
