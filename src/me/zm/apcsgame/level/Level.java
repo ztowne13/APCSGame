@@ -377,14 +377,11 @@ public class Level
 			player.draw(graphics);
 
 			// Renders the tiles that will be above the player_walk (if the player_walk exists, otherwise they're already rendered)
-			if (!(player == null))
-			{
-				renderTiles(player, graphics, false);
-			}
+			renderTiles(player, graphics, false);
 
 			for (Entity ent : entities)
 			{
-				if (!(ent instanceof Tile))
+				if (!(ent instanceof Tile) && !(ent instanceof Player))
 				{
 					ent.draw(graphics);
 				}
@@ -424,6 +421,15 @@ public class Level
 			}
 
 			pauseMenu.draw(graphics);
+
+			if(GameSettings.drawHitboxes)
+			{
+				for (Entity ent : getEntities())
+				{
+					graphics.setColor(Color.BLACK);
+					graphics.drawRect((int) ent.getHitbox().getX(), (int) ent.getHitbox().getY(), (int) ent.getHitbox().getWidth(), (int) ent.getHitbox().getHeight());
+				}
+			}
 		}
 	}
 
@@ -451,14 +457,7 @@ public class Level
 		{
 			if(tile instanceof Tile)
 			{
-				if(!(player == null))
-				{
-					if ((player.renderBefore(tile) && before) || (!player.renderBefore(tile) && !before))
-					{
-						tile.draw(graphics);
-					}
-				}
-				else
+				if ((player.renderBefore(tile) == before))
 				{
 					tile.draw(graphics);
 				}

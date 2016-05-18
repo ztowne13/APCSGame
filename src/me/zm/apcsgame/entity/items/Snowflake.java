@@ -25,9 +25,10 @@ public class Snowflake extends Entity
 
     public void respawn()
     {
-        int randX = random.nextInt(getGame().getCurrentLevel().getWidth()) - random.nextInt(getGame().getCurrentLevel().getWidth());
+        int randX = random.nextInt(getGame().getCurrentLevel().getWidth()) - random.nextInt(getGame().getCurrentLevel().getHeight());
 
         getLocation().setX(randX);
+        getLocation().setY(0);
     }
 
     @Override

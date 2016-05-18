@@ -3,6 +3,7 @@ package me.zm.apcsgame.level;
 import me.zm.apcsgame.entity.tiles.InteractType;
 import me.zm.apcsgame.utils.FileUtils;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
@@ -12,30 +13,61 @@ import java.awt.image.BufferedImage;
  */
 public enum BlockType
 {
-	GRASS_1("Grass1", true);
+	GRASS_1("Grass1", true, false),
+
+	TREE_1("Tree1", false, true, 38, 332, 152, 333),
+
+	TREE_2("Tree2", false, true, 52, 251, 187, 252),
+
+	DARK_TREE_1("Dark-Tree1", false, true, 117, 310, 213, 311),
+
+	DARK_TREE_2("Dark-Tree2", false, true, 107, 310, 150, 311),
+
+	/*TREE_1("Tree1", false, true, 38, 332, 152, 393),
+
+	TREE_2("Tree2", false, true, 52, 251, 187, 300),
+
+	DARK_TREE_1("Dark-Tree1", false, true, 117, 310, 213, 345),
+
+	DARK_TREE_2("Dark-Tree2", false, true, 107, 310, 150, 350),*/
+
+	PILLAR_1("Pillar1", false, true, 0, 180, 70, 242);
 
 	String fileName;
-	boolean breakable;
+	boolean breakable, hasCustomHitbox;
 	InteractType interactType;
+	Rectangle customHitbox;
 
 	/**
 	 * The block's constructor
 	 * @param fileName The name of the block's image. (May later be changed to support animations)
 	 * @param breakable True = the block is breakable. False = not breakable.
 	 */
-	BlockType(String fileName, boolean breakable)
+	BlockType(String fileName, boolean breakable, boolean customHitbox)
 	{
-		this(fileName, breakable, InteractType.NONE);
+		this(fileName, breakable, InteractType.NONE, customHitbox);
 	}
 
 	/**
 	 * @param interactType If and how the block can be interacted with
 	 */
-	BlockType(String fileName, boolean breakable, InteractType interactType)
+	BlockType(String fileName, boolean breakable, InteractType interactType, boolean hasCustomHitbox)
+	{
+		this(fileName, breakable, interactType, hasCustomHitbox, 0, 0, 0, 0);
+	}
+
+	BlockType(String fileName, boolean breakable, boolean hasCustomHitbox, int x, int y, int x2, int y2)
+	{
+		this(fileName, breakable, InteractType.NONE, hasCustomHitbox, x, y, x2, y2);
+	}
+
+	BlockType(String fileName, boolean breakable, InteractType interactType, boolean hasCustomHitbox, int x, int y, int x2, int y2)
 	{
 		this.fileName = fileName;
 		this.breakable = breakable;
 		this.interactType = interactType;
+		this.hasCustomHitbox = hasCustomHitbox;
+		this.customHitbox = new Rectangle(x, y, x2-x, y2-y);
 	}
 
 	public BufferedImage getImage()
@@ -71,5 +103,25 @@ public enum BlockType
 	public void setInteractType(InteractType interactType)
 	{
 		this.interactType = interactType;
+	}
+
+	public boolean isHasCustomHitbox()
+	{
+		return hasCustomHitbox;
+	}
+
+	public void setHasCustomHitbox(boolean hasCustomHitbox)
+	{
+		this.hasCustomHitbox = hasCustomHitbox;
+	}
+
+	public Rectangle getCustomHitbox()
+	{
+		return customHitbox;
+	}
+
+	public void setCustomHitbox(Rectangle customHitbox)
+	{
+		this.customHitbox = customHitbox;
 	}
 }

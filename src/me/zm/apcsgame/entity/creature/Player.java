@@ -159,7 +159,7 @@ public class Player extends Creature
 		{
 			if(tile instanceof Tile)
 			{
-				if (tile.collidesWith(getHitbox()))
+				if (((Tile)tile).collidesWith(getHitbox()))
 				{
 					collidesWithTile = true;
 					break;

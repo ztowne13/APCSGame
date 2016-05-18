@@ -40,6 +40,8 @@ public class GameSettings
 
 	/**
 	 * Developer Settings
+	 * block hitbox build mode only active if in levelbuildmode
 	 */
 	public static boolean levelBuildMode = false;
+	public static boolean drawHitboxes = false;
 }

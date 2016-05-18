@@ -17,9 +17,6 @@ public class StaticTile extends Tile
 	{
 		super(game, x, y, width, height, blockType);
 		this.blockType = blockType;
-
-		setWidth(image.getWidth());
-		setHeight(image.getHeight());
 	}
 
 	@Override

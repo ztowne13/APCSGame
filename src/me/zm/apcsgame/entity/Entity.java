@@ -19,6 +19,7 @@ public abstract class Entity
 	boolean damageable;
 
 	Location location;
+	Rectangle hitbox;
 
 	public Entity(Game game, String name, int x, int y, int width, int height, int maxhealth)
 	{
@@ -63,7 +64,7 @@ public abstract class Entity
 	 */
 	public boolean renderBefore(Entity entity)
 	{
-		return getLocation().getY() + getHeight() > entity.getLocation().getY() + entity.getHeight();
+		return getHitbox().getY() + getHitbox().getHeight() > entity.getHitbox().getY() + entity.getHitbox().getHeight();
 	}
 
 	/**
@@ -72,7 +73,7 @@ public abstract class Entity
 	 */
 	public Rectangle getHitbox()
 	{
-		return new Rectangle(getLocation().getX(), getLocation().getY(), getWidth(), getHeight());
+		return new Rectangle(getLocation().getX() - (int)getGame().getCurrentLevel().getGameCamera().getxOffset(), getLocation().getY() - (int)getGame().getCurrentLevel().getGameCamera().getyOffset(), getWidth(), getHeight());
 	}
 
 	/**
