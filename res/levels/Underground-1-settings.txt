@@ -11,7 +11,7 @@ breakable tiles {
 }
 
 event locations {
-new_level, 1310, 143, 150, RealLevel1-Unfinished, 552, 3172
+new_level, 1310, 143, 150, Forest-1, 552, 3172
 }
 
 level bounds {

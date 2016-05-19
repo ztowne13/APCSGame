@@ -13,9 +13,9 @@ import java.awt.*;
 public class StaticTile extends Tile
 {
 
-	public StaticTile(Game game, int x, int y, int width, int height, BlockType blockType)
+	public StaticTile(Game game, int x, int y, int width, int height, BlockType blockType, boolean flipped)
 	{
-		super(game, x, y, width, height, blockType);
+		super(game, x, y, width, height, blockType, flipped);
 		this.blockType = blockType;
 	}
 
@@ -28,6 +28,13 @@ public class StaticTile extends Tile
 	@Override
 	public void draw(Graphics graphics)
 	{
-		graphics.drawImage(image, getLocation().getX() - (int)getGame().getCurrentLevel().getGameCamera().getxOffset(), getLocation().getY() - (int)getGame().getCurrentLevel().getGameCamera().getyOffset(), null);
+		if (isFlipped())
+		{
+			graphics.drawImage(image, getLocation().getX() - (int) getGame().getCurrentLevel().getGameCamera().getxOffset() + getWidth(), getLocation().getY() - (int) getGame().getCurrentLevel().getGameCamera().getyOffset(), -getWidth(), getHeight(), null);
+		}
+		else
+		{
+			graphics.drawImage(image, getLocation().getX() - (int) getGame().getCurrentLevel().getGameCamera().getxOffset(), getLocation().getY() - (int) getGame().getCurrentLevel().getGameCamera().getyOffset(), null);
+		}
 	}
 }

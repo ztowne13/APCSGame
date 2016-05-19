@@ -4,6 +4,7 @@ import me.zm.apcsgame.Game;
 import me.zm.apcsgame.GameSettings;
 import me.zm.apcsgame.displays.animations.AnimationType;
 import me.zm.apcsgame.displays.animations.DirectionalAnimation;
+import me.zm.apcsgame.displays.effects.MaskEffect;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.tiles.Tile;
 import me.zm.apcsgame.input.KeyInputListener;
@@ -192,6 +193,14 @@ public class Player extends Creature
 		}
 
 		walkAnimation.render(!moving, direction, graphics);
+	}
+
+	@Override
+	public void destroy()
+	{
+		setDead(true);
+		getGame().getGraphicEffects().put("death red", new MaskEffect(getGame(), Color.RED, 120));
+		//getGame().getGraphicEffects().put("death fade", new )
 	}
 
 	public int getSpeed()

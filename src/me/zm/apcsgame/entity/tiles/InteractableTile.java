@@ -15,9 +15,9 @@ public class InteractableTile extends Tile
 {
 	InteractType interactType;
 
-	public InteractableTile(Game game, int x, int y, int width, int height, BlockType blockType)
+	public InteractableTile(Game game, int x, int y, int width, int height, BlockType blockType, boolean flipped)
 	{
-		super(game, x, y, width, height, blockType);
+		super(game, x, y, width, height, blockType, flipped);
 
 		setWidth(image.getWidth());
 		setHeight(image.getHeight());

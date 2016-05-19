@@ -68,7 +68,7 @@ public class Level
 		this.width = width;
 		this.height = height;
 
-		loadedSettings = FileUtils.loadFileByLine("levels/" + levelId + "settings.txt");
+		loadedSettings = FileUtils.loadFileByLine("levels/" + levelId + "-settings.txt");
 	}
 
 	public void tick()
@@ -304,7 +304,7 @@ public class Level
 			}
 
 			String[] parsedTiles = s.replaceAll("\\s+","").split(",");
-			StaticTile staticTile = new StaticTile(game, Integer.parseInt(parsedTiles[1]), Integer.parseInt(parsedTiles[2]), 0, 0, BlockType.valueOf(parsedTiles[0].toUpperCase()));
+			StaticTile staticTile = new StaticTile(game, Integer.parseInt(parsedTiles[1]), Integer.parseInt(parsedTiles[2]), 0, 0, BlockType.valueOf(parsedTiles[0].toUpperCase()), Boolean.valueOf(parsedTiles[3]));
 			getEntities().add(staticTile);
 		}
 	}

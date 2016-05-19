@@ -16,10 +16,9 @@ public abstract class Entity
 
 	private UUID uuid;
 	private int width, height, maxhealth, health;
-	boolean damageable;
+	boolean damageable, dead;
 
 	Location location;
-	Rectangle hitbox;
 
 	public Entity(Game game, String name, int x, int y, int width, int height, int maxhealth)
 	{
@@ -102,6 +101,7 @@ public abstract class Entity
 	public void destroy()
 	{
 		getGame().getCurrentLevel().getEntities().remove(this);
+		setDead(true);
 	}
 
 	public Game getGame()
@@ -190,5 +190,15 @@ public abstract class Entity
 
 	public void setDamageable(boolean damageable) {
 		this.damageable = damageable;
+	}
+
+	public boolean isDead()
+	{
+		return dead;
+	}
+
+	public void setDead(boolean dead)
+	{
+		this.dead = dead;
 	}
 }

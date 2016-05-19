@@ -17,13 +17,15 @@ public abstract class Tile extends Entity
 {
 	BufferedImage image;
 	BlockType blockType;
+	boolean flipped;
 
-	public Tile(Game game, int x, int y, int width, int height, BlockType blockType)
+	public Tile(Game game, int x, int y, int width, int height, BlockType blockType, boolean flipped)
 	{
 		super(game, blockType.name(), x, y, width, height, 1);
 		this.blockType = blockType;
 
 		this.image = blockType.getImage();
+		this.flipped = flipped;
 
 		setWidth(image.getWidth());
 		setHeight(image.getHeight());
@@ -33,7 +35,7 @@ public abstract class Tile extends Entity
 	public Rectangle getHitbox()
 	{
 		Rectangle cHB = blockType.getCustomHitbox();
-		return new Rectangle(getLocation().getX() + (int)cHB.getX() - (int)getGame().getCurrentLevel().getGameCamera().getxOffset(), getLocation().getY() + (int)cHB.getY() - (int)getGame().getCurrentLevel().getGameCamera().getyOffset(), (int)cHB.getWidth(), (int)cHB.getHeight());
+		return new Rectangle((int)(getLocation().getX() + (isFlipped() ? (getWidth()-(cHB.getX()+blockType.getCustomHitbox().getWidth())) : cHB.getX()) - getGame().getCurrentLevel().getGameCamera().getxOffset()), getLocation().getY() + (int)cHB.getY() - (int)getGame().getCurrentLevel().getGameCamera().getyOffset(), (int)cHB.getWidth(), (int)cHB.getHeight());
 	}
 
 	/**
@@ -94,5 +96,15 @@ public abstract class Tile extends Entity
 	public void setBlockType(BlockType blockType)
 	{
 		this.blockType = blockType;
+	}
+
+	public boolean isFlipped()
+	{
+		return flipped;
+	}
+
+	public void setFlipped(boolean flipped)
+	{
+		this.flipped = flipped;
 	}
 }
