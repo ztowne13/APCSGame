@@ -10,21 +10,27 @@ import java.awt.*;
 public class MaskEffect extends GraphicEffect
 {
 	Color maskColor;
+	Color maskColorWithAlpha;
 	int ticksToLive;
 	int ticksAlive = 0;
+	int alpha;
 
-	public MaskEffect(Game game, Color maskColor, int ticksToLive)
+	public MaskEffect(Game game, Color maskColor, int alpha, int ticksToLive)
 	{
 		super(game);
 
 		this.maskColor = maskColor;
 		this.ticksToLive = ticksToLive;
+		this.alpha = alpha;
+
+		this.maskColorWithAlpha = new Color(maskColor.getRed(), maskColor.getGreen(), maskColor.getBlue(), alpha);
+
 	}
 
 	@Override
 	public void draw(Graphics graphics)
 	{
-		graphics.setColor(maskColor);
+		graphics.setColor(maskColorWithAlpha);
 		graphics.fillRect(0, 0, game.getDisplay().getFrame().getWidth(), game.getDisplay().getFrame().getHeight());
 	}
 

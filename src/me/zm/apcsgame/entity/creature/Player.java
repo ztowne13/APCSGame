@@ -4,11 +4,13 @@ import me.zm.apcsgame.Game;
 import me.zm.apcsgame.GameSettings;
 import me.zm.apcsgame.displays.animations.AnimationType;
 import me.zm.apcsgame.displays.animations.DirectionalAnimation;
+import me.zm.apcsgame.displays.effects.FadeEffect;
 import me.zm.apcsgame.displays.effects.MaskEffect;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.tiles.Tile;
 import me.zm.apcsgame.input.KeyInputListener;
 import me.zm.apcsgame.locations.Direction;
+import me.zm.apcsgame.locations.Location;
 import me.zm.apcsgame.sounds.Sound;
 import me.zm.apcsgame.utils.EntityUtils;
 
@@ -29,6 +31,7 @@ public class Player extends Creature
 	AudioInputStream walkSound;
 	Clip clip;
 	boolean moving = false;
+	Location lastCheckPoint;
 
 	DirectionalAnimation walkAnimation;
 
@@ -37,6 +40,7 @@ public class Player extends Creature
 		super(game, x, y, width, height, CreatureType.PLAYER.getDefaultHealth(), CreatureType.PLAYER);
 		this.id = id;
 		this.speed = speed;
+		lastCheckPoint = new Location(getGame(), getLocation().getX(), getLocation().getY());
 
 		this.walkAnimation = new DirectionalAnimation(game, AnimationType.PLAYER_WALK, getLocation());
 		walkAnimation.loadImages();
@@ -55,45 +59,48 @@ public class Player extends Creature
 	@Override
 	public void tick()
 	{
-		getGame().getKeyInputListener().update();
-		getLocation().setDirection(Direction.combineCardinalDirections(EntityUtils.keysPressesToDirections(getGame().getKeyInputListener().getKeysPressed())));
-
-		checkMove();
-
-		if(getGame().getTicksAlive() % 7 == 0)
+		if (!isDead() || getGame().getCurrentLevel().getPauseMenu().isInPauseMenu())
 		{
-			if(moving)
+			getGame().getKeyInputListener().update();
+			getLocation().setDirection(Direction.combineCardinalDirections(EntityUtils.keysPressesToDirections(getGame().getKeyInputListener().getKeysPressed())));
+
+			checkMove();
+
+			if (getGame().getTicksAlive() % 7 == 0)
 			{
-				walkAnimation.tick();
-				try
+				if (moving)
 				{
-					walkSound.mark(20);
-					walkSound.reset();
-
-					if(clip != null)
+					walkAnimation.tick();
+					try
 					{
-						clip.stop();
+						walkSound.mark(20);
+						walkSound.reset();
+
+						if (clip != null)
+						{
+							clip.stop();
+						}
+						else
+						{
+							clip = AudioSystem.getClip();
+							clip.open(walkSound);
+
+							FloatControl gainControl =
+									(FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+							gainControl.setValue(-15.0f);
+						}
+
+						clip.setMicrosecondPosition(0);
+
+						if (getGame().getTicksAlive() % 21 == 0)
+						{
+							//clip.start();
+						}
 					}
-					else
+					catch (Exception exc)
 					{
-						clip = AudioSystem.getClip();
-						clip.open(walkSound);
-
-						FloatControl gainControl =
-								(FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-						gainControl.setValue(-15.0f);
+						exc.printStackTrace();
 					}
-
-					clip.setMicrosecondPosition(0);
-
-					if(getGame().getTicksAlive() % 21 == 0)
-					{
-						//clip.start();
-					}
-				}
-				catch(Exception exc)
-				{
-					exc.printStackTrace();
 				}
 			}
 		}
@@ -105,47 +112,44 @@ public class Player extends Creature
 	@Override
 	public void checkMove()
 	{
-		if(!getGame().getCurrentLevel().getPauseMenu().isInPauseMenu())
+		int xMove = 0;
+		int yMove = 0;
+
+		// To revert back to original position if position outside bounds.
+		int tempX = getLocation().getX();
+		int tempY = getLocation().getY();
+
+		KeyInputListener keyInputListener = getGame().getKeyInputListener();
+		if (keyInputListener.downKey)
+			yMove = speed;
+		if (keyInputListener.upKey)
+			yMove = -speed;
+		if (keyInputListener.leftKey)
+			xMove = -speed;
+		if (keyInputListener.rightKey)
+			xMove = speed;
+
+		getLocation().setX(getLocation().getX() + xMove);
+
+		if (collides() && !GameSettings.levelBuildMode)
 		{
-			int xMove = 0;
-			int yMove = 0;
+			getLocation().setX(tempX);
+			xMove = 0;
+		}
 
-			// To revert back to original position if position outside bounds.
-			int tempX = getLocation().getX();
-			int tempY = getLocation().getY();
+		getLocation().setY(getLocation().getY() + yMove);
 
-			KeyInputListener keyInputListener = getGame().getKeyInputListener();
-			if (keyInputListener.downKey)
-				yMove = speed;
-			if (keyInputListener.upKey)
-				yMove = -speed;
-			if (keyInputListener.leftKey)
-				xMove = -speed;
-			if (keyInputListener.rightKey)
-				xMove = speed;
+		if (collides() && !GameSettings.levelBuildMode)
+		{
+			getLocation().setY(tempY);
+			yMove = 0;
+		}
 
-			getLocation().setX(getLocation().getX() + xMove);
+		moving = yMove != 0 || xMove != 0;
 
-			if (collides() && !GameSettings.levelBuildMode)
-			{
-				getLocation().setX(tempX);
-				xMove = 0;
-			}
-
-			getLocation().setY(getLocation().getY() + yMove);
-
-			if (collides() && !GameSettings.levelBuildMode)
-			{
-				getLocation().setY(tempY);
-				yMove = 0;
-			}
-
-			moving = yMove != 0 || xMove != 0;
-
-			if (getGame().getCurrentLevel().getGameCamera().moveGameCamera(this))
-			{
-				getGame().getCurrentLevel().getGameCamera().move(xMove, yMove);
-			}
+		if (getGame().getCurrentLevel().getGameCamera().moveGameCamera(this))
+		{
+			getGame().getCurrentLevel().getGameCamera().move(xMove, yMove);
 		}
 	}
 
@@ -169,6 +173,18 @@ public class Player extends Creature
 		}
 
 		return getGame().getCurrentLevel().isEntityOutsideBounds(this) || collidesWithTile;
+	}
+
+	public void respawn(boolean fadeOut)
+	{
+		getGame().getGraphicEffects().put("fade out respawn", new FadeEffect(getGame(), Color.BLACK, 1, true, true));
+		setLocation(lastCheckPoint);
+		walkAnimation.setLocation(getLocation());
+		getGame().getCurrentLevel().getGameCamera().centerOnEntity(this);
+		setHealth(getMaxhealth());
+		setDead(false);
+		getGame().getGraphicEffects().remove("2");
+		getGame().getGraphicEffects().remove("1");
 	}
 
 
@@ -199,8 +215,28 @@ public class Player extends Creature
 	public void destroy()
 	{
 		setDead(true);
-		getGame().getGraphicEffects().put("death red", new MaskEffect(getGame(), Color.RED, 120));
-		//getGame().getGraphicEffects().put("death fade", new )
+		getGame().getGraphicEffects().put("2", new FadeEffect(getGame(), Color.BLACK, 2, false, false));
+		getGame().getGraphicEffects().put("1", new MaskEffect(getGame(), Color.RED, 100, -1));
+
+		Thread thread = new Thread()
+		{
+			@Override
+			public void run()
+			{
+				try
+				{
+					sleep(4000);
+					respawn(true);
+					interrupt();
+				}
+				catch(Exception exc)
+				{
+
+				}
+			}
+		};
+
+		thread.start();
 	}
 
 	public int getSpeed()
@@ -212,6 +248,5 @@ public class Player extends Creature
 	{
 		this.speed = speed;
 	}
-
 
 }
