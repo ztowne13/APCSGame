@@ -4,6 +4,7 @@ import me.zm.apcsgame.Game;
 import me.zm.apcsgame.displays.effects.GraphicEffect;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,7 +44,10 @@ public class LevelGSTick extends GameStateTick
 		game.getCurrentLevel().render(graphics);
 		game.getCurrentLevel().renderOverlay(graphics);
 
-		for(GraphicEffect graphicEffect : game.getGraphicEffects().values())
+		ArrayList<GraphicEffect> graphicEffectsCopy = new ArrayList<GraphicEffect>();
+		graphicEffectsCopy.addAll( game.getGraphicEffects().values());
+
+		for(GraphicEffect graphicEffect : graphicEffectsCopy)
 		{
 			graphicEffect.draw(graphics);
 		}

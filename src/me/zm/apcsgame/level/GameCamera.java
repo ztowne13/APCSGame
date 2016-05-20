@@ -90,4 +90,14 @@ public class GameCamera
 	{
 		this.yOffset = yOffset;
 	}
+
+	public void setToMoveX(int toMoveX)
+	{
+		this.toMoveX = toMoveX;
+	}
+
+	public void setToMoveY(int toMoveY)
+	{
+		this.toMoveY = toMoveY;
+	}
 }

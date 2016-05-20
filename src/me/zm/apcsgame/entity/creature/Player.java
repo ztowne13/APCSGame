@@ -106,6 +106,28 @@ public class Player extends Creature
 		}
 	}
 
+	public void jump()
+	{
+		int pX = getLocation().getX();
+		int pY = getLocation().getY();
+
+		int mX = getGame().getMouseEventListener().getX();
+		int mY = getGame().getMouseEventListener().getY();
+
+		double angle = Math.toDegrees(Math.atan2(pY - mY, pX - mX));
+		System.out.println(angle + " " + Math.sin(angle) + " " + Math.toRadians(Math.sin(angle)) + " " + Math.toDegrees(Math.sin(angle)));
+
+		double sin = Math.toRadians(Math.sin(angle)) * GameSettings.moveableDistanceFromMiddle;
+		double cos = Math.toRadians(Math.cos(angle)) * GameSettings.moveableDistanceFromMiddle;
+
+		getLocation().setX(getLocation().getX() + (int)sin);
+		getLocation().setY(getLocation().getY() + (int)cos);
+
+		getGame().getCurrentLevel().getGameCamera().centerOnEntity(this);
+		getGame().getCurrentLevel().getGameCamera().setToMoveX(0);
+		getGame().getCurrentLevel().getGameCamera().setToMoveY(0);
+	}
+
 	/**
 	 * Checks whether or not the player should be moving based on the keys that are pressed.
 	 */

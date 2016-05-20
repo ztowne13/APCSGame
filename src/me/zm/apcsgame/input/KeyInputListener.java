@@ -83,6 +83,10 @@ public class KeyInputListener implements KeyListener
 		{
 			game.getCurrentLevel().getPlayer().damage(1);
 		}
+		else if(e.getKeyCode() == e.VK_SPACE)
+		{
+			game.getCurrentLevel().getPlayer().jump();
+		}
 	}
 
 
