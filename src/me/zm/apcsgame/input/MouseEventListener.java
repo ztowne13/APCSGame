@@ -35,6 +35,13 @@ public class MouseEventListener implements MouseListener, MouseMotionListener
 	public void mouseClicked(MouseEvent e)
 	{
 
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e)
+	{
+		game.getCurrentLevel().getPauseMenu().click();
+
 		for(Entity entity : game.getCurrentLevel().getEntities())
 		{
 
@@ -67,14 +74,7 @@ public class MouseEventListener implements MouseListener, MouseMotionListener
 			{
 				points.add(new Point((int) (e.getX() + game.getCurrentLevel().getGameCamera().getxOffset()), (int) (e.getY() + game.getCurrentLevel().getGameCamera().getyOffset())));
 			}
-		}
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e)
-	{
-
-	}
+		}	}
 
 	@Override
 	public void mouseReleased(MouseEvent e)

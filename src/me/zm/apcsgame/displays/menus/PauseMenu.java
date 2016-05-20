@@ -38,6 +38,42 @@ public class PauseMenu
 		if(inPauseMenu)
 		{
 			graphics.drawImage(pauseImage, 0, 0, game.getDisplay().getFrame().getWidth(), game.getDisplay().getFrame().getHeight(), null);
+
+			double heightScale = (double)game.getDisplay().getFrame().getHeight() / (double)pauseImage.getHeight();
+
+			int mY = game.getMouseEventListener().getY();
+
+			for(int i : new Integer[]{pixel_y_mainMenu, pixel_y_resume, pixel_y_settings})
+			{
+				i = (int)(i * heightScale);
+				if(mY > i && mY <= i + (int)(heightScale*box_width))
+				{
+					graphics.setColor(new Color(Color.GRAY.getRed(), Color.GRAY.getGreen(), Color.GRAY.getBlue(), 150));
+					graphics.fillRect(0, i, game.getDisplay().getFrame().getWidth(), (int)(box_width*heightScale) + 1);
+				}
+			}
+		}
+	}
+
+	public void click()
+	{
+		if(isInPauseMenu())
+		{
+			double heightScale = (double)game.getDisplay().getFrame().getHeight() / (double)pauseImage.getHeight();
+			int mY = game.getMouseEventListener().getY();
+
+			if (mY > pixel_y_resume*heightScale && mY < (pixel_y_resume + box_width)*heightScale)
+			{
+				setInPauseMenu(false);
+			}
+			if (mY > pixel_y_settings*heightScale && mY < (pixel_y_settings + box_width)*heightScale)
+			{
+
+			}
+			if (mY > pixel_y_mainMenu*heightScale && mY < (pixel_y_mainMenu + box_width)*heightScale)
+			{
+
+			}
 		}
 	}
 

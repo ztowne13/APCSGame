@@ -59,7 +59,7 @@ public class Player extends Creature
 	@Override
 	public void tick()
 	{
-		if (!isDead() || getGame().getCurrentLevel().getPauseMenu().isInPauseMenu())
+		if (!isDead())
 		{
 			getGame().getKeyInputListener().update();
 			getLocation().setDirection(Direction.combineCardinalDirections(EntityUtils.keysPressesToDirections(getGame().getKeyInputListener().getKeysPressed())));

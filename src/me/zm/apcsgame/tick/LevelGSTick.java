@@ -20,18 +20,21 @@ public class LevelGSTick extends GameStateTick
 	@Override
 	public void tick()
 	{
-		Set<String> clonedList = new HashSet<String>();
-		clonedList.addAll(game.getGraphicEffects().keySet());
-		for(String graphicEffect : clonedList)
+		if(!game.getCurrentLevel().getPauseMenu().isInPauseMenu())
 		{
-			GraphicEffect effect = game.getGraphicEffects().get(graphicEffect);
-			if(!effect.tick())
+			Set<String> clonedList = new HashSet<String>();
+			clonedList.addAll(game.getGraphicEffects().keySet());
+			for (String graphicEffect : clonedList)
 			{
-				game.getGraphicEffects().remove(graphicEffect);
+				GraphicEffect effect = game.getGraphicEffects().get(graphicEffect);
+				if (!effect.tick())
+				{
+					game.getGraphicEffects().remove(graphicEffect);
+				}
 			}
-		}
 
-		game.getCurrentLevel().tick();
+			game.getCurrentLevel().tick();
+		}
 	}
 
 	@Override

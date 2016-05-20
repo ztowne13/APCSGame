@@ -44,7 +44,10 @@ public class SnowOverlay extends Overlay
     {
         for(Snowflake snowflake : flakes)
         {
-            snowflake.tick();
+            if(!game.getCurrentLevel().getPauseMenu().isInPauseMenu())
+            {
+                snowflake.tick();
+            }
             snowflake.draw(g);
         }
     }
