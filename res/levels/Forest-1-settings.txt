@@ -2,7 +2,7 @@ settings {
 The Beginning
 370,270
 SONG_1
-SNOW
+GOLD
 1
 TestBackground-Blurred1,60,1.15
 }

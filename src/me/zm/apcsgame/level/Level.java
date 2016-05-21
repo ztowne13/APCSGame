@@ -7,6 +7,7 @@ import me.zm.apcsgame.displays.Background;
 import me.zm.apcsgame.displays.effects.FadeEffect;
 import me.zm.apcsgame.displays.menus.HUD;
 import me.zm.apcsgame.displays.menus.PauseMenu;
+import me.zm.apcsgame.displays.overlays.GoldOverlay;
 import me.zm.apcsgame.displays.overlays.Overlay;
 import me.zm.apcsgame.displays.overlays.OverlayType;
 import me.zm.apcsgame.displays.overlays.SnowOverlay;
@@ -192,6 +193,12 @@ public class Level
 			SnowOverlay flakes = new SnowOverlay(game, 500);
 			flakes.createAllFlakes();
 			overlay = flakes;
+		}
+		else if(overlayType == OverlayType.GOLD)
+		{
+			GoldOverlay goldOverlay = new GoldOverlay(game, 500);
+			//goldOverlay.createAllSparks();
+			overlay = goldOverlay;
 		}
 	}
 

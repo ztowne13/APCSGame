@@ -12,7 +12,12 @@ public class GameSettings
 
 	public static int moveableDistanceFromMiddle = 50;
 	public static int imageScaleFactor = 2;
-	public static int toMoveJump = 100;
+
+	/**
+	 * All jump variables
+	 */
+	public static int toMoveJump = 200;
+	public static int jumpCooldown = 500000000;
 
 	/**
 	 * How many pixels smaller the friendly hitbox will be and bigger the enemy hitbox will be.

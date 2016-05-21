@@ -7,5 +7,7 @@ public enum OverlayType
 {
 	EMPTY,
 
-	SNOW;
+	SNOW,
+
+	GOLD;
 }

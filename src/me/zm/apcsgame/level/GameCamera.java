@@ -91,13 +91,23 @@ public class GameCamera
 		this.yOffset = yOffset;
 	}
 
-	public void setToMoveX(int toMoveX)
+	public void setToMoveX(float toMoveX)
 	{
 		this.toMoveX = toMoveX;
 	}
 
-	public void setToMoveY(int toMoveY)
+	public float getToMoveX()
+	{
+		return toMoveX;
+	}
+
+	public void setToMoveY(float toMoveY)
 	{
 		this.toMoveY = toMoveY;
+	}
+
+	public float getToMoveY()
+	{
+		return toMoveY;
 	}
 }

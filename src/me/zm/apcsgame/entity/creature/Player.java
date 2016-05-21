@@ -9,6 +9,7 @@ import me.zm.apcsgame.displays.effects.MaskEffect;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.tiles.Tile;
 import me.zm.apcsgame.input.KeyInputListener;
+import me.zm.apcsgame.level.GameCamera;
 import me.zm.apcsgame.locations.Direction;
 import me.zm.apcsgame.locations.Location;
 import me.zm.apcsgame.sounds.Sound;
@@ -33,6 +34,7 @@ public class Player extends Creature
 	boolean moving = false;
 	Location lastCheckPoint;
 
+	float lastJump = 0;
 	DirectionalAnimation walkAnimation;
 
 	public Player(Game game, String id, int x, int y, int width, int height, int speed)
@@ -108,24 +110,30 @@ public class Player extends Creature
 
 	public void jump()
 	{
-		int pX = getLocation().getX();
-		int pY = getLocation().getY();
+		System.out.println(System.nanoTime() - lastJump);
+		if(System.nanoTime() - lastJump > GameSettings.jumpCooldown)
+		{
+			GameCamera gc = getGame().getCurrentLevel().getGameCamera();
 
-		int mX = getGame().getMouseEventListener().getX();
-		int mY = getGame().getMouseEventListener().getY();
+			int pX = getLocation().getX() - (int) gc.getxOffset();
+			int pY = getLocation().getY() - (int) gc.getyOffset();
 
-		double angle = Math.toDegrees(Math.atan2(pY - mY, pX - mX));
-		System.out.println(angle + " " + Math.sin(angle) + " " + Math.toRadians(Math.sin(angle)) + " " + Math.toDegrees(Math.sin(angle)));
+			int mX = getGame().getMouseEventListener().getX();
+			int mY = getGame().getMouseEventListener().getY();
 
-		double sin = Math.toRadians(Math.sin(angle)) * GameSettings.moveableDistanceFromMiddle;
-		double cos = Math.toRadians(Math.cos(angle)) * GameSettings.moveableDistanceFromMiddle;
+			double angle = Math.toDegrees(Math.atan2(mY - pY, mX - pX));
 
-		getLocation().setX(getLocation().getX() + (int)sin);
-		getLocation().setY(getLocation().getY() + (int)cos);
+			double sin = Math.sin(Math.toRadians(angle)) * GameSettings.toMoveJump;
+			double cos = Math.cos(Math.toRadians(angle)) * GameSettings.toMoveJump;
 
-		getGame().getCurrentLevel().getGameCamera().centerOnEntity(this);
-		getGame().getCurrentLevel().getGameCamera().setToMoveX(0);
-		getGame().getCurrentLevel().getGameCamera().setToMoveY(0);
+			getLocation().setX(getLocation().getX() + (int) cos);
+			getLocation().setY(getLocation().getY() + (int) sin);
+
+			gc.setToMoveX(gc.getToMoveX() + (float) cos);
+			gc.setToMoveY(gc.getToMoveY() + (float) sin);
+
+			lastJump = System.nanoTime();
+		}
 	}
 
 	/**
