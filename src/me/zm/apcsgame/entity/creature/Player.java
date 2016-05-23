@@ -113,6 +113,9 @@ public class Player extends Creature
 		System.out.println(System.nanoTime() - lastJump);
 		if(System.nanoTime() - lastJump > GameSettings.jumpCooldown)
 		{
+			int tempX = getLocation().getX();
+			int tempY = getLocation().getY();
+			
 			GameCamera gc = getGame().getCurrentLevel().getGameCamera();
 
 			int pX = getLocation().getX() - (int) gc.getxOffset();
@@ -128,9 +131,17 @@ public class Player extends Creature
 
 			getLocation().setX(getLocation().getX() + (int) cos);
 			getLocation().setY(getLocation().getY() + (int) sin);
-
-			gc.setToMoveX(gc.getToMoveX() + (float) cos);
-			gc.setToMoveY(gc.getToMoveY() + (float) sin);
+			
+			if(!collides())
+			{
+				gc.setToMoveX(gc.getToMoveX() + (float) cos);
+				gc.setToMoveY(gc.getToMoveY() + (float) sin);
+			}
+			else
+			{
+				getLocation().setX(tempX);
+				getLocation().setY(tempY);
+			}
 
 			lastJump = System.nanoTime();
 		}
