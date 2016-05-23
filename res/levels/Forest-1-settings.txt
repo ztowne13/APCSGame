@@ -16,6 +16,9 @@ dark_tree_2,1275,2000,false
 dark_tree_1,800,2220,true
 dark_tree_1,295,2710,false
 dark_tree_2,210,2760,true
+empty_square_1,1505,3223,false
+empty_square_1,1036,3153,false
+empty_square_1,674,3034,false
 }
 
 event locations {

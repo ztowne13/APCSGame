@@ -13,6 +13,9 @@ import java.awt.image.BufferedImage;
  */
 public enum BlockType
 {
+	// (name of file, broken?, custom hitbox, x1, y1, x2, y2)
+	EMPTY_SQUARE_1("Square1",false,true, 0, 0, 100, 100),
+
 	GRASS_1("Grass1", true, false),
 
 	TREE_1("Tree1", false, true, 38, 332, 152, 333),
