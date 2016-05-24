@@ -47,8 +47,8 @@ public abstract class Tile extends Entity
 	public boolean collidesWith(Rectangle otherHitBox)
 	{
 		//Rectangle realOtherHitbox = new Rectangle((int)otherHitBox.getX(), (int)otherHitBox.getY(), (int)otherHitBox.getWidth(), (int)otherHitBox.getHeight()/4);
-		return getHitbox().intersects(otherHitBox);
-		//return collidesWithOnAxis(otherHitBox, true) && collidesWithOnAxis(otherHitBox, false);
+		//return getHitbox().intersects(otherHitBox);
+		return collidesWithOnAxis(otherHitBox, true) && collidesWithOnAxis(otherHitBox, false);
 	}
 
 	/**

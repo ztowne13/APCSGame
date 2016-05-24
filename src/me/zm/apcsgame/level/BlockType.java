@@ -18,13 +18,13 @@ public enum BlockType
 
 	GRASS_1("Grass1", true, false),
 
-	TREE_1("Tree1", false, true, 38, 332, 152, 333),
+	TREE_1("Tree1", false, true, 38, 332, 152, 373),
 
-	TREE_2("Tree2", false, true, 52, 251, 187, 252),
+	TREE_2("Tree2", false, true, 52, 251, 187, 292),
 
-	DARK_TREE_1("Dark-Tree1", false, true, 117, 310, 213, 311),
+	DARK_TREE_1("Dark-Tree1", false, true, 117, 310, 213, 341),
 
-	DARK_TREE_2("Dark-Tree2", false, true, 107, 310, 150, 311),
+	DARK_TREE_2("Dark-Tree2", false, true, 107, 310, 150, 351),
 
 	/*TREE_1("Tree1", false, true, 38, 332, 152, 393),
 
