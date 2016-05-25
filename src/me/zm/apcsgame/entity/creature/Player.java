@@ -20,6 +20,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by ztowne13 on 4/11/16.
@@ -205,9 +206,6 @@ public class Player extends Creature
 		}
 	}
 
-	/**
-	 * 	Checks if the player_walk collides with the walls or entity
-	 */
 	public boolean collides()
 	{
 		boolean collidesWithTile = false;
@@ -226,6 +224,7 @@ public class Player extends Creature
 
 		return getGame().getCurrentLevel().isEntityOutsideBounds(this) || collidesWithTile;
 	}
+
 
 	public void respawn(boolean fadeOut)
 	{

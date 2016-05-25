@@ -20,6 +20,11 @@ public class OrderedAnimation extends Animation
 	@Override
 	public void loadImages()
 	{
+		loadImages(.5);
+	}
+
+	public void loadImages(double scale)
+	{
 		for(int i = 0; i < framesCount; i++)
 		{
 			images.put(i + "", FileUtils.loadImage(defaultPath + animationType.name() + "_" + (i+1) + ".png"));

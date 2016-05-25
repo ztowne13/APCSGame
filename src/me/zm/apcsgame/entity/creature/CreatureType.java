@@ -1,5 +1,8 @@
 package me.zm.apcsgame.entity.creature;
 
+import me.zm.apcsgame.Game;
+import me.zm.apcsgame.level.Level;
+
 /**
  * Created by ztowne13 on 4/11/16.
  */
@@ -20,9 +23,14 @@ public enum CreatureType
 		this.defaultHealth = defaultHealth;
 	}
 
-	public void spawn()
+	public void spawn(Game game, int x, int y)
 	{
-
+		switch(this)
+		{
+			case BOSS_1:
+				game.getCurrentLevel().getEntities().add(new Boss1(game, "boss1", x, y, 100, 100, 3));
+				break;
+		}
 	}
 
 	public int getDefaultHealth()

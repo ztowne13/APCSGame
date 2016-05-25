@@ -9,6 +9,8 @@ public enum AnimationType
 
 	PLAYER_SWING(4),
 
+	BOSS_WALK(5),
+
 	INTERACT(4);
 
 	int framesCount;

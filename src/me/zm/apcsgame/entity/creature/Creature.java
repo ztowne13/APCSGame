@@ -5,6 +5,7 @@ import me.zm.apcsgame.Game;
 import me.zm.apcsgame.GameSettings;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.tiles.Tile;
+import me.zm.apcsgame.locations.Location;
 import me.zm.apcsgame.utils.MathUtils;
 
 import java.util.ArrayList;
@@ -92,48 +93,68 @@ public abstract class Creature extends Entity
 	
 	public void update_pathfinder()
 	{
-		Location toLoc = pathFinderLoc;
-		Location cL = getLocation();
-		int tempX = cL.getX();
-		int tempY = cL.getY();
-		
-		double angle = Math.toDegrees(Math.atan2(toLoc.getY() - cL.getY(), toLoc.getX() - cL.getX()));
-		
-		int addPlus = 0;
-		boolean success;
-		
-		while(true)
-		{
-			double sin = Math.sin(Math.toRadians(angle + addPlus)) * 3;
-			double cos = Math.cos(Math.toRadians(angle + addPlus)) * 3;
-			
-			cL.setY(tempY + sin);
-			cL.setC(tempX + cos);
-			
-			if(collides())
-			{
-				success = true;
-				break;
+		/*if(!(pathFinderLoc == null)) {
+			Location toLoc = pathFinderLoc;
+			Location cL = getLocation();
+			int tempX = cL.getX();
+			int tempY = cL.getY();
+
+			double angle = Math.toDegrees(Math.atan2(toLoc.getY() - cL.getY(), toLoc.getX() - cL.getX()));
+
+			int addPlus = 0;
+			boolean success;
+
+			while (true) {
+				double sin = Math.sin(Math.toRadians(angle + addPlus)) * 3;
+				double cos = Math.cos(Math.toRadians(angle + addPlus)) * 3;
+
+				cL.setY(tempY + (int) sin);
+				cL.setX(tempX + (int) cos);
+
+				if (collides()) {
+					success = true;
+					break;
+				}
+
+				sin = Math.sin(Math.toRadians(angle - addPlus)) * 3;
+				cos = Math.cos(Math.toRadians(angle - addPlus)) * 3;
+
+				cL.setY(tempY + (int) sin);
+				cL.setX(tempX + (int) cos);
+
+				if (collides()) {
+					success = true;
+					break;
+				}
 			}
-			
-			double sin = Math.sin(Math.toRadians(angle - addPlus)) * 3;
-			double cos = Math.cos(Math.toRadians(angle - addPlus)) * 3;
-			
-			cL.setY(tempY + sin);
-			cL.setC(tempX + cos);
-			
-			if(collides())
+
+			if (!success) {
+				cL.setX(tempX);
+				cL.setY(tempY);
+			}
+		}*/
+	}
+
+	/**
+	 * 	Checks if the entity collides with the walls or entity
+	 */
+	public boolean collides()
+	{
+		boolean collidesWithTile = false;
+
+		for(Entity tile : (ArrayList<Entity>) getGame().getCurrentLevel().getEntities().clone())
+		{
+			if(tile instanceof Tile)
 			{
-				success = true;
-				break;
+				if (((Tile)tile).collidesWith(getHitbox()))
+				{
+					collidesWithTile = true;
+					break;
+				}
 			}
 		}
-		
-		if(!success)
-		{
-			cL.setX(tempX);
-			cL.setY(tempY);
-		}
+
+		return getGame().getCurrentLevel().isEntityOutsideBounds(this) || collidesWithTile;
 	}
 
 	public CreatureType getCreatureType()

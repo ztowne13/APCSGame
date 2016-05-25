@@ -172,7 +172,7 @@ public class Level
 
 	public void loadMonsterSpawns()
 	{
-		int startingBoundsLine = findStartingConfigLine(GameSettings.start_levelBounds);
+		int startingBoundsLine = findStartingConfigLine(GameSettings.start_monsters);
 
 		ArrayList<Point> tempPoints = new ArrayList<Point>();
 
@@ -191,6 +191,8 @@ public class Level
 			CreatureType creatureType = CreatureType.valueOf(split[0].toUpperCase());
 			int x = Integer.parseInt(split[1]);
 			int y = Integer.parseInt(split[2]);
+
+			creatureType.spawn(game, x, y);
 		}
 
 		points = tempPoints.toArray(new Point[0]);
@@ -227,6 +229,8 @@ public class Level
 			//goldOverlay.createAllSparks();
 			overlay = goldOverlay;
 		}
+
+		loadMonsterSpawns();
 	}
 
 	/**
@@ -417,6 +421,7 @@ public class Level
 			{
 				if (!(ent instanceof Tile) && !(ent instanceof Player))
 				{
+					System.out.println(ent.getLocation().getX() + "  -  " + ent.getLocation().getY());
 					ent.draw(graphics);
 				}
 			}

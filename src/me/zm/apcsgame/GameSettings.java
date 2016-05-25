@@ -43,6 +43,7 @@ public class GameSettings
 	public static String start_breakableTiles = "breakable tiles {";
 	public static String start_eventLocations = "event locations {";
 	public static String start_levelBounds = "level bounds {";
+	public static String start_monsters = "creatures {";
 
 	/**
 	 * Developer Settings
