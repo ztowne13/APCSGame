@@ -16,6 +16,7 @@ public abstract class Creature extends Entity
 {
 	CreatureType creatureType;
 
+	Location pathFinderLoc = null;
 	float lastSwing = 0;
 
 	public Creature(Game game, int x, int y, int width, int height, int maxhealth, CreatureType creatureType)
@@ -86,6 +87,52 @@ public abstract class Creature extends Entity
 			}
 
 			lastSwing = System.nanoTime();
+		}
+	}
+	
+	public void update_pathfinder()
+	{
+		Location toLoc = pathFinderLoc;
+		Location cL = getLocation();
+		int tempX = cL.getX();
+		int tempY = cL.getY();
+		
+		double angle = Math.toDegrees(Math.atan2(toLoc.getY() - cL.getY(), toLoc.getX() - cL.getX()));
+		
+		int addPlus = 0;
+		boolean success;
+		
+		while(true)
+		{
+			double sin = Math.sin(Math.toRadians(angle + addPlus)) * 3;
+			double cos = Math.cos(Math.toRadians(angle + addPlus)) * 3;
+			
+			cL.setY(tempY + sin);
+			cL.setC(tempX + cos);
+			
+			if(collides())
+			{
+				success = true;
+				break;
+			}
+			
+			double sin = Math.sin(Math.toRadians(angle - addPlus)) * 3;
+			double cos = Math.cos(Math.toRadians(angle - addPlus)) * 3;
+			
+			cL.setY(tempY + sin);
+			cL.setC(tempX + cos);
+			
+			if(collides())
+			{
+				success = true;
+				break;
+			}
+		}
+		
+		if(!success)
+		{
+			cL.setX(tempX);
+			cL.setY(tempY);
 		}
 	}
 
