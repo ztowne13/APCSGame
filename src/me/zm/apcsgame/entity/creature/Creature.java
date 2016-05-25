@@ -5,6 +5,7 @@ import me.zm.apcsgame.Game;
 import me.zm.apcsgame.GameSettings;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.tiles.Tile;
+import me.zm.apcsgame.locations.Location;
 import me.zm.apcsgame.utils.MathUtils;
 
 import java.util.ArrayList;
@@ -90,7 +91,7 @@ public abstract class Creature extends Entity
 		}
 	}
 	
-	public void update_pathfinder()
+/*	public void update_pathfinder()
 	{
 		Location toLoc = pathFinderLoc;
 		Location cL = getLocation();
@@ -134,7 +135,7 @@ public abstract class Creature extends Entity
 			cL.setX(tempX);
 			cL.setY(tempY);
 		}
-	}
+	} */
 
 	public CreatureType getCreatureType()
 	{

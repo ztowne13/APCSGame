@@ -6,6 +6,7 @@ import me.zm.apcsgame.displays.animations.AnimationType;
 import me.zm.apcsgame.displays.animations.DirectionalAnimation;
 import me.zm.apcsgame.displays.effects.FadeEffect;
 import me.zm.apcsgame.displays.effects.MaskEffect;
+import me.zm.apcsgame.displays.effects.WastedEffect;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.tiles.Tile;
 import me.zm.apcsgame.input.KeyInputListener;
@@ -235,8 +236,10 @@ public class Player extends Creature
 		getGame().getCurrentLevel().getGameCamera().centerOnEntity(this);
 		setHealth(getMaxhealth());
 		setDead(false);
+		getGame().getGraphicEffects().remove("0");
 		getGame().getGraphicEffects().remove("2");
 		getGame().getGraphicEffects().remove("1");
+
 	}
 
 
@@ -285,6 +288,7 @@ public class Player extends Creature
 		setDead(true);
 		getGame().getGraphicEffects().put("2", new FadeEffect(getGame(), Color.BLACK, 2, false, false));
 		getGame().getGraphicEffects().put("1", new MaskEffect(getGame(), Color.RED, 100, -1));
+		getGame().getGraphicEffects().put("0",new WastedEffect(getGame(),false));
 
 		Thread thread = new Thread()
 		{
