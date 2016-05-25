@@ -26,6 +26,7 @@ empty_square_1,1220,3114,false
 empty_square_1,1220,3185,false
 empty_square_1,1286,3250,false
 empty_square_1,1286,3337,false
+empty_square_1,1220,3080,false
 }
 
 event locations {
