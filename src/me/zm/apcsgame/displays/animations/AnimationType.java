@@ -7,6 +7,8 @@ public enum AnimationType
 {
 	PLAYER_WALK(3),
 
+	PLAYER_SWING(4),
+
 	INTERACT(4);
 
 	int framesCount;

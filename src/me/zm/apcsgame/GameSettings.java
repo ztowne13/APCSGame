@@ -8,7 +8,6 @@ import java.awt.event.KeyEvent;
 public class GameSettings
 {
 	public static int FPS = 60;
-	public static int totalAnimationFrames = 3;
 
 	public static int moveableDistanceFromMiddle = 50;
 	public static int imageScaleFactor = 2;
@@ -28,6 +27,7 @@ public class GameSettings
 	 * The amount of pixels that the player_walk can move under breakable tiles.
 	 */
 	public static int xShift = 10;
+	public static int swingCooldown = 200000000;
 
 	public static int UP_KEY = KeyEvent.VK_W;
 	public static int DOWN_KEY = KeyEvent.VK_S;

@@ -12,6 +12,7 @@ import me.zm.apcsgame.displays.overlays.Overlay;
 import me.zm.apcsgame.displays.overlays.OverlayType;
 import me.zm.apcsgame.displays.overlays.SnowOverlay;
 import me.zm.apcsgame.entity.Entity;
+import me.zm.apcsgame.entity.creature.CreatureType;
 import me.zm.apcsgame.entity.creature.Player;
 import me.zm.apcsgame.entity.tiles.StaticTile;
 import me.zm.apcsgame.entity.tiles.Tile;
@@ -167,6 +168,32 @@ public class Level
 		};
 
 		thread.start();
+	}
+
+	public void loadMonsterSpawns()
+	{
+		int startingBoundsLine = findStartingConfigLine(GameSettings.start_levelBounds);
+
+		ArrayList<Point> tempPoints = new ArrayList<Point>();
+
+		for(int i = startingBoundsLine; i < loadedSettings.size(); i++)
+		{
+			String s = loadedSettings.get(i).replaceAll("\\s+","");
+
+			// Checks to see if it has hit the end of the configuration section.
+			if(s.equalsIgnoreCase("}"))
+			{
+				break;
+			}
+
+			// format creature type, x, y
+			String[] split = s.split(",");
+			CreatureType creatureType = CreatureType.valueOf(split[0].toUpperCase());
+			int x = Integer.parseInt(split[1]);
+			int y = Integer.parseInt(split[2]);
+		}
+
+		points = tempPoints.toArray(new Point[0]);
 	}
 
 	public void loadAfter(boolean fadeOut, boolean setAsCurrent, boolean modifyToInLevel)

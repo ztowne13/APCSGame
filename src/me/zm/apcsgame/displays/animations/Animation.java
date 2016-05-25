@@ -1,7 +1,6 @@
 package me.zm.apcsgame.displays.animations;
 
 import me.zm.apcsgame.Game;
-import me.zm.apcsgame.GameSettings;
 import me.zm.apcsgame.locations.Location;
 
 import java.awt.*;
@@ -51,15 +50,20 @@ public abstract class Animation
 	 */
 	public abstract void individualTick();
 
-	public void tick()
+	public boolean tick()
 	{
+		boolean done = false;
+
 		currentAnimationStage++;
-		if(currentAnimationStage >= GameSettings.totalAnimationFrames)
+		if(currentAnimationStage >= animationType.framesCount)
 		{
 			currentAnimationStage = 0;
+			done = true;
 		}
 
 		individualTick();
+
+		return done;
 	}
 
 	public HashMap<String, Image> getImages()

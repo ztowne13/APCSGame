@@ -49,16 +49,6 @@ public class DirectionalAnimation extends Animation
 		g.drawImage(images.get(direction.name() + (keepAtOne ? 0 + "" : currentAnimationStage)), location.getX() - (int) game.getCurrentLevel().getGameCamera().getxOffset(), location.getY() - (int) game.getCurrentLevel().getGameCamera().getyOffset(), null);
 	}
 
-	public int getCurrentAnimationStage()
-	{
-		return currentAnimationStage;
-	}
-
-	public void setCurrentAnimationStage(int currentAnimationStage)
-	{
-		this.currentAnimationStage = currentAnimationStage;
-	}
-
 	public HashMap<String, Image> getImages()
 	{
 		return images;

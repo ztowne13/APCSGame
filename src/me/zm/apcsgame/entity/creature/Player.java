@@ -36,6 +36,7 @@ public class Player extends Creature
 
 	float lastJump = 0;
 	DirectionalAnimation walkAnimation;
+	DirectionalAnimation swingAnimation;
 
 	public Player(Game game, String id, int x, int y, int width, int height, int speed)
 	{
@@ -46,6 +47,9 @@ public class Player extends Creature
 
 		this.walkAnimation = new DirectionalAnimation(game, AnimationType.PLAYER_WALK, getLocation());
 		walkAnimation.loadImages();
+
+		this.swingAnimation = new DirectionalAnimation(game, AnimationType.PLAYER_SWING, getLocation());
+		swingAnimation.loadImages();
 
 		setWidth(walkAnimation.getImages().values().iterator().next().getWidth(null));
 		setHeight(walkAnimation.getImages().values().iterator().next().getHeight(null));
@@ -72,7 +76,11 @@ public class Player extends Creature
 			{
 				if (moving)
 				{
-					walkAnimation.tick();
+					if(System.nanoTime() - lastSwing > GameSettings.swingCooldown)
+					{
+						walkAnimation.tick();
+					}
+
 					try
 					{
 						walkSound.mark(20);
@@ -153,44 +161,47 @@ public class Player extends Creature
 	@Override
 	public void checkMove()
 	{
-		int xMove = 0;
-		int yMove = 0;
-
-		// To revert back to original position if position outside bounds.
-		int tempX = getLocation().getX();
-		int tempY = getLocation().getY();
-
-		KeyInputListener keyInputListener = getGame().getKeyInputListener();
-		if (keyInputListener.downKey)
-			yMove = speed;
-		if (keyInputListener.upKey)
-			yMove = -speed;
-		if (keyInputListener.leftKey)
-			xMove = -speed;
-		if (keyInputListener.rightKey)
-			xMove = speed;
-
-		getLocation().setX(getLocation().getX() + xMove);
-
-		if (collides() && !GameSettings.levelBuildMode)
+		if(System.nanoTime() - getLastSwing() > GameSettings.swingCooldown)
 		{
-			getLocation().setX(tempX);
-			xMove = 0;
-		}
+			int xMove = 0;
+			int yMove = 0;
 
-		getLocation().setY(getLocation().getY() + yMove);
+			// To revert back to original position if position outside bounds.
+			int tempX = getLocation().getX();
+			int tempY = getLocation().getY();
 
-		if (collides() && !GameSettings.levelBuildMode)
-		{
-			getLocation().setY(tempY);
-			yMove = 0;
-		}
+			KeyInputListener keyInputListener = getGame().getKeyInputListener();
+			if (keyInputListener.downKey)
+				yMove = speed;
+			if (keyInputListener.upKey)
+				yMove = -speed;
+			if (keyInputListener.leftKey)
+				xMove = -speed;
+			if (keyInputListener.rightKey)
+				xMove = speed;
 
-		moving = yMove != 0 || xMove != 0;
+			getLocation().setX(getLocation().getX() + xMove);
 
-		if (getGame().getCurrentLevel().getGameCamera().moveGameCamera(this))
-		{
-			getGame().getCurrentLevel().getGameCamera().move(xMove, yMove);
+			if (collides() && !GameSettings.levelBuildMode)
+			{
+				getLocation().setX(tempX);
+				xMove = 0;
+			}
+
+			getLocation().setY(getLocation().getY() + yMove);
+
+			if (collides() && !GameSettings.levelBuildMode)
+			{
+				getLocation().setY(tempY);
+				yMove = 0;
+			}
+
+			moving = yMove != 0 || xMove != 0;
+
+			if (getGame().getCurrentLevel().getGameCamera().moveGameCamera(this))
+			{
+				getGame().getCurrentLevel().getGameCamera().move(xMove, yMove);
+			}
 		}
 	}
 
@@ -249,7 +260,23 @@ public class Player extends Creature
 			}
 		}
 
-		walkAnimation.render(!moving, direction, graphics);
+
+		if(System.nanoTime() - lastSwing > GameSettings.swingCooldown)
+		{
+			walkAnimation.render(!moving, direction, graphics);
+		}
+		else
+		{
+			if (getGame().getTicksAlive() % 4 == 0)
+			{
+				swingAnimation.tick();
+				swingAnimation.render(false, direction, graphics);
+			}
+			else
+			{
+				swingAnimation.render(false, direction, graphics);
+			}
+		}
 	}
 
 	@Override

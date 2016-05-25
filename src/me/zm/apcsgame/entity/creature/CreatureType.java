@@ -5,7 +5,9 @@ package me.zm.apcsgame.entity.creature;
  */
 public enum CreatureType
 {
-	PLAYER(10);
+	PLAYER(10),
+
+	BOSS_1(300);
 
 	int defaultHealth;
 
@@ -16,6 +18,11 @@ public enum CreatureType
 	CreatureType(int defaultHealth)
 	{
 		this.defaultHealth = defaultHealth;
+	}
+
+	public void spawn()
+	{
+
 	}
 
 	public int getDefaultHealth()
