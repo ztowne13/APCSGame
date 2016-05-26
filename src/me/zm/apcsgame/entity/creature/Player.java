@@ -7,8 +7,6 @@ import me.zm.apcsgame.displays.animations.DirectionalAnimation;
 import me.zm.apcsgame.displays.effects.FadeEffect;
 import me.zm.apcsgame.displays.effects.MaskEffect;
 import me.zm.apcsgame.displays.effects.WastedEffect;
-import me.zm.apcsgame.entity.Entity;
-import me.zm.apcsgame.entity.tiles.Tile;
 import me.zm.apcsgame.input.KeyInputListener;
 import me.zm.apcsgame.level.GameCamera;
 import me.zm.apcsgame.locations.Direction;
@@ -21,7 +19,6 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Created by ztowne13 on 4/11/16.
@@ -42,7 +39,7 @@ public class Player extends Creature
 
 	public Player(Game game, String id, int x, int y, int width, int height, int speed)
 	{
-		super(game, x, y, width, height, CreatureType.PLAYER.getDefaultHealth(), CreatureType.PLAYER);
+		super(game, x, y, width, height, 7, CreatureType.PLAYER.getDefaultHealth(), CreatureType.PLAYER);
 		this.id = id;
 		this.speed = speed;
 		lastCheckPoint = new Location(getGame(), getLocation().getX(), getLocation().getY());
@@ -74,7 +71,7 @@ public class Player extends Creature
 
 			checkMove();
 
-			if (getGame().getTicksAlive() % 7 == 0)
+			if (getGame().getTicksAlive() % getTickDelay() == 0)
 			{
 				if (moving)
 				{
@@ -206,26 +203,6 @@ public class Player extends Creature
 			}
 		}
 	}
-
-	public boolean collides()
-	{
-		boolean collidesWithTile = false;
-
-		for(Entity tile : getGame().getCurrentLevel().getEntities())
-		{
-			if(tile instanceof Tile)
-			{
-				if (((Tile)tile).collidesWith(getHitbox()))
-				{
-					collidesWithTile = true;
-					break;
-				}
-			}
-		}
-
-		return getGame().getCurrentLevel().isEntityOutsideBounds(this) || collidesWithTile;
-	}
-
 
 	public void respawn(boolean fadeOut)
 	{

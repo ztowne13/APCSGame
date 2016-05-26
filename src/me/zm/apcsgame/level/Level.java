@@ -1,5 +1,6 @@
 package me.zm.apcsgame.level;
 
+import com.badlogic.gdx.math.Vector2;
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.GameSettings;
 import me.zm.apcsgame.GameState;
@@ -104,7 +105,7 @@ public class Level
 			{
 				getPlayer().tick();
 
-				for (Entity ent : entities)
+				for (Entity ent : (ArrayList<Entity>) entities.clone())
 				{
 					ent.tick();
 				}
@@ -194,8 +195,6 @@ public class Level
 
 			creatureType.spawn(game, x, y);
 		}
-
-		points = tempPoints.toArray(new Point[0]);
 	}
 
 	public void loadAfter(boolean fadeOut, boolean setAsCurrent, boolean modifyToInLevel)
@@ -421,8 +420,13 @@ public class Level
 			{
 				if (!(ent instanceof Tile) && !(ent instanceof Player))
 				{
-					System.out.println(ent.getLocation().getX() + "  -  " + ent.getLocation().getY());
 					ent.draw(graphics);
+
+					if(GameSettings.drawHitboxes)
+					{
+						Vector2 entVec = ent.getLocation().getVectorAsMiddleWithOffset(ent.getWidth(), ent.getHeight());
+						graphics.fillRect((int) entVec.x - 5, (int) entVec.y - 5, 10, 10);
+					}
 				}
 			}
 
@@ -452,6 +456,7 @@ public class Level
 			}
 
 			hud.drawHealth(graphics);
+			hud.drawBossHealth(graphics);
 
 			// This is to go to a new level (typically). Code may be moved at some point
 			for (EventLocation eventLocation : eventLocations)
@@ -463,6 +468,18 @@ public class Level
 
 			if(GameSettings.drawHitboxes)
 			{
+				int[] xPoints = new int[points.length];
+				int[] yPoints = new int[points.length];
+
+				for(int i = 0; i < points.length; i++)
+				{
+					xPoints[i] = points[i].x - (int)(getGameCamera().getxOffset()) - (player.getWidth()/2);
+					yPoints[i] = points[i].y - (int)(getGameCamera().getyOffset()) - (player.getHeight());
+				}
+
+				Polygon polygon = new Polygon(xPoints, yPoints, points.length);
+				graphics.drawPolygon(polygon);
+
 				for (Entity ent : getEntities())
 				{
 					graphics.setColor(Color.BLACK);

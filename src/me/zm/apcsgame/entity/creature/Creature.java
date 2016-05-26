@@ -5,6 +5,7 @@ import me.zm.apcsgame.Game;
 import me.zm.apcsgame.GameSettings;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.tiles.Tile;
+import me.zm.apcsgame.locations.Location;
 import me.zm.apcsgame.utils.MathUtils;
 
 import java.util.ArrayList;
@@ -17,11 +18,13 @@ public abstract class Creature extends Entity
 	CreatureType creatureType;
 
 	Location pathFinderLoc = null;
+	int tickDelay;
 	float lastSwing = 0;
 
-	public Creature(Game game, int x, int y, int width, int height, int maxhealth, CreatureType creatureType)
+	public Creature(Game game, int x, int y, int width, int height, int tickDelay, int maxhealth, CreatureType creatureType)
 	{
-		super(game, creatureType.name(), x, y, width, height, maxhealth);
+		super(game, creatureType.name(), x, y, width, height, maxhealth, true);
+		this.tickDelay = tickDelay;
 		this.creatureType = creatureType;
 	}
 
@@ -56,7 +59,7 @@ public abstract class Creature extends Entity
 			for(Entity entity : (ArrayList<Entity>) getGame().getCurrentLevel().getEntities().clone())
 			{
 				// Make sure it's a breakable tile
-				if (!(entity instanceof Tile && !((Tile) entity).getBlockType().isBreakable()))
+				if (!(entity instanceof Tile && !((Tile) entity).getBlockType().isBreakable()) || entity instanceof Creature)
 				{
 					// Checks that the entity is not this entity so it doesn't kill itsself.
 					if (!entity.getUuid().toString().equalsIgnoreCase(getUuid().toString()))
@@ -73,11 +76,11 @@ public abstract class Creature extends Entity
 						float enemyAngle = new Vector2((float) (midX - x), (float) (midY - y)).angle();
 
 						// Checks if the entity is within 60 degrees of the swing radius
-						boolean inField = (mouseAngle - enemyAngle < 30 && mouseAngle - enemyAngle > -30);
+						boolean inField = (mouseAngle - enemyAngle < 90 && mouseAngle - enemyAngle > -90);
 
 						float distance = crVec.dst(entVec);
 
-						if (inField && distance < 100)
+						if (inField && distance < 160)
 						{
 							entity.damage(1);
 						}
@@ -89,51 +92,77 @@ public abstract class Creature extends Entity
 			lastSwing = System.nanoTime();
 		}
 	}
+
+	public boolean collides()
+	{
+		boolean collidesWithTile = false;
+
+		for(Entity tile : getGame().getCurrentLevel().getEntities())
+		{
+			if(tile instanceof Tile)
+			{
+				if (((Tile)tile).collidesWith(getHitbox()))
+				{
+					collidesWithTile = true;
+					break;
+				}
+			}
+		}
+
+		return getGame().getCurrentLevel().isEntityOutsideBounds(this) || collidesWithTile;
+	}
 	
 	public void update_pathfinder()
 	{
-		Location toLoc = pathFinderLoc;
-		Location cL = getLocation();
-		int tempX = cL.getX();
-		int tempY = cL.getY();
-		
-		double angle = Math.toDegrees(Math.atan2(toLoc.getY() - cL.getY(), toLoc.getX() - cL.getX()));
-		
-		int addPlus = 0;
-		boolean success;
-		
-		while(true)
-		{
-			double sin = Math.sin(Math.toRadians(angle + addPlus)) * 3;
-			double cos = Math.cos(Math.toRadians(angle + addPlus)) * 3;
-			
-			cL.setY(tempY + sin);
-			cL.setC(tempX + cos);
-			
-			if(collides())
-			{
-				success = true;
-				break;
-			}
-			
-			double sin = Math.sin(Math.toRadians(angle - addPlus)) * 3;
-			double cos = Math.cos(Math.toRadians(angle - addPlus)) * 3;
-			
-			cL.setY(tempY + sin);
-			cL.setC(tempX + cos);
-			
-			if(collides())
-			{
-				success = true;
-				break;
-			}
-		}
-		
-		if(!success)
-		{
-			cL.setX(tempX);
-			cL.setY(tempY);
-		}
+		if(!(pathFinderLoc == null)) {
+ 			Location toLoc = pathFinderLoc;
+ 			Location cL = getLocation();
+ 			int tempX = cL.getX();
+ 			int tempY = cL.getY();
+
+ 			double angle = Math.toDegrees(Math.atan2(toLoc.getY() - cL.getY(), toLoc.getX() - cL.getX()));
+			System.out.println(angle);
+
+ 			int addPlus = 0;
+ 			boolean success = false;
+
+ 			while (true) {
+ 				double sin = Math.sin(Math.toRadians(angle + addPlus)) * 3;
+ 				double cos = Math.cos(Math.toRadians(angle + addPlus)) * 3;
+				System.out.println(sin + " -- " + cos);
+
+ 				cL.setY(tempY + (int) sin);
+ 				cL.setX(tempX + (int) cos);
+
+ 				if (!collides()) {
+ 					success = true;
+ 					break;
+ 				}
+
+ 				sin = Math.sin(Math.toRadians(angle - addPlus)) * 3;
+ 				cos = Math.cos(Math.toRadians(angle - addPlus)) * 3;
+
+ 				cL.setY(tempY + (int) sin);
+ 				cL.setX(tempX + (int) cos);
+
+ 				if (!collides()) {
+ 					success = true;
+ 					break;
+ 				}
+
+				addPlus++;
+
+				if(addPlus >= 360)
+				{
+					break;
+				}
+ 			}
+
+ 			if (!success) {
+ 				cL.setX(tempX);
+ 				cL.setY(tempY);
+ 			}
+ 		}
 	}
 
 	public CreatureType getCreatureType()
@@ -154,5 +183,25 @@ public abstract class Creature extends Entity
 	public void setLastSwing(float lastSwing)
 	{
 		this.lastSwing = lastSwing;
+	}
+
+	public Location getPathFinderLoc()
+	{
+		return pathFinderLoc;
+	}
+
+	public void setPathFinderLoc(Location pathFinderLoc)
+	{
+		this.pathFinderLoc = pathFinderLoc;
+	}
+
+	public int getTickDelay()
+	{
+		return tickDelay;
+	}
+
+	public void setTickDelay(int tickDelay)
+	{
+		this.tickDelay = tickDelay;
 	}
 }

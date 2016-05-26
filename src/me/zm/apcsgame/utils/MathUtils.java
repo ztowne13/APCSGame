@@ -1,7 +1,7 @@
 package me.zm.apcsgame.utils;
 
 import me.zm.apcsgame.level.Point;
-
+import me.zm.apcsgame.locations.Location;
 
 
 /**
@@ -15,6 +15,11 @@ public class MathUtils
 		int y = (int) (origin.y + radius * Math.sin(angle));
 
 		return new Point(x, y);
+	}
+
+	public static double distance(Location l1, Location l2)
+	{
+		return Math.sqrt(Math.pow(Math.abs(l1.getX() - l2.getX()) / 2, 2) + Math.pow(Math.abs(l1.getY() - l2.getY()) / 2, 2));
 	}
 
 	/**

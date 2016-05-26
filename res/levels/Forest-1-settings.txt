@@ -34,7 +34,7 @@ new_level, 576, 3423, 150, Underground-1, -1, -1
 }
 
 creatures {
-BOSS_1,0,0
+BOSS_1,600,1000
 }
 
 level bounds {

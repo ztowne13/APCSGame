@@ -1,6 +1,7 @@
 package me.zm.apcsgame.displays.animations;
 
 import me.zm.apcsgame.Game;
+import me.zm.apcsgame.level.GameCamera;
 import me.zm.apcsgame.locations.Location;
 import me.zm.apcsgame.utils.FileUtils;
 
@@ -20,14 +21,14 @@ public class OrderedAnimation extends Animation
 	@Override
 	public void loadImages()
 	{
-		loadImages(.5);
+		loadImages(1);
 	}
 
 	public void loadImages(double scale)
 	{
 		for(int i = 0; i < framesCount; i++)
 		{
-			images.put(i + "", FileUtils.loadImage(defaultPath + animationType.name() + "_" + (i+1) + ".png"));
+			images.put(i + "", FileUtils.loadImage(defaultPath + animationType.name() + "_" + (i+1) + ".png", scale));
 		}
 	}
 
@@ -39,6 +40,7 @@ public class OrderedAnimation extends Animation
 
 	public void render(Graphics graphics)
 	{
-		graphics.drawImage(images.get(currentAnimationStage + ""), getLocation().getX(), getLocation().getY(), null);
+		GameCamera gc = getGame().getCurrentLevel().getGameCamera();
+		graphics.drawImage(images.get(currentAnimationStage + ""), getLocation().getX() - (int)gc.getxOffset(), getLocation().getY() - (int)gc.getyOffset(), null);
 	}
 }
