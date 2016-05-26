@@ -46,9 +46,14 @@ public class EntityUtils
 	{
 		ArrayList<Direction> directions = new ArrayList<Direction>();
 
-		for(int i : (ArrayList<Integer>) pressedKeys.clone())
+		try {
+			for (int i : (ArrayList<Integer>) pressedKeys.clone()) {
+				directions.add(getDirectionFromKeypress(i));
+			}
+		}
+		catch(Exception exc)
 		{
-			directions.add(getDirectionFromKeypress(i));
+			exc.printStackTrace();
 		}
 
 		return directions;

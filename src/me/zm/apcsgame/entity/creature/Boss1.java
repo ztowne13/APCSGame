@@ -25,18 +25,18 @@ public class Boss1 extends Creature
     OrderedAnimation swingAnim;
     Direction lastMoveDirection = Direction.EAST;
 
-    public Boss1(Game game, String id, int x, int y, int width, int height, int speed)
+    public Boss1(Game game, String id, int x, int y, int width, int height, int speed, double size)
     {
-        super(game, x, y, width, height, 10, CreatureType.BOSS_1, PathfinderAIType.WALK_STRAIGHT, InteractionAIType.HIT_NEAR);
+        super(game, x, y, width, height, 3, 10, CreatureType.BOSS_1, PathfinderAIType.WALK_STRAIGHT, InteractionAIType.HIT_NEAR);
 
         ArrayList<String> excludedDirections = new ArrayList<String>();
         excludedDirections.add("NORTH");
         excludedDirections.add("SOUTH");
         moveAnim = new DirectionalAnimation(game, AnimationType.BOSS_WALK, getLocation(), excludedDirections);
-        moveAnim.loadImages(.3);
+        moveAnim.loadImages(size);
 
         swingAnim = new OrderedAnimation(game, AnimationType.BOSS_ATTACK, getLocation());
-        swingAnim.loadImages(.3);
+        swingAnim.loadImages(size);
 
         setWidth(moveAnim.getImages().values().iterator().next().getWidth(null));
         setHeight(moveAnim.getImages().values().iterator().next().getHeight(null));

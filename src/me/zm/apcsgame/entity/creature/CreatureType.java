@@ -9,7 +9,9 @@ public enum CreatureType
 {
 	PLAYER(10, 0, 1),
 
-	BOSS_1(200, 300, 2);
+	BOSS_1(200, 300, 2),
+
+	BOSS_MINION(3, 300, 1);
 
 	int defaultHealth;
 	int visibleRange;
@@ -32,7 +34,10 @@ public enum CreatureType
 		switch(this)
 		{
 			case BOSS_1:
-				game.getCurrentLevel().getEntities().add(new Boss1(game, "boss1", x, y, 100, 100, 3));
+				game.getCurrentLevel().getEntities().add(new Boss1(game, "boss1", x, y, 100, 100, 3, .6));
+				break;
+			case BOSS_MINION:
+				game.getCurrentLevel().getEntities().add(new Boss1(game, "boss1", x, y, 100, 100, 3, .2));
 				break;
 		}
 	}

@@ -13,9 +13,9 @@ public class WalkLinearPF extends PathfinderAI
 	Location lastLoc = null;
 	int minDistance;
 
-	public WalkLinearPF(Game game, Creature entity, Location pathFindingGoal, int minDistance)
+	public WalkLinearPF(Game game, Creature entity, Location pathFindingGoal, int minDistance, int speed)
 	{
-		super(game, entity, pathFindingGoal, 0, 0);
+		super(game, entity, pathFindingGoal, 0, 0, speed);
 		lastLoc = entity.getLocation().clone();
 		this.minDistance = minDistance;
 	}
@@ -39,8 +39,8 @@ public class WalkLinearPF extends PathfinderAI
 			{
 				while (true)
 				{
-					double sin = Math.sin(Math.toRadians(angle + addPlus)) * 3;
-					double cos = Math.cos(Math.toRadians(angle + addPlus)) * 3;
+					double sin = Math.sin(Math.toRadians(angle + addPlus)) * getSpeed();
+					double cos = Math.cos(Math.toRadians(angle + addPlus)) * getSpeed();
 
 					cL.setY(tempY + (int) sin);
 					cL.setX(tempX + (int) cos);
@@ -51,8 +51,8 @@ public class WalkLinearPF extends PathfinderAI
 						break;
 					}
 
-					sin = Math.sin(Math.toRadians(angle - addPlus)) * 3;
-					cos = Math.cos(Math.toRadians(angle - addPlus)) * 3;
+					sin = Math.sin(Math.toRadians(angle - addPlus)) * getSpeed();
+					cos = Math.cos(Math.toRadians(angle - addPlus)) * getSpeed();
 
 					cL.setY(tempY + (int) sin);
 					cL.setX(tempX + (int) cos);

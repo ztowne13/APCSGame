@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.GameSettings;
 import me.zm.apcsgame.ai.MobAI;
+import me.zm.apcsgame.ai.interactions.Boss1AI;
 import me.zm.apcsgame.ai.interactions.HitNearAI;
 import me.zm.apcsgame.ai.interactions.InteractionAI;
 import me.zm.apcsgame.ai.interactions.InteractionAIType;
@@ -28,7 +29,7 @@ public abstract class Creature extends Entity implements MobAI
 	PathfinderAI pathfindingAI;
 	InteractionAI interactionAI;
 
-	public Creature(Game game, int x, int y, int width, int height, int tickDelay, CreatureType creatureType, PathfinderAIType pathfindingAIType, InteractionAIType interactionAIType)
+	public Creature(Game game, int x, int y, int width, int height, int speed, int tickDelay, CreatureType creatureType, PathfinderAIType pathfindingAIType, InteractionAIType interactionAIType)
 	{
 		super(game, creatureType.name(), x, y, width, height, creatureType.getDefaultHealth(), true);
 		this.tickDelay = tickDelay;
@@ -37,14 +38,14 @@ public abstract class Creature extends Entity implements MobAI
 		switch(pathfindingAIType)
 		{
 			case WALK_STRAIGHT:
-				pathfindingAI = new WalkLinearPF(game, this, null, 60);
+				pathfindingAI = new WalkLinearPF(game, this, null, 60, speed);
 				break;
 		}
 
 		switch(interactionAIType)
 		{
 			case HIT_NEAR:
-				interactionAI = new HitNearAI(game, this, 3, 100);
+				interactionAI = new Boss1AI(game, this, 3, 150);
 				break;
 		}
 	}

@@ -11,15 +11,16 @@ import me.zm.apcsgame.locations.Location;
 public abstract class PathfinderAI extends ActionAI
 {
 	Location pathFindingGoal;
-	int pathFindingWidth, pathFindingHeight;
+	int pathFindingWidth, pathFindingHeight, speed;
 
-	public PathfinderAI(Game game, Creature entity, Location pathFindingGoal, int pathFindingWidth, int pathFindingHeigt)
+	public PathfinderAI(Game game, Creature entity, Location pathFindingGoal, int pathFindingWidth, int pathFindingHeigt, int speed)
 	{
 		super(game, entity);
 
 		this.pathFindingGoal = pathFindingGoal;
 		this.pathFindingWidth = pathFindingWidth;
 		this.pathFindingHeight = pathFindingHeigt;
+		this.speed = speed;
 	}
 
 	public Location getPathFindingGoal()
@@ -50,5 +51,15 @@ public abstract class PathfinderAI extends ActionAI
 	public void setPathFindingHeight(int pathFindingHeight)
 	{
 		this.pathFindingHeight = pathFindingHeight;
+	}
+
+	public void setSpeed(int speed)
+	{
+		this.speed = speed;
+	}
+
+	public int getSpeed()
+	{
+		return speed;
 	}
 }

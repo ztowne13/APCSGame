@@ -41,7 +41,7 @@ public class Player extends Creature
 
 	public Player(Game game, String id, int x, int y, int width, int height, int speed)
 	{
-		super(game, x, y, width, height, 7, CreatureType.PLAYER, PathfinderAIType.NONE, InteractionAIType.NONE);
+		super(game, x, y, width, height, speed, 7, CreatureType.PLAYER, PathfinderAIType.NONE, InteractionAIType.NONE);
 		this.id = id;
 		this.speed = speed;
 		lastCheckPoint = new Location(getGame(), getLocation().getX(), getLocation().getY());
