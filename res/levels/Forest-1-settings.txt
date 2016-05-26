@@ -4,7 +4,7 @@ The Beginning
 SONG_1
 GOLD
 1
-TestBackground-Blurred1,60,1.15
+TestBackground-Blurred1,300,1.15
 }
 
 breakable tiles {
@@ -34,7 +34,6 @@ new_level, 576, 3423, 150, Underground-1, -1, -1
 }
 
 creatures {
-BOSS_1,600,1000
 }
 
 level bounds {

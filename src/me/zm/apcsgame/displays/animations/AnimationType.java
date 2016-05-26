@@ -9,7 +9,9 @@ public enum AnimationType
 
 	PLAYER_SWING(4),
 
-	BOSS_WALK(5),
+	BOSS_WALK(6),
+
+	BOSS_ATTACK(3),
 
 	INTERACT(4);
 

@@ -1,6 +1,8 @@
 package me.zm.apcsgame.entity;
 
 import me.zm.apcsgame.Game;
+import me.zm.apcsgame.displays.effects.FadeEffect;
+import me.zm.apcsgame.entity.creature.Player;
 import me.zm.apcsgame.locations.Location;
 
 import java.awt.*;
@@ -90,6 +92,11 @@ public abstract class Entity
 		if(damageable)
 		{
 			health -= amount;
+
+			if(this instanceof Player)
+			{
+				game.getGraphicEffects().put("damage flash", new FadeEffect(game, Color.RED, 10, true, true));
+			}
 
 			if (health <= 0)
 			{

@@ -6,6 +6,7 @@ import me.zm.apcsgame.locations.Location;
 import me.zm.apcsgame.utils.FileUtils;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -15,19 +16,34 @@ import java.util.HashMap;
  */
 public class DirectionalAnimation extends Animation
 {
+	ArrayList<String> excludedDirections;
 	public DirectionalAnimation(Game game, AnimationType animationType, Location location)
 	{
+		this(game, animationType, location, new ArrayList<String>());
+	}
+
+	public DirectionalAnimation(Game game, AnimationType animationType, Location location, ArrayList<String> excludedDirections)
+	{
 		super(game, animationType, location, "directional/");
+		this.excludedDirections = excludedDirections;
 	}
 
 	@Override
 	public void loadImages()
 	{
+		loadImages(1);
+	}
+
+	public void loadImages(double scale)
+	{
 		for(String dir : new String[]{"NORTH", "EAST", "SOUTH", "WEST"})
 		{
-			for(int i = 0; i < framesCount; i++)
+			if (!excludedDirections.contains(dir))
 			{
-				images.put(dir + i, FileUtils.loadImage(defaultPath + dir + "_" + (i+1) + ".png", 2));
+				for (int i = 0; i < framesCount; i++)
+				{
+					images.put(dir + i, FileUtils.loadImage(defaultPath + dir + "_" + (i + 1) + ".png", scale));
+				}
 			}
 		}
 	}

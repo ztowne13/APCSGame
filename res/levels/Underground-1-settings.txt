@@ -14,6 +14,10 @@ event locations {
 new_level, 1310, 143, 150, Forest-1, 552, 3172
 }
 
+creatures {
+BOSS_1,1300,1700
+}
+
 level bounds {
 1180,135
 1460,135

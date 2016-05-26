@@ -27,6 +27,16 @@ public class Location implements Locatable
 		this.game = game;
 	}
 
+	public Location getAsCentered(int width, int height)
+	{
+		return new Location(game, x + (width/2), y + (height/2));
+	}
+
+	public Location clone()
+	{
+		return new Location(game, x, y, direction);
+	}
+
 	public Vector2 getVector()
 	{
 		return new Vector2(x, y);

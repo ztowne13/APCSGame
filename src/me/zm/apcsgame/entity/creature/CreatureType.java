@@ -7,22 +7,24 @@ import me.zm.apcsgame.Game;
  */
 public enum CreatureType
 {
-	PLAYER(10, 0),
+	PLAYER(10, 0, 1),
 
-	BOSS_1(300, 300);
+	BOSS_1(200, 300, 2);
 
 	int defaultHealth;
 	int visibleRange;
+	int damageAmount;
 
 	/**
 	 * CreatureType constructor
 	 * @param defaultHealth The default amount of health this specific creature will have unless changed.
 	 * @param visibleRange How many pixels the mob's AI will detect the player
 	 */
-	CreatureType(int defaultHealth, int visibleRange)
+	CreatureType(int defaultHealth, int visibleRange, int damageAmount)
 	{
 		this.defaultHealth = defaultHealth;
 		this.visibleRange = visibleRange;
+		this.damageAmount = damageAmount;
 	}
 
 	public void spawn(Game game, int x, int y)
@@ -53,5 +55,15 @@ public enum CreatureType
 	public void setVisibleRange(int visibleRange)
 	{
 		this.visibleRange = visibleRange;
+	}
+
+	public int getDamageAmount()
+	{
+		return damageAmount;
+	}
+
+	public void setDamageAmount(int damageAmount)
+	{
+		this.damageAmount = damageAmount;
 	}
 }

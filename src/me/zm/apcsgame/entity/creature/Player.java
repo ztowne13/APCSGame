@@ -2,6 +2,8 @@ package me.zm.apcsgame.entity.creature;
 
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.GameSettings;
+import me.zm.apcsgame.ai.interactions.InteractionAIType;
+import me.zm.apcsgame.ai.pathfinding.PathfinderAIType;
 import me.zm.apcsgame.displays.animations.AnimationType;
 import me.zm.apcsgame.displays.animations.DirectionalAnimation;
 import me.zm.apcsgame.displays.effects.FadeEffect;
@@ -39,16 +41,16 @@ public class Player extends Creature
 
 	public Player(Game game, String id, int x, int y, int width, int height, int speed)
 	{
-		super(game, x, y, width, height, 7, CreatureType.PLAYER.getDefaultHealth(), CreatureType.PLAYER);
+		super(game, x, y, width, height, 7, CreatureType.PLAYER, PathfinderAIType.NONE, InteractionAIType.NONE);
 		this.id = id;
 		this.speed = speed;
 		lastCheckPoint = new Location(getGame(), getLocation().getX(), getLocation().getY());
 
 		this.walkAnimation = new DirectionalAnimation(game, AnimationType.PLAYER_WALK, getLocation());
-		walkAnimation.loadImages();
+		walkAnimation.loadImages(2);
 
 		this.swingAnimation = new DirectionalAnimation(game, AnimationType.PLAYER_SWING, getLocation());
-		swingAnimation.loadImages();
+		swingAnimation.loadImages(2);
 
 		setWidth(walkAnimation.getImages().values().iterator().next().getWidth(null));
 		setHeight(walkAnimation.getImages().values().iterator().next().getHeight(null));
@@ -75,7 +77,7 @@ public class Player extends Creature
 			{
 				if (moving)
 				{
-					if(System.nanoTime() - lastSwing > GameSettings.swingCooldown)
+					if(canMove())
 					{
 						walkAnimation.tick();
 					}
@@ -160,7 +162,7 @@ public class Player extends Creature
 	@Override
 	public void checkMove()
 	{
-		if(System.nanoTime() - getLastSwing() > GameSettings.swingCooldown)
+		if(canMove())
 		{
 			int xMove = 0;
 			int yMove = 0;
@@ -285,6 +287,12 @@ public class Player extends Creature
 		};
 
 		thread.start();
+	}
+
+	@Override
+	public boolean canMove()
+	{
+		return (System.nanoTime() - lastSwing > GameSettings.swingCooldown);
 	}
 
 	public int getSpeed()

@@ -3,9 +3,15 @@ package me.zm.apcsgame.entity.creature;
 import com.badlogic.gdx.math.Vector2;
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.GameSettings;
+import me.zm.apcsgame.ai.MobAI;
+import me.zm.apcsgame.ai.interactions.HitNearAI;
+import me.zm.apcsgame.ai.interactions.InteractionAI;
+import me.zm.apcsgame.ai.interactions.InteractionAIType;
+import me.zm.apcsgame.ai.pathfinding.PathfinderAI;
+import me.zm.apcsgame.ai.pathfinding.PathfinderAIType;
+import me.zm.apcsgame.ai.pathfinding.WalkLinearPF;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.tiles.Tile;
-import me.zm.apcsgame.locations.Location;
 import me.zm.apcsgame.utils.MathUtils;
 
 import java.util.ArrayList;
@@ -13,25 +19,42 @@ import java.util.ArrayList;
 /**
  * Created by ztowne13 on 4/11/16.
  */
-public abstract class Creature extends Entity
+public abstract class Creature extends Entity implements MobAI
 {
 	CreatureType creatureType;
 
-	Location pathFinderLoc = null;
 	int tickDelay;
 	float lastSwing = 0;
+	PathfinderAI pathfindingAI;
+	InteractionAI interactionAI;
 
-	public Creature(Game game, int x, int y, int width, int height, int tickDelay, int maxhealth, CreatureType creatureType)
+	public Creature(Game game, int x, int y, int width, int height, int tickDelay, CreatureType creatureType, PathfinderAIType pathfindingAIType, InteractionAIType interactionAIType)
 	{
-		super(game, creatureType.name(), x, y, width, height, maxhealth, true);
+		super(game, creatureType.name(), x, y, width, height, creatureType.getDefaultHealth(), true);
 		this.tickDelay = tickDelay;
 		this.creatureType = creatureType;
+
+		switch(pathfindingAIType)
+		{
+			case WALK_STRAIGHT:
+				pathfindingAI = new WalkLinearPF(game, this, null, 60);
+				break;
+		}
+
+		switch(interactionAIType)
+		{
+			case HIT_NEAR:
+				interactionAI = new HitNearAI(game, this, 3, 100);
+				break;
+		}
 	}
 
 	/**
 	 * Checks to see whether or not the entity should move
 	 */
 	public abstract void checkMove();
+
+	public abstract boolean canMove();
 
 	/**
 	 * Swings the creatures melee attack. I.E. sword swing.
@@ -97,7 +120,7 @@ public abstract class Creature extends Entity
 	{
 		boolean collidesWithTile = false;
 
-		for(Entity tile : getGame().getCurrentLevel().getEntities())
+		for(Entity tile : (ArrayList<Entity>) getGame().getCurrentLevel().getEntities().clone())
 		{
 			if(tile instanceof Tile)
 			{
@@ -111,59 +134,22 @@ public abstract class Creature extends Entity
 
 		return getGame().getCurrentLevel().isEntityOutsideBounds(this) || collidesWithTile;
 	}
-	
-	public void update_pathfinder()
+
+	public boolean find_path()
 	{
-		if(!(pathFinderLoc == null)) {
- 			Location toLoc = pathFinderLoc;
- 			Location cL = getLocation();
- 			int tempX = cL.getX();
- 			int tempY = cL.getY();
-
- 			double angle = Math.toDegrees(Math.atan2(toLoc.getY() - cL.getY(), toLoc.getX() - cL.getX()));
-			System.out.println(angle);
-
- 			int addPlus = 0;
- 			boolean success = false;
-
- 			while (true) {
- 				double sin = Math.sin(Math.toRadians(angle + addPlus)) * 3;
- 				double cos = Math.cos(Math.toRadians(angle + addPlus)) * 3;
-				System.out.println(sin + " -- " + cos);
-
- 				cL.setY(tempY + (int) sin);
- 				cL.setX(tempX + (int) cos);
-
- 				if (!collides()) {
- 					success = true;
- 					break;
- 				}
-
- 				sin = Math.sin(Math.toRadians(angle - addPlus)) * 3;
- 				cos = Math.cos(Math.toRadians(angle - addPlus)) * 3;
-
- 				cL.setY(tempY + (int) sin);
- 				cL.setX(tempX + (int) cos);
-
- 				if (!collides()) {
- 					success = true;
- 					break;
- 				}
-
-				addPlus++;
-
-				if(addPlus >= 360)
-				{
-					break;
-				}
- 			}
-
- 			if (!success) {
- 				cL.setX(tempX);
- 				cL.setY(tempY);
- 			}
- 		}
+		return pathfindingAI.run();
 	}
+
+	public boolean interact()
+	{
+		if(interactionAI.run())
+		{
+			setLastSwing(System.nanoTime());
+			return true;
+		}
+		return false;
+	}
+
 
 	public CreatureType getCreatureType()
 	{
@@ -185,16 +171,6 @@ public abstract class Creature extends Entity
 		this.lastSwing = lastSwing;
 	}
 
-	public Location getPathFinderLoc()
-	{
-		return pathFinderLoc;
-	}
-
-	public void setPathFinderLoc(Location pathFinderLoc)
-	{
-		this.pathFinderLoc = pathFinderLoc;
-	}
-
 	public int getTickDelay()
 	{
 		return tickDelay;
@@ -204,4 +180,26 @@ public abstract class Creature extends Entity
 	{
 		this.tickDelay = tickDelay;
 	}
+
+	public PathfinderAI getPathfindingAI()
+	{
+		return pathfindingAI;
+	}
+
+	public void setPathfindingAI(PathfinderAI pathfindingAI)
+	{
+		this.pathfindingAI = pathfindingAI;
+	}
+
+	public InteractionAI getInteractionAI()
+	{
+		return interactionAI;
+	}
+
+	public void setInteractionAI(InteractionAI interactionAI)
+	{
+		this.interactionAI = interactionAI;
+	}
+
+
 }
