@@ -43,7 +43,7 @@ public class Boss1AI extends InteractionAI
 
         if(getEntity().getHealth() == getEntity().getMaxhealth() - 50 && phase == 1)
         {
-            spawnMinionCount(2, 600);
+            spawnMinionCount(3, 600);
             phase++;
         }
 
@@ -55,13 +55,19 @@ public class Boss1AI extends InteractionAI
 
         if(getEntity().getHealth() == getEntity().getMaxhealth() - 150 && phase == 3)
         {
-            spawnMinionCount(5, 800);
+            spawnMinionCount(8, 1500);
             phase++;
         }
 
-        if(getEntity().getHealth() == getEntity().getMaxhealth() - 195 && phase == 4)
+        if(getEntity().getHealth() == getEntity().getMaxhealth() - 175 && phase == 4)
         {
-            spawnMinionCount(3, 800);
+            spawnMinionCount(7, 1500);
+            phase++;
+        }
+
+        if(getEntity().getHealth() == getEntity().getMaxhealth() - 195 && phase == 5)
+        {
+            spawnMinionCount(5, 800);
             phase++;
         }
         return hitNearAI.run();

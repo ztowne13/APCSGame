@@ -42,7 +42,7 @@ public abstract class Creature extends Entity implements MobAI
 		switch(interactionAIType)
 		{
 			case HIT_NEAR:
-				interactionAI = new HitNearAI(game, this, 2.25F, creatureType.getSwingDistance());
+				interactionAI = new HitNearAI(game, this, 1.75F, creatureType.getSwingDistance());
 				break;
 			case BOSS_AI:
 				interactionAI = new Boss1AI(game, this, 3, 150);

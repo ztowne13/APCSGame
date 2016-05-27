@@ -153,9 +153,10 @@ public class Level
 				last = System.currentTimeMillis();
 
 				System.out.println("Milliseconds to load level '" + levelName + "': " + (last - start));
-				hasFinishedLoading = true;
 
 				loadAfter(fadeOut, setAsCurrent, modifyToInLevel, forceXSpawn, forceYSpawn);
+
+				hasFinishedLoading = true;
 
 				try
 				{
@@ -232,6 +233,8 @@ public class Level
 		setPlayer(new Player(game, "TestCharacter1", forceX != -1 ? forceX : getSpawnPoint().x, forceY != -1 ? forceY : getSpawnPoint().y, 50, 50, 3));
 		entities.add(0, getPlayer());
 
+		getGameCamera().centerOnEntity(getPlayer());
+
 		loadMonsterSpawns();
 	}
 
@@ -246,7 +249,6 @@ public class Level
 		pauseMenu = new PauseMenu(game);
 		pauseMenu.loadImage();
 
-		getGameCamera().centerOnEntity(getPlayer());
 		game.setPlaySpeed(100);
 	}
 
