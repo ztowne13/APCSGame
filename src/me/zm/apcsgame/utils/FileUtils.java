@@ -5,6 +5,7 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
+import javax.swing.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -26,12 +27,23 @@ public class FileUtils
 	 */
 	public static ArrayList<String> loadFileByLine(String localPath)
 	{
-		localPath = "/" + localPath;
+		boolean res = true;
+		localPath = (res ? "/res" : "") + "/" + localPath;
 		String loadedString = "";
 
 		try
 		{
-			File file = new File(FileUtils.class.getResource(localPath).toURI());
+			JOptionPane.showConfirmDialog(null, FileUtils.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath() + localPath);
+
+			File file;
+			if(res)
+			{
+				file = new File(FileUtils.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath() + localPath);
+			}
+			else
+			{
+				file = new File(FileUtils.class.getResource(localPath).toURI());
+			}
 			FileInputStream fileInputSteam = new FileInputStream(file);
 
 			int content;
@@ -42,7 +54,7 @@ public class FileUtils
 		}
 		catch (Exception exc)
 		{
-
+			JOptionPane.showConfirmDialog(null, exc.getStackTrace());
 		}
 
 		ArrayList<String> loadedList = new ArrayList<String>();
@@ -69,8 +81,9 @@ public class FileUtils
 	{
 		try
 		{
-
-			BufferedImage bI = ImageIO.read(FileUtils.class.getResource("/" + path));
+			boolean res = true;
+			//JOptionPane.showConfirmDialog(null, (FileUtils.class.getResource((res ? "/res" : "") + "/" + path)));
+			BufferedImage bI = ImageIO.read(FileUtils.class.getResource((res ? "/res" : "") + "/" + path));
 
 			BufferedImage after = new BufferedImage((int)(bI.getWidth()*imageScale), (int)(bI.getHeight()*imageScale), BufferedImage.TYPE_INT_ARGB);
 			AffineTransform at = new AffineTransform();
@@ -81,6 +94,7 @@ public class FileUtils
 		}
 		catch (IOException e)
 		{
+			JOptionPane.showConfirmDialog(null, ("failed to load image: " + path));
 			e.printStackTrace();
 		}
 		return null;
@@ -105,11 +119,13 @@ public class FileUtils
 	{
 		try
 		{
-			AudioInputStream inputStream = AudioSystem.getAudioInputStream(FileUtils.class.getResourceAsStream("/sounds/" + path));
+			boolean res = true;
+			AudioInputStream inputStream = AudioSystem.getAudioInputStream(FileUtils.class.getResourceAsStream((res ? "/res" : "") + "/sounds/" + path));
 			return inputStream;
 		}
 		catch(Exception exc)
 		{
+			JOptionPane.showConfirmDialog(null, ("failed to load sound: " + path));
 			exc.printStackTrace();
 		}
 		return null;
