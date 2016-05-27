@@ -9,7 +9,7 @@ public enum CreatureType
 {
 	PLAYER(10, 0, 1, 160, 0),
 
-	BOSS_1(1, 300, 3, 220, 60),
+	BOSS_1(200, 300, 3, 220, 60),
 
 	CROW(3, 150, 1, 50, 30),
 
@@ -26,6 +26,7 @@ public enum CreatureType
 	 */
 	CreatureType(int defaultHealth, int visibleRange, int damageAmount, int swingDistance, int minimumRange)
 	{
+
 		this.defaultHealth = defaultHealth;
 		this.visibleRange = visibleRange;
 		this.damageAmount = damageAmount;
@@ -51,6 +52,9 @@ public enum CreatureType
 				break;
 			case CROW:
 				creature = new Crow(game, "crow", x, y, -1, -1);
+				break;
+			case BALL:
+				creature = new Ball(game, "ball", x, y, -1, -1);
 				break;
 		}
 

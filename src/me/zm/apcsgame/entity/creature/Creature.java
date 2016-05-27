@@ -6,6 +6,7 @@ import me.zm.apcsgame.ai.interactions.Boss1AI;
 import me.zm.apcsgame.ai.interactions.HitNearAI;
 import me.zm.apcsgame.ai.interactions.InteractionAI;
 import me.zm.apcsgame.ai.interactions.InteractionAIType;
+import me.zm.apcsgame.ai.pathfinding.BallPF;
 import me.zm.apcsgame.ai.pathfinding.PathfinderAI;
 import me.zm.apcsgame.ai.pathfinding.PathfinderAIType;
 import me.zm.apcsgame.ai.pathfinding.WalkLinearPF;
@@ -38,6 +39,8 @@ public abstract class Creature extends Entity implements MobAI
 			case WALK_STRAIGHT:
 				pathfindingAI = new WalkLinearPF(game, this, null, creatureType.getMinimumRange(), speed);
 				break;
+			case BALL:
+				pathfindingAI = new BallPF(game, this, null, speed, 6);
 		}
 
 		switch(interactionAIType)
@@ -49,7 +52,7 @@ public abstract class Creature extends Entity implements MobAI
 				}
 				else if(this instanceof Ball)
 				{
-					interactionAI = new HitNearAI(game, this, .1F, creatureType.getSwingDistance());
+					interactionAI = new HitNearAI(game, this, .5F, creatureType.getSwingDistance());
 				}
 				else
 				{

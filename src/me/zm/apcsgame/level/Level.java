@@ -51,6 +51,7 @@ public class Level
 	String levelName;
 	Point spawnPoint;
 	boolean endedLevel = false;
+	boolean startedSound = false;
 
 	HUD hud;
 	Player player;
@@ -83,15 +84,15 @@ public class Level
 	{
 		if(hasFinishedLoading)
 		{
-			if ((levelSong == null || !levelSong.isRunning()) && !endedLevel)
+			if ((levelSong == null || !levelSong.isRunning()) && !endedLevel && !startedSound)
 			{
 				try
 				{
 					/*
 					* Just got annoyed listening to the music, will re-add later.
 					*/
-					levelSongStream.reset();
-
+					//levelSongStream.reset();
+					startedSound = true;
 					levelSong = AudioSystem.getClip();
 					levelSong.open(levelSongStream);
 					levelSong.start();
@@ -535,7 +536,7 @@ public class Level
 	 */
 	public void renderTiles(Entity player, Graphics graphics, boolean before)
 	{
-		for(Entity tile : getEntities())
+		for(Entity tile : (ArrayList<Entity>) getEntities().clone())
 		{
 			if(tile instanceof Tile)
 			{

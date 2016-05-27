@@ -7,5 +7,7 @@ public enum PathfinderAIType
 {
 	WALK_STRAIGHT,
 
+	BALL,
+
 	NONE;
 }
