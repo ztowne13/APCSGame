@@ -74,6 +74,8 @@ public class Game implements Runnable
 		// Load into the first thing
 		Level testLevel1 = new Level(this, "Forest-1", 0, 0);
 		testLevel1.loadAll(true, true, true);
+
+
 	}
 
 	/**
@@ -324,5 +326,15 @@ public class Game implements Runnable
 	public void setPlaySpeed(double playSpeed)
 	{
 		this.playSpeed = playSpeed;
+	}
+
+	public GameStateTick getGameStateTick()
+	{
+		return gameStateTick;
+	}
+
+	public void setGameStateTick(GameStateTick gameStateTick)
+	{
+		this.gameStateTick = gameStateTick;
 	}
 }

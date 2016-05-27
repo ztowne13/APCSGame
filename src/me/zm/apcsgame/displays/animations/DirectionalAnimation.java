@@ -49,6 +49,14 @@ public class DirectionalAnimation extends Animation
 	}
 
 	@Override
+	public Animation clone()
+	{
+		DirectionalAnimation directionalAnimation = new DirectionalAnimation(getGame(), getAnimationType(), getLocation());
+		directionalAnimation.setImages(getImages());
+		return directionalAnimation;
+	}
+
+	@Override
 	public void individualTick()
 	{
 

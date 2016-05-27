@@ -1,9 +1,11 @@
 package me.zm.apcsgame.ai.interactions;
 
 import me.zm.apcsgame.Game;
+import me.zm.apcsgame.displays.animations.DirectionalAnimation;
+import me.zm.apcsgame.displays.animations.OrderedAnimation;
+import me.zm.apcsgame.entity.creature.Boss1Minion;
 import me.zm.apcsgame.entity.creature.Creature;
 import me.zm.apcsgame.entity.creature.CreatureType;
-import me.zm.apcsgame.entity.creature.Player;
 import me.zm.apcsgame.locations.Location;
 
 import java.util.Random;
@@ -13,33 +15,81 @@ import java.util.Random;
  */
 public class Boss1AI extends InteractionAI
 {
+    DirectionalAnimation walkAnim = null;
+    OrderedAnimation swingAnim = null;
+
     HitNearAI hitNearAI;
+    int phase = 0;
 
     public Boss1AI(Game game, Creature creature, float swingCharge, int swingDistance)
     {
         super(game, creature);
 
         this.hitNearAI = new HitNearAI(game, creature, swingCharge, swingDistance);
+
+        Boss1Minion minion = (Boss1Minion) new Boss1Minion(game, "boss1 minion", -1, -1, -1, -1, -1, true);
+        walkAnim = minion.getMoveAnim();
+        swingAnim = minion.getSwingAnim();
     }
 
     @Override
     public boolean run()
     {
-        hitNearAI.run();
-
-        //if(getEntity().getHealth() == getEntity().getMaxhealth() / 2)
-        if(getEntity().getHealth() == getEntity().getMaxhealth() - 10)
+        if(getEntity().getHealth() == getEntity().getMaxhealth() - 25 && phase == 0)
         {
-            Random r = new Random();
-            for(int i = 0; i < 10; i++)
-            {
-                int x = r.nextInt(100);
-                int y = r.nextInt(100);
-
-                CreatureType.BOSS_MINION.spawn(getGame(), x, y);
-            }
+            spawnMinionCount(1, 600);
+            phase++;
         }
-        return false;
+
+        if(getEntity().getHealth() == getEntity().getMaxhealth() - 50 && phase == 1)
+        {
+            spawnMinionCount(2, 600);
+            phase++;
+        }
+
+        if(getEntity().getHealth() == getEntity().getMaxhealth() - 100 && phase == 2)
+        {
+            spawnMinionCount(5, 1000);
+            phase++;
+        }
+
+        if(getEntity().getHealth() == getEntity().getMaxhealth() - 150 && phase == 3)
+        {
+            spawnMinionCount(5, 800);
+            phase++;
+        }
+
+        if(getEntity().getHealth() == getEntity().getMaxhealth() - 195 && phase == 4)
+        {
+            spawnMinionCount(3, 800);
+            phase++;
+        }
+        return hitNearAI.run();
     }
 
+    public void spawnMinionCount(int amnt, int distance)
+    {
+        Random r = new Random();
+        Location cL = getEntity().getLocation().getAsCentered(getEntity().getWidth(), getEntity().getHeight());;
+
+        for(int i = 0; i < amnt; i++)
+        {
+            int x = r.nextInt(600) - r.nextInt(600) + cL.getX();
+            int y = r.nextInt(600) - r.nextInt(600) + cL.getY();
+
+            Boss1Minion minion = (Boss1Minion) CreatureType.BOSS_MINION.spawn(getGame(), x, y, false);
+
+            if(minion.collides())
+            {
+                i++;
+                minion.destroy();
+            }
+
+            minion.setMoveAnim((DirectionalAnimation)walkAnim.clone());
+            minion.getMoveAnim().setLocation(minion.getLocation());
+            minion.setSwingAnim((OrderedAnimation)swingAnim.clone());
+            minion.getSwingAnim().setLocation(minion.getLocation());
+            minion.updateWidthHeight();
+        }
+    }
 }

@@ -7,39 +7,53 @@ import me.zm.apcsgame.Game;
  */
 public enum CreatureType
 {
-	PLAYER(10, 0, 1),
+	PLAYER(10, 0, 1, 160),
 
-	BOSS_1(200, 300, 2),
+	BOSS_1(200, 300, 2, 220),
 
-	BOSS_MINION(3, 300, 1);
+	CROW(3, 200, 1, 50),
+
+	BOSS_MINION(3, 300, 1, 67);
 
 	int defaultHealth;
 	int visibleRange;
 	int damageAmount;
+	int swingDistance;
 
 	/**
 	 * CreatureType constructor
 	 * @param defaultHealth The default amount of health this specific creature will have unless changed.
 	 * @param visibleRange How many pixels the mob's AI will detect the player
 	 */
-	CreatureType(int defaultHealth, int visibleRange, int damageAmount)
+	CreatureType(int defaultHealth, int visibleRange, int damageAmount, int swingDistance)
 	{
 		this.defaultHealth = defaultHealth;
 		this.visibleRange = visibleRange;
 		this.damageAmount = damageAmount;
+		this.swingDistance = swingDistance;
 	}
 
-	public void spawn(Game game, int x, int y)
+	public Creature spawn(Game game, int x, int y)
 	{
+		return spawn(game, x, y, true);
+	}
+
+	public Creature spawn(Game game, int x, int y, boolean loadImages)
+	{
+		Creature creature = null;
 		switch(this)
 		{
 			case BOSS_1:
-				game.getCurrentLevel().getEntities().add(new Boss1(game, "boss1", x, y, 100, 100, 3, .6));
+				creature = new Boss1(game, "boss1", x, y, -1, -1, 3);
+				game.getCurrentLevel().getEntities().add(creature);
 				break;
 			case BOSS_MINION:
-				game.getCurrentLevel().getEntities().add(new Boss1(game, "boss1", x, y, 100, 100, 3, .2));
+				creature = new Boss1Minion(game, "boss1 minion", x, y, -1, -1, 3, loadImages);
+				game.getCurrentLevel().getEntities().add(creature);
 				break;
 		}
+
+		return creature;
 	}
 
 	public int getDefaultHealth()
@@ -70,5 +84,15 @@ public enum CreatureType
 	public void setDamageAmount(int damageAmount)
 	{
 		this.damageAmount = damageAmount;
+	}
+
+	public int getSwingDistance()
+	{
+		return swingDistance;
+	}
+
+	public void setSwingDistance(int swingDistance)
+	{
+		this.swingDistance = swingDistance;
 	}
 }

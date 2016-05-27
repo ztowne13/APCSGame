@@ -7,5 +7,7 @@ public enum InteractionAIType
 {
 	HIT_NEAR,
 
+	BOSS_AI,
+
 	NONE;
 }

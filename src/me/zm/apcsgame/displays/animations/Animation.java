@@ -45,6 +45,8 @@ public abstract class Animation
 	 */
 	public abstract void loadImages();
 
+	public abstract Animation clone();
+
 	/**
 	 * Is a tick method if specific animation classes need extra code run when the plugin is ticked.
 	 */

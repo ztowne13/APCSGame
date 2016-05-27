@@ -2,6 +2,7 @@ package me.zm.apcsgame.tick;
 
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.displays.effects.GraphicEffect;
+import me.zm.apcsgame.entity.creature.Player;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ import java.util.Set;
  */
 public class LevelGSTick extends GameStateTick
 {
+	Player player;
+
 	public LevelGSTick(Game game)
 	{
 		super(game);
@@ -51,5 +54,15 @@ public class LevelGSTick extends GameStateTick
 		{
 			graphicEffect.draw(graphics);
 		}
+	}
+
+	public Player getPlayer()
+	{
+		return player;
+	}
+
+	public void setPlayer(Player player)
+	{
+		this.player = player;
 	}
 }

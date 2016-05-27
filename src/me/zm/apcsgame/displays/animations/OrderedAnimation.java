@@ -33,6 +33,14 @@ public class OrderedAnimation extends Animation
 	}
 
 	@Override
+	public Animation clone()
+	{
+		OrderedAnimation orderedAnimation = new OrderedAnimation(getGame(), getAnimationType(), getLocation());
+		orderedAnimation.setImages(getImages());
+		return orderedAnimation;
+	}
+
+	@Override
 	public void individualTick()
 	{
 

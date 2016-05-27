@@ -21,6 +21,7 @@ import me.zm.apcsgame.locations.events.EventLocation;
 import me.zm.apcsgame.locations.events.EventLocationType;
 import me.zm.apcsgame.locations.events.NewLevelEventLocation;
 import me.zm.apcsgame.sounds.Sound;
+import me.zm.apcsgame.tick.LevelGSTick;
 import me.zm.apcsgame.utils.FileUtils;
 
 import javax.sound.sampled.AudioInputStream;
@@ -42,7 +43,6 @@ public class Level
 
 	GameCamera gameCamera;
 	private ArrayList<Entity> entities = new ArrayList<Entity>();
-	Player player;
 	ArrayList<EventLocation> eventLocations = new ArrayList<EventLocation>();
 
 	Point[] points;
@@ -148,14 +148,14 @@ public class Level
 				System.out.println("(" + (System.currentTimeMillis() - start) + ") Loaded level '" + levelName + "' event locations in " + (System.currentTimeMillis() - last) + " ms");
 				last = System.currentTimeMillis();
 
-				loadOther(forceXSpawn, forceYSpawn);
+				loadOther();
 				System.out.println("(" + (System.currentTimeMillis() - start) + ") Loaded level '" + levelName + "' other in " + (System.currentTimeMillis() - last) + " ms");
 				last = System.currentTimeMillis();
 
 				System.out.println("Milliseconds to load level '" + levelName + "': " + (last - start));
 				hasFinishedLoading = true;
 
-				loadAfter(fadeOut, setAsCurrent, modifyToInLevel);
+				loadAfter(fadeOut, setAsCurrent, modifyToInLevel, forceXSpawn, forceYSpawn);
 
 				try
 				{
@@ -197,7 +197,7 @@ public class Level
 		}
 	}
 
-	public void loadAfter(boolean fadeOut, boolean setAsCurrent, boolean modifyToInLevel)
+	public void loadAfter(boolean fadeOut, boolean setAsCurrent, boolean modifyToInLevel, int forceX, int forceY)
 	{
 		game.getGraphicEffects().remove("fade in level");
 
@@ -229,25 +229,24 @@ public class Level
 			overlay = goldOverlay;
 		}
 
+		setPlayer(new Player(game, "TestCharacter1", forceX != -1 ? forceX : getSpawnPoint().x, forceY != -1 ? forceY : getSpawnPoint().y, 50, 50, 3));
+		entities.add(0, getPlayer());
+
 		loadMonsterSpawns();
 	}
 
 	/**
 	 * Loads the player as well as the game camera
 	 */
-	public void loadOther(int forceX, int forceY)
+	public void loadOther()
 	{
-
-		this.player = new Player(game, "TestCharacter1", forceX != -1 ? forceX : getSpawnPoint().x, forceY != -1 ? forceY : getSpawnPoint().y, 50, 50, 3);
-		entities.add(0, player);
-
 		this.gameCamera = new GameCamera(game, 0, 0, 1);
 		hud = new HUD(game);
 
 		pauseMenu = new PauseMenu(game);
 		pauseMenu.loadImage();
 
-		getGameCamera().centerOnEntity(player);
+		getGameCamera().centerOnEntity(getPlayer());
 		game.setPlaySpeed(100);
 	}
 
@@ -409,12 +408,12 @@ public class Level
 			graphics.drawImage(levelBaseWindow, -(int) getGameCamera().getxOffset(), -(int) getGameCamera().getyOffset(), null);
 
 			// Renders the tiles that will be beneath the player_walk
-			renderTiles(player, graphics, true);
+			renderTiles(getPlayer(), graphics, true);
 
-			player.draw(graphics);
+			getPlayer().draw(graphics);
 
 			// Renders the tiles that will be above the player_walk (if the player_walk exists, otherwise they're already rendered)
-			renderTiles(player, graphics, false);
+			renderTiles(getPlayer(), graphics, false);
 
 			for (Entity ent : entities)
 			{
@@ -461,7 +460,7 @@ public class Level
 			// This is to go to a new level (typically). Code may be moved at some point
 			for (EventLocation eventLocation : eventLocations)
 			{
-				eventLocation.executeFor(graphics, player);
+				eventLocation.executeFor(graphics, getPlayer());
 			}
 
 			pauseMenu.draw(graphics);
@@ -473,8 +472,8 @@ public class Level
 
 				for(int i = 0; i < points.length; i++)
 				{
-					xPoints[i] = points[i].x - (int)(getGameCamera().getxOffset()) - (player.getWidth()/2);
-					yPoints[i] = points[i].y - (int)(getGameCamera().getyOffset()) - (player.getHeight());
+					xPoints[i] = points[i].x - (int)(getGameCamera().getxOffset()) - (getPlayer().getWidth()/2);
+					yPoints[i] = points[i].y - (int)(getGameCamera().getyOffset()) - (getPlayer().getHeight());
 				}
 
 				Polygon polygon = new Polygon(xPoints, yPoints, points.length);
@@ -589,12 +588,12 @@ public class Level
 
 	public Player getPlayer()
 	{
-		return player;
+		return ((LevelGSTick)game.getGameStateTick()).getPlayer();
 	}
 
 	public void setPlayer(Player player)
 	{
-		this.player = player;
+		((LevelGSTick)game.getGameStateTick()).setPlayer(player);
 	}
 
 	public GameCamera getGameCamera()

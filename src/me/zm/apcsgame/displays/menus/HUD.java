@@ -3,7 +3,6 @@ package me.zm.apcsgame.displays.menus;
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.creature.Boss1;
-import me.zm.apcsgame.entity.creature.Creature;
 import me.zm.apcsgame.entity.creature.Player;
 import me.zm.apcsgame.utils.MathUtils;
 
@@ -43,7 +42,7 @@ public class HUD
 		{
 			if(ent instanceof Boss1)
 			{
-				if (MathUtils.distance(p.getLocation(), ent.getLocation()) < ((Creature)ent).getCreatureType().getVisibleRange())
+				if (MathUtils.distance(p.getLocation().getAsCentered(p.getWidth(), p.getHeight()), ent.getLocation().getAsCentered(ent.getWidth(), ent.getHeight())) < 1000)
 				{
 					Canvas canvas = game.getDisplay().getCanvas();
 					graphics.setColor(Color.GRAY);
