@@ -9,8 +9,7 @@ import javax.swing.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,23 +27,12 @@ public class FileUtils
 	public static ArrayList<String> loadFileByLine(String localPath)
 	{
 		boolean res = true;
-		localPath = (res ? "/res" : "") + "/" + localPath;
+		localPath = "/" + localPath;
 		String loadedString = "";
 
 		try
 		{
-			JOptionPane.showConfirmDialog(null, FileUtils.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath() + localPath);
-
-			File file;
-			if(res)
-			{
-				file = new File(FileUtils.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath() + localPath);
-			}
-			else
-			{
-				file = new File(FileUtils.class.getResource(localPath).toURI());
-			}
-			FileInputStream fileInputSteam = new FileInputStream(file);
+			InputStream fileInputSteam = FileUtils.class.getResourceAsStream(localPath);
 
 			int content;
 			while ((content = fileInputSteam.read()) != -1)
@@ -54,6 +42,9 @@ public class FileUtils
 		}
 		catch (Exception exc)
 		{
+			JOptionPane.showConfirmDialog(null, exc.getMessage());
+			JOptionPane.showConfirmDialog(null, exc.getCause());
+			JOptionPane.showConfirmDialog(null, exc.getLocalizedMessage());
 			JOptionPane.showConfirmDialog(null, exc.getStackTrace());
 		}
 
@@ -81,9 +72,10 @@ public class FileUtils
 	{
 		try
 		{
-			boolean res = true;
 			//JOptionPane.showConfirmDialog(null, (FileUtils.class.getResource((res ? "/res" : "") + "/" + path)));
-			BufferedImage bI = ImageIO.read(FileUtils.class.getResource((res ? "/res" : "") + "/" + path));
+			System.out.println(path);
+			System.out.println(FileUtils.class.getResource("/" + path));
+			BufferedImage bI = ImageIO.read(FileUtils.class.getResourceAsStream("/" + path));
 
 			BufferedImage after = new BufferedImage((int)(bI.getWidth()*imageScale), (int)(bI.getHeight()*imageScale), BufferedImage.TYPE_INT_ARGB);
 			AffineTransform at = new AffineTransform();
@@ -119,13 +111,14 @@ public class FileUtils
 	{
 		try
 		{
-			boolean res = true;
-			AudioInputStream inputStream = AudioSystem.getAudioInputStream(FileUtils.class.getResourceAsStream((res ? "/res" : "") + "/sounds/" + path));
+			AudioInputStream inputStream = AudioSystem.getAudioInputStream(new BufferedInputStream(FileUtils.class.getResourceAsStream("/sounds/" + path)));
 			return inputStream;
 		}
 		catch(Exception exc)
 		{
 			JOptionPane.showConfirmDialog(null, ("failed to load sound: " + path));
+			JOptionPane.showConfirmDialog(null, exc.getMessage());
+			JOptionPane.showConfirmDialog(null, exc.getStackTrace());
 			exc.printStackTrace();
 		}
 		return null;

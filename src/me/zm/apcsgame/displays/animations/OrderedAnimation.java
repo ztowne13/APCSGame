@@ -15,7 +15,7 @@ public class OrderedAnimation extends Animation
 	String animationName;
 	public OrderedAnimation(Game game, AnimationType animationType, Location location)
 	{
-		super(game, animationType, location, "/ordered_animations/");
+		super(game, animationType, location, "ordered_animations/");
 	}
 
 	@Override

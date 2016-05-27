@@ -2,7 +2,7 @@ settings {
 Cave1
 1317,660
 THE_SENTIENTS
-EMPTY
+GOLD
 1
 TestBackground-Blurred1,60,1.15
 }
