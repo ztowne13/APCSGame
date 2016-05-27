@@ -27,7 +27,7 @@ public class Boss1AI extends InteractionAI
 
         this.hitNearAI = new HitNearAI(game, creature, swingCharge, swingDistance);
 
-        Boss1Minion minion = (Boss1Minion) new Boss1Minion(game, "boss1 minion", -1, -1, -1, -1, -1, true);
+        Boss1Minion minion = (Boss1Minion) new Boss1Minion(game, "boss1 minion", -1, -1, -1, -1, true);
         walkAnim = minion.getMoveAnim();
         swingAnim = minion.getSwingAnim();
     }
@@ -85,7 +85,7 @@ public class Boss1AI extends InteractionAI
 
             Boss1Minion minion = (Boss1Minion) CreatureType.BOSS_MINION.spawn(getGame(), x, y, false);
 
-            if(minion.collides())
+            if(minion.collides(false))
             {
                 i++;
                 minion.destroy();

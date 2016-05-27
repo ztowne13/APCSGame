@@ -34,6 +34,14 @@ new_level, 576, 3423, 150, Underground-1, -1, -1
 }
 
 creatures {
+CROW,400,1400
+CROW,930,1350
+CROW,750,1600
+CROW,800,1350
+CROW,1600,2000
+CROW,1000,2000
+CROW,730,2000
+CROW,1600,2500
 }
 
 level bounds {

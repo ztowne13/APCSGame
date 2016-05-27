@@ -89,7 +89,10 @@ public class Game implements Runnable
 
 		if((lastWidth != width || lastHeight != height) && getGameState().equals(GameState.IN_LEVEL))
 		{
-			getCurrentLevel().getGameCamera().centerOnEntity(getCurrentLevel().getPlayer());
+			if(getCurrentLevel().isHasFinishedLoading())
+			{
+				getCurrentLevel().getGameCamera().centerOnEntity(getCurrentLevel().getPlayer());
+			}
 		}
 
 		lastWidth = getWidth();

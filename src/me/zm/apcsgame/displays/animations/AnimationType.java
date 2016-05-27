@@ -13,6 +13,10 @@ public enum AnimationType
 
 	BOSS_ATTACK(3),
 
+	CROW_SWING(3),
+
+	CROW_WALK(4),
+
 	INTERACT(4);
 
 	int framesCount;

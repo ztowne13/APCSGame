@@ -35,7 +35,7 @@ public abstract class Creature extends Entity implements MobAI
 		switch(pathfindingAIType)
 		{
 			case WALK_STRAIGHT:
-				pathfindingAI = new WalkLinearPF(game, this, null, 60, speed);
+				pathfindingAI = new WalkLinearPF(game, this, null, creatureType.getMinimumRange(), speed);
 				break;
 		}
 
@@ -60,7 +60,7 @@ public abstract class Creature extends Entity implements MobAI
 
 	public abstract void loadImages();
 
-	public boolean collides()
+	public boolean collides(boolean includeOthers)
 	{
 		boolean collidesWithTile = false;
 
@@ -68,7 +68,7 @@ public abstract class Creature extends Entity implements MobAI
 		{
 			if(tile instanceof Tile)
 			{
-				if (((Tile)tile).collidesWith(getHitbox()))
+				if (((Tile) tile).collidesWith(getHitbox()))
 				{
 					collidesWithTile = true;
 					break;

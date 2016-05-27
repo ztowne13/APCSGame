@@ -217,7 +217,7 @@ public class Player extends Creature
 			getLocation().setX(getLocation().getX() + (int) cos);
 			getLocation().setY(getLocation().getY() + (int) sin);
 			
-			if(!collides())
+			if(!collides(false))
 			{
 				gc.setToMoveX(gc.getToMoveX() + (float) cos);
 				gc.setToMoveY(gc.getToMoveY() + (float) sin);
@@ -259,7 +259,7 @@ public class Player extends Creature
 
 			getLocation().setX(getLocation().getX() + xMove);
 
-			if (collides() && !GameSettings.levelBuildMode)
+			if (collides(false) && !GameSettings.levelBuildMode)
 			{
 				getLocation().setX(tempX);
 				xMove = 0;
@@ -267,7 +267,7 @@ public class Player extends Creature
 
 			getLocation().setY(getLocation().getY() + yMove);
 
-			if (collides() && !GameSettings.levelBuildMode)
+			if (collides(false) && !GameSettings.levelBuildMode)
 			{
 				getLocation().setY(tempY);
 				yMove = 0;

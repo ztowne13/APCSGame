@@ -12,6 +12,7 @@ public abstract class PathfinderAI extends ActionAI
 {
 	Location pathFindingGoal;
 	int pathFindingWidth, pathFindingHeight, speed;
+	boolean moving = false;
 
 	public PathfinderAI(Game game, Creature entity, Location pathFindingGoal, int pathFindingWidth, int pathFindingHeigt, int speed)
 	{
@@ -61,5 +62,15 @@ public abstract class PathfinderAI extends ActionAI
 	public int getSpeed()
 	{
 		return speed;
+	}
+
+	public boolean isMoving()
+	{
+		return moving;
+	}
+
+	public void setMoving(boolean moving)
+	{
+		this.moving = moving;
 	}
 }

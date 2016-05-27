@@ -45,7 +45,7 @@ public class WalkLinearPF extends PathfinderAI
 					cL.setY(tempY + (int) sin);
 					cL.setX(tempX + (int) cos);
 
-					if (!getEntity().collides())
+					if (!getEntity().collides(true))
 					{
 						success = true;
 						break;
@@ -57,7 +57,7 @@ public class WalkLinearPF extends PathfinderAI
 					cL.setY(tempY + (int) sin);
 					cL.setX(tempX + (int) cos);
 
-					if (!getEntity().collides())
+					if (!getEntity().collides(true))
 					{
 						success = true;
 						break;
@@ -75,9 +75,18 @@ public class WalkLinearPF extends PathfinderAI
 				{
 					cL.setX(tempX);
 					cL.setY(tempY);
+					moving = false;
+				}
+				else
+				{
+					moving = true;
 				}
 
 				lastLoc = cL.clone();
+			}
+			else
+			{
+				moving = false;
 			}
 		}
 		return true;

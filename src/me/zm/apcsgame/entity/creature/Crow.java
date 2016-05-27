@@ -1,25 +1,37 @@
 package me.zm.apcsgame.entity.creature;
 
+import me.zm.apcsgame.Game;
+import me.zm.apcsgame.ai.interactions.InteractionAIType;
+import me.zm.apcsgame.ai.pathfinding.PathfinderAIType;
+import me.zm.apcsgame.displays.animations.AnimationType;
+import me.zm.apcsgame.displays.animations.DirectionalAnimation;
+import me.zm.apcsgame.locations.Direction;
+import me.zm.apcsgame.locations.Location;
+import me.zm.apcsgame.utils.MathUtils;
+
+import java.awt.*;
+import java.util.ArrayList;
+
 /**
  * Created by ztowne13 on 5/26/16.
  */
-public class Crow
+public class Crow extends Creature
 {
-	/*private final float swingCooldown = 1000000000;
+	private final float swingCooldown = 1000000000;
 
 	Location lastLoc;
 	DirectionalAnimation moveAnim;
-	OrderedAnimation swingAnim;
+	DirectionalAnimation swingAnim;
 	Direction lastMoveDirection = Direction.EAST;
 
-	public Boss1Minion(Game game, String id, int x, int y, int width, int height, int speed)
+	public Crow(Game game, String id, int x, int y, int width, int height)
 	{
-		this(game, id, x, y, width, height, speed, true);
+		this(game, id, x, y, width, height, true);
 	}
 
-	public Boss1Minion(Game game, String id, int x, int y, int width, int height, int speed, boolean loadImages)
+	public Crow(Game game, String id, int x, int y, int width, int height, boolean loadImages)
 	{
-		super(game, x, y, width, height, 3, 10, CreatureType.BOSS_MINION, PathfinderAIType.WALK_STRAIGHT, InteractionAIType.HIT_NEAR);
+		super(game, x, y, width, height, 3, 10, CreatureType.CROW, PathfinderAIType.WALK_STRAIGHT, InteractionAIType.HIT_NEAR);
 
 		if(loadImages)
 		{
@@ -33,11 +45,11 @@ public class Crow
 		excludedDirections.add("NORTH");
 		excludedDirections.add("SOUTH");
 
-		moveAnim = new DirectionalAnimation(getGame(), AnimationType.BOSS_WALK, getLocation(), excludedDirections);
-		moveAnim.loadImages(.2);
+		moveAnim = new DirectionalAnimation(getGame(), AnimationType.CROW_WALK, getLocation(), excludedDirections);
+		moveAnim.loadImages(.1);
 
-		swingAnim = new OrderedAnimation(getGame(), AnimationType.BOSS_ATTACK, getLocation());
-		swingAnim.loadImages(.2);
+		swingAnim = new DirectionalAnimation(getGame(), AnimationType.CROW_SWING, getLocation(), excludedDirections);
+		swingAnim.loadImages(.1);
 
 		updateWidthHeight();
 	}
@@ -94,11 +106,11 @@ public class Crow
 			if (getGame().getTicksAlive() % 4 == 0)
 			{
 				swingAnim.tick();
-				swingAnim.render(g);
+				swingAnim.render(getPathfindingAI().isMoving(), lastMoveDirection, g);
 			}
 			else
 			{
-				swingAnim.render(g);
+				swingAnim.render(getPathfindingAI().isMoving(), lastMoveDirection, g);
 			}
 		}
 	}
@@ -129,13 +141,13 @@ public class Crow
 		this.moveAnim = moveAnim;
 	}
 
-	public OrderedAnimation getSwingAnim()
+	public DirectionalAnimation getSwingAnim()
 	{
 		return swingAnim;
 	}
 
-	public void setSwingAnim(OrderedAnimation swingAnim)
+	public void setSwingAnim(DirectionalAnimation swingAnim)
 	{
 		this.swingAnim = swingAnim;
-	}*/
+	}
 }

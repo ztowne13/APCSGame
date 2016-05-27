@@ -25,14 +25,14 @@ public class Boss1Minion extends Creature
 	OrderedAnimation swingAnim;
 	Direction lastMoveDirection = Direction.EAST;
 
-	public Boss1Minion(Game game, String id, int x, int y, int width, int height, int speed)
+	public Boss1Minion(Game game, String id, int x, int y, int width, int height)
 	{
-		this(game, id, x, y, width, height, speed, true);
+		this(game, id, x, y, width, height, true);
 	}
 
-	public Boss1Minion(Game game, String id, int x, int y, int width, int height, int speed, boolean loadImages)
+	public Boss1Minion(Game game, String id, int x, int y, int width, int height, boolean loadImages)
 	{
-		super(game, x, y, width, height, 3, 10, CreatureType.BOSS_MINION, PathfinderAIType.WALK_STRAIGHT, InteractionAIType.HIT_NEAR);
+		super(game, x, y, width, height, 2, 10, CreatureType.BOSS_MINION, PathfinderAIType.WALK_STRAIGHT, InteractionAIType.HIT_NEAR);
 
 		if(loadImages)
 		{
