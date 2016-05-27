@@ -15,7 +15,7 @@ public class GameSettings
 	/**
 	 * All jump variables
 	 */
-	public static int toMoveJump = 200;
+	public static int toMoveJump = 230;
 	public static int jumpCooldown = 500000000;
 
 	/**

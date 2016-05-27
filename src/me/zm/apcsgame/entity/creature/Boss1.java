@@ -6,6 +6,8 @@ import me.zm.apcsgame.ai.pathfinding.PathfinderAIType;
 import me.zm.apcsgame.displays.animations.AnimationType;
 import me.zm.apcsgame.displays.animations.DirectionalAnimation;
 import me.zm.apcsgame.displays.animations.OrderedAnimation;
+import me.zm.apcsgame.displays.effects.FadeEffect;
+import me.zm.apcsgame.displays.effects.WastedEffect;
 import me.zm.apcsgame.locations.Direction;
 import me.zm.apcsgame.locations.Location;
 import me.zm.apcsgame.utils.MathUtils;
@@ -101,6 +103,39 @@ public class Boss1 extends Creature
                 swingAnim.render(g);
             }
         }
+    }
+
+    @Override
+    public void destroy()
+    {
+        getGame().getCurrentLevel().getEntities().remove(this);
+        setDead(true);
+        getGame().getGraphicEffects().put("congrats",new WastedEffect(getGame(),false, "congrats"));
+
+        Thread thread = new Thread()
+        {
+            @Override
+            public void run()
+            {
+                boolean b = false;
+                while(true)
+                {
+                    try
+                    {
+                        b = !b;
+                        getGame().getGraphicEffects().put("end game fade", new FadeEffect(getGame(), Color.GREEN, 255 / 60, b, true));
+                        sleep(1000);
+                    }
+                    catch(Exception exc)
+                    {
+                        exc.printStackTrace();
+                    }
+                }
+            }
+        };
+
+        thread.start();
+
     }
 
     @Override

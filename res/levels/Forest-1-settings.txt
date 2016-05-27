@@ -1,7 +1,7 @@
 settings {
 The Beginning
 370,270
-SONG_1
+TITAN
 GOLD
 1
 TestBackground-Blurred1,300,1.15

@@ -72,7 +72,7 @@ public class Game implements Runnable
 		this.mousePointer = new MousePointer(this);
 
 		// Load into the first thing
-		Level testLevel1 = new Level(this, "Forest-1", 0, 0);
+		Level testLevel1 = new Level(this, "Forest-1", 0, 0, null);
 		testLevel1.loadAll(true, true, true);
 
 

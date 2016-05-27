@@ -14,16 +14,15 @@ import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.tiles.Tile;
 import me.zm.apcsgame.input.KeyInputListener;
 import me.zm.apcsgame.level.GameCamera;
+import me.zm.apcsgame.level.Level;
 import me.zm.apcsgame.locations.Direction;
 import me.zm.apcsgame.locations.Location;
-import me.zm.apcsgame.sounds.Sound;
 import me.zm.apcsgame.utils.EntityUtils;
 import me.zm.apcsgame.utils.MathUtils;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -35,10 +34,10 @@ public class Player extends Creature
 	String id;
 	int speed;
 
-	AudioInputStream walkSound;
 	Clip clip;
 	boolean moving = false;
 	Location lastCheckPoint;
+	int checkpointHealth;
 
 	float lastJump = 0;
 	DirectionalAnimation walkAnimation;
@@ -50,9 +49,7 @@ public class Player extends Creature
 		this.id = id;
 		this.speed = speed;
 		lastCheckPoint = new Location(getGame(), getLocation().getX(), getLocation().getY());
-		lastCheckPoint = new Location(getGame(), getLocation().getX(), getLocation().getY());
-
-		walkSound = Sound.WALK.getSoundClip();
+		checkpointHealth = getHealth();
 
 		loadImages();
 	}
@@ -83,9 +80,7 @@ public class Player extends Creature
 
 					try
 					{
-						walkSound.mark(20);
-						walkSound.reset();
-
+						AudioInputStream walkSound = getGame().getCurrentLevel().getWalkSound();
 						if (clip != null)
 						{
 							clip.stop();
@@ -94,20 +89,23 @@ public class Player extends Creature
 						{
 							clip = AudioSystem.getClip();
 							clip.open(walkSound);
-
-							FloatControl gainControl =
-									(FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-							gainControl.setValue(-15.0f);
 						}
 
-						clip.setMicrosecondPosition(0);
-
-						if (getGame().getTicksAlive() % 21 == 0)
+						if (!clip.isActive())
 						{
-							//clip.start();
+							walkSound.mark(20);
+							walkSound.reset();
+
+
+							clip.setMicrosecondPosition(0);
+
+							if (getGame().getTicksAlive() % 21 == 0)
+							{
+								//clip.start();
+							}
 						}
 					}
-					catch (Exception exc)
+					catch(Exception exc)
 					{
 						exc.printStackTrace();
 					}
@@ -119,14 +117,10 @@ public class Player extends Creature
 	@Override
 	public void loadImages()
 	{
-		ArrayList<String> excludedDirections = new ArrayList<String>();
-		excludedDirections.add("NORTH");
-		excludedDirections.add("SOUTH");
-
 		this.walkAnimation = new DirectionalAnimation(getGame(), AnimationType.PLAYER_WALK, getLocation());
 		walkAnimation.loadImages(2);
 
-		this.swingAnimation = new DirectionalAnimation(getGame(), AnimationType.PLAYER_SWING, getLocation(), excludedDirections);
+		this.swingAnimation = new DirectionalAnimation(getGame(), AnimationType.PLAYER_SWING, getLocation());
 		swingAnimation.loadImages(2);
 
 		setWidth(walkAnimation.getImages().values().iterator().next().getWidth(null));
@@ -284,14 +278,13 @@ public class Player extends Creature
 
 	public void respawn(boolean fadeOut)
 	{
-		getGame().getGraphicEffects().put("fade out respawn", new FadeEffect(getGame(), Color.BLACK, 1, true, true));
-		setLocation(lastCheckPoint);
-		walkAnimation.setLocation(getLocation());
-		getGame().getCurrentLevel().getGameCamera().centerOnEntity(this);
-		setHealth(getMaxhealth());
+		setHealth(checkpointHealth);
 		setDead(false);
+
+		Level respawnLevel = new Level(getGame(), getGame().getCurrentLevel().getLevelId(), -1, -1, this);
+		respawnLevel.loadAll(true, true, true, lastCheckPoint.getX(), lastCheckPoint.getY());
+
 		getGame().getGraphicEffects().remove("0");
-		getGame().getGraphicEffects().remove("2");
 		getGame().getGraphicEffects().remove("1");
 
 	}
@@ -324,8 +317,12 @@ public class Player extends Creature
 		}
 		else
 		{
-			direction = getLocation().getAsCentered(getWidth(), getHeight()).getX() - getGame().getCurrentLevel().getGameCamera().getxOffset() - getGame().getMouseEventListener().getX() < 0 ? Direction.EAST : Direction.WEST;
-			getGame().getKeyInputListener().setLastKeyPressed(direction == Direction.WEST ? GameSettings.LEFT_KEY : GameSettings.RIGHT_KEY);
+			float xDiff = getLocation().getAsCentered(getWidth(), getHeight()).getX() - getGame().getCurrentLevel().getGameCamera().getxOffset() - getGame().getMouseEventListener().getX();
+			float yDiff = getLocation().getAsCentered(getWidth(), getHeight()).getY() - getGame().getCurrentLevel().getGameCamera().getyOffset() - getGame().getMouseEventListener().getY();
+
+			direction = Math.abs(yDiff) > Math.abs(xDiff) ? yDiff < 0 ? Direction.SOUTH : Direction.NORTH : xDiff < 0 ? Direction.EAST : Direction.WEST;
+
+			getGame().getKeyInputListener().setLastKeyPressed(EntityUtils.directionToKeypress(direction));
 			if (getGame().getTicksAlive() % 4 == 0)
 			{
 				swingAnimation.tick();
@@ -342,9 +339,8 @@ public class Player extends Creature
 	public void destroy()
 	{
 		setDead(true);
-		getGame().getGraphicEffects().put("2", new FadeEffect(getGame(), Color.BLACK, 2, false, false));
 		getGame().getGraphicEffects().put("1", new MaskEffect(getGame(), Color.RED, 100, -1));
-		getGame().getGraphicEffects().put("0",new WastedEffect(getGame(),false));
+		getGame().getGraphicEffects().put("0",new WastedEffect(getGame(),false, "WASTED"));
 
 		Thread thread = new Thread()
 		{
@@ -353,6 +349,9 @@ public class Player extends Creature
 			{
 				try
 				{
+					getGame().getCurrentLevel().getEntities().clear();
+					sleep(1000);
+					getGame().getGraphicEffects().put("2", new FadeEffect(getGame(), Color.BLACK, 2, false, false));
 					sleep(4000);
 					respawn(true);
 					interrupt();
@@ -383,4 +382,23 @@ public class Player extends Creature
 		this.speed = speed;
 	}
 
+	public Location getLastCheckPoint()
+	{
+		return lastCheckPoint;
+	}
+
+	public void setLastCheckPoint(Location lastCheckPoint)
+	{
+		this.lastCheckPoint = lastCheckPoint;
+	}
+
+	public int getCheckpointHealth()
+	{
+		return checkpointHealth;
+	}
+
+	public void setCheckpointHealth(int checkpointHealth)
+	{
+		this.checkpointHealth = checkpointHealth;
+	}
 }

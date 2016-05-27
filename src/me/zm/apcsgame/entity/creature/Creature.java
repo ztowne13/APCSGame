@@ -11,6 +11,7 @@ import me.zm.apcsgame.ai.pathfinding.PathfinderAIType;
 import me.zm.apcsgame.ai.pathfinding.WalkLinearPF;
 import me.zm.apcsgame.entity.Entity;
 import me.zm.apcsgame.entity.tiles.Tile;
+import me.zm.apcsgame.utils.MathUtils;
 
 import java.util.ArrayList;
 
@@ -42,7 +43,18 @@ public abstract class Creature extends Entity implements MobAI
 		switch(interactionAIType)
 		{
 			case HIT_NEAR:
-				interactionAI = new HitNearAI(game, this, 1.75F, creatureType.getSwingDistance());
+				if(this instanceof Crow)
+				{
+					interactionAI = new HitNearAI(game, this, .8F, creatureType.getSwingDistance());
+				}
+				else if(this instanceof Ball)
+				{
+					interactionAI = new HitNearAI(game, this, .1F, creatureType.getSwingDistance());
+				}
+				else
+				{
+					interactionAI = new HitNearAI(game, this, 1.75F, creatureType.getSwingDistance());
+				}
 				break;
 			case BOSS_AI:
 				interactionAI = new Boss1AI(game, this, 3, 150);
@@ -66,12 +78,15 @@ public abstract class Creature extends Entity implements MobAI
 
 		for(Entity tile : (ArrayList<Entity>) getGame().getCurrentLevel().getEntities().clone())
 		{
-			if(tile instanceof Tile)
+			if(tile instanceof Tile || includeOthers ? (!(tile instanceof  Player)) : false)
 			{
-				if (((Tile) tile).collidesWith(getHitbox()))
+				if (tile instanceof Tile ? ((Tile) tile).collidesWith(getHitbox()) : MathUtils.distance(tile.getLocation(), getLocation()) < getHitbox().getWidth()/4)
 				{
-					collidesWithTile = true;
-					break;
+					if(!tile.getUuid().equals(getUuid()))
+					{
+						collidesWithTile = true;
+						break;
+					}
 				}
 			}
 		}

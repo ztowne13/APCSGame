@@ -17,6 +17,8 @@ public enum AnimationType
 
 	CROW_WALK(4),
 
+	BALL_ROLL(4),
+
 	INTERACT(4);
 
 	int framesCount;

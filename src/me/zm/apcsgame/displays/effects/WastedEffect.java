@@ -1,17 +1,10 @@
 package me.zm.apcsgame.displays.effects;
 
-import java.awt.*;
 import me.zm.apcsgame.Game;
 import me.zm.apcsgame.utils.FileUtils;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.net.URL;
-
-
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
-import javax.imageio.ImageIO;
 
 /**
  * Created by Jason Rhoads on 5/25/2016.
@@ -25,11 +18,11 @@ public class WastedEffect extends GraphicEffect
 
     boolean endWhenDone;
 
-    public WastedEffect(Game game, boolean endWhenDone)
+    public WastedEffect(Game game, boolean endWhenDone, String path)
     {
         super(game);
         this.endWhenDone = endWhenDone;
-        image = FileUtils.loadImage("hud/WASTED.png");
+        image = FileUtils.loadImage("hud/" + path + ".png");
     }
     public void draw(Graphics graphics)
     {

@@ -59,4 +59,20 @@ public class EntityUtils
 		return directions;
 	}
 
+	public static int directionToKeypress(Direction direction)
+	{
+		switch(direction)
+		{
+			case NORTH:
+				return GameSettings.UP_KEY;
+			case EAST:
+				return GameSettings.RIGHT_KEY;
+			case SOUTH:
+				return GameSettings.DOWN_KEY;
+			case WEST:
+				return GameSettings.LEFT_KEY;
+			default:
+				return -1;
+		}
+	}
 }

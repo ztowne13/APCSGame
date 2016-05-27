@@ -31,7 +31,7 @@ public class Crow extends Creature
 
 	public Crow(Game game, String id, int x, int y, int width, int height, boolean loadImages)
 	{
-		super(game, x, y, width, height, 3, 10, CreatureType.CROW, PathfinderAIType.WALK_STRAIGHT, InteractionAIType.HIT_NEAR);
+		super(game, x, y, width, height, 5, 10, CreatureType.CROW, PathfinderAIType.WALK_STRAIGHT, InteractionAIType.HIT_NEAR);
 
 		if(loadImages)
 		{

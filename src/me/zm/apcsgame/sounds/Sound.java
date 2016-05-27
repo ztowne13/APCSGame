@@ -11,9 +11,15 @@ import javax.sound.sampled.AudioInputStream;
  */
 public enum Sound
 {
-	WALK(SoundType.EFFECT, FileUtils.loadSoundClip("walk.wav")),
+	WALK_HARD_FLOOR(SoundType.EFFECT, FileUtils.loadSoundClip("walk_hard_floor.wav")),
 
-	SONG_1(SoundType.SONG, FileUtils.loadSoundClip("song1.wav"));
+	WALK_GRASS(SoundType.EFFECT, FileUtils.loadSoundClip("walk_grass.wav")),
+
+	FOREST_SONG(SoundType.SONG, FileUtils.loadSoundClip("forest_song.wav")),
+
+	TITAN(SoundType.SONG, FileUtils.loadSoundClip("titan.wav")),
+
+	THE_SENTIENTS(SoundType.SONG, FileUtils.loadSoundClip("the_sentients.wav"));
 
 	AudioInputStream soundClip;
 	SoundType soundType;

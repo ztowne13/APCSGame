@@ -42,7 +42,9 @@ public class NewLevelEventLocation extends EventLocation
 					try
 					{
 						sleep(2134);
-						Level level = new Level(game, toLevel, game.getWidth(), game.getHeight());
+						game.getCurrentLevel().endLevel();
+
+						Level level = new Level(game, toLevel, game.getWidth(), game.getHeight(), game.getCurrentLevel().getPlayer());
 						level.loadAll(true, true, true, toX, toY);
 
 						interrupt();

@@ -17,14 +17,15 @@ import me.zm.apcsgame.entity.creature.CreatureType;
 import me.zm.apcsgame.entity.creature.Player;
 import me.zm.apcsgame.entity.tiles.StaticTile;
 import me.zm.apcsgame.entity.tiles.Tile;
+import me.zm.apcsgame.locations.Location;
 import me.zm.apcsgame.locations.events.EventLocation;
 import me.zm.apcsgame.locations.events.EventLocationType;
 import me.zm.apcsgame.locations.events.NewLevelEventLocation;
 import me.zm.apcsgame.sounds.Sound;
-import me.zm.apcsgame.tick.LevelGSTick;
 import me.zm.apcsgame.utils.FileUtils;
 
 import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -40,6 +41,7 @@ public class Level
 	String levelId;
 	BufferedImage levelBaseWindow;
 	double levelImageScale;
+	AudioInputStream walkSound;
 
 	GameCamera gameCamera;
 	private ArrayList<Entity> entities = new ArrayList<Entity>();
@@ -48,8 +50,10 @@ public class Level
 	Point[] points;
 	String levelName;
 	Point spawnPoint;
+	boolean endedLevel = false;
 
 	HUD hud;
+	Player player;
 	Background background;
 	Overlay overlay;
 	OverlayType overlayType;
@@ -64,12 +68,13 @@ public class Level
 	boolean hasFinishedLoading = false;
 	boolean finished = false;
 
-	public Level(Game game, String levelId, int width, int height)
+	public Level(Game game, String levelId, int width, int height, Player player)
 	{
 		this.game = game;
 		this.levelId = levelId;
 		this.width = width;
 		this.height = height;
+		this.player = player;
 
 		loadedSettings = FileUtils.loadFileByLine("levels/" + levelId + "-settings.txt");
 	}
@@ -78,18 +83,18 @@ public class Level
 	{
 		if(hasFinishedLoading)
 		{
-			if (levelSong == null || !levelSong.isRunning())
+			if ((levelSong == null || !levelSong.isRunning()) && !endedLevel)
 			{
 				try
 				{
 					/*
 					* Just got annoyed listening to the music, will re-add later.
-					*
+					*/
 					levelSongStream.reset();
 
 					levelSong = AudioSystem.getClip();
 					levelSong.open(levelSongStream);
-					levelSong.start();*/
+					levelSong.start();
 				}
 				catch (Exception exc)
 				{
@@ -148,15 +153,14 @@ public class Level
 				System.out.println("(" + (System.currentTimeMillis() - start) + ") Loaded level '" + levelName + "' event locations in " + (System.currentTimeMillis() - last) + " ms");
 				last = System.currentTimeMillis();
 
-				loadOther();
+				loadOther(forceXSpawn, forceYSpawn);
 				System.out.println("(" + (System.currentTimeMillis() - start) + ") Loaded level '" + levelName + "' other in " + (System.currentTimeMillis() - last) + " ms");
 				last = System.currentTimeMillis();
 
+				hasFinishedLoading = true;
 				System.out.println("Milliseconds to load level '" + levelName + "': " + (last - start));
 
-				loadAfter(fadeOut, setAsCurrent, modifyToInLevel, forceXSpawn, forceYSpawn);
-
-				hasFinishedLoading = true;
+				loadAfter(fadeOut, setAsCurrent, modifyToInLevel);
 
 				try
 				{
@@ -198,9 +202,10 @@ public class Level
 		}
 	}
 
-	public void loadAfter(boolean fadeOut, boolean setAsCurrent, boolean modifyToInLevel, int forceX, int forceY)
+	public void loadAfter(boolean fadeOut, boolean setAsCurrent, boolean modifyToInLevel)
 	{
 		game.getGraphicEffects().remove("fade in level");
+		game.getGraphicEffects().remove("2");
 
 		if(fadeOut)
 		{
@@ -230,24 +235,44 @@ public class Level
 			overlay = goldOverlay;
 		}
 
-		setPlayer(new Player(game, "TestCharacter1", forceX != -1 ? forceX : getSpawnPoint().x, forceY != -1 ? forceY : getSpawnPoint().y, 50, 50, 3));
-		entities.add(0, getPlayer());
-
-		getGameCamera().centerOnEntity(getPlayer());
-
 		loadMonsterSpawns();
 	}
 
 	/**
 	 * Loads the player as well as the game camera
 	 */
-	public void loadOther()
+	public void loadOther(int forceX, int forceY)
 	{
+		if(getLevelId().equalsIgnoreCase("forest-1"))
+		{
+			walkSound = Sound.WALK_GRASS.getSoundClip();
+		}
+		else
+		{
+			walkSound = Sound.WALK_HARD_FLOOR.getSoundClip();
+		}
+
 		this.gameCamera = new GameCamera(game, 0, 0, 1);
 		hud = new HUD(game);
 
 		pauseMenu = new PauseMenu(game);
 		pauseMenu.loadImage();
+
+		if(getPlayer() == null)
+		{
+			setPlayer(new Player(game, "TestCharacter1", forceX != -1 ? forceX : getSpawnPoint().x, forceY != -1 ? forceY : getSpawnPoint().y, 50, 50, 3));
+		}
+		else
+		{
+			player.getLocation().setX(forceX != -1 ? forceX : getSpawnPoint().x);
+			player.getLocation().setY(forceY != -1 ? forceY : getSpawnPoint().y);
+
+			getPlayer().setLastCheckPoint(new Location(game, player.getLocation().getX(), player.getLocation().getY()));
+			getPlayer().setCheckpointHealth(getPlayer().getHealth());
+		}
+		entities.add(0, getPlayer());
+
+		getGameCamera().centerOnEntity(getPlayer());
 
 		game.setPlaySpeed(100);
 	}
@@ -417,7 +442,7 @@ public class Level
 			// Renders the tiles that will be above the player_walk (if the player_walk exists, otherwise they're already rendered)
 			renderTiles(getPlayer(), graphics, false);
 
-			for (Entity ent : entities)
+			for (Entity ent : (ArrayList<Entity>) entities.clone())
 			{
 				if (!(ent instanceof Tile) && !(ent instanceof Player))
 				{
@@ -524,6 +549,7 @@ public class Level
 
 	public void endLevel()
 	{
+		endedLevel = true;
 		levelSong.stop();
 	}
 
@@ -590,12 +616,12 @@ public class Level
 
 	public Player getPlayer()
 	{
-		return ((LevelGSTick)game.getGameStateTick()).getPlayer();
+		return player;
 	}
 
 	public void setPlayer(Player player)
 	{
-		((LevelGSTick)game.getGameStateTick()).setPlayer(player);
+		this.player = player;
 	}
 
 	public GameCamera getGameCamera()
@@ -646,5 +672,25 @@ public class Level
 	public int getHeight()
 	{
 		return height;
+	}
+
+	public String getLevelId()
+	{
+		return levelId;
+	}
+
+	public void setLevelId(String levelId)
+	{
+		this.levelId = levelId;
+	}
+
+	public AudioInputStream getWalkSound()
+	{
+		return walkSound;
+	}
+
+	public void setWalkSound(AudioInputStream walkSound)
+	{
+		this.walkSound = walkSound;
 	}
 }
